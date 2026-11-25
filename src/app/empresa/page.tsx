@@ -5,14 +5,12 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/ui/Reveal";
 import { getContentSource } from "@/lib/content/source";
+import { buildMetadata } from "@/lib/seo/metadata";
 
 const LEAD =
   "Construtora e consultoria em obras civis e infraestrutura, com sede em Regente Feijó (SP).";
 
-export const metadata: Metadata = {
-  title: "Sobre a DT | DT Construtora",
-  description: LEAD,
-};
+export const metadata: Metadata = buildMetadata({ title: "Sobre a DT", description: LEAD, path: "/empresa" });
 
 function CheckIcon() {
   return (

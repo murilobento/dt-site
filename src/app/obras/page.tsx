@@ -4,11 +4,13 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { getContentSource } from "@/lib/content/source";
 import { parseObraFilters } from "@/lib/obras/filter";
 import { ObrasExplorer } from "./ObrasExplorer";
+import { buildMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Obras | DT Construtora",
+export const metadata: Metadata = buildMetadata({
+  title: "Obras",
   description: "Obras civis e de infraestrutura executadas e em andamento pela DT Construtora.",
-};
+  path: "/obras",
+});
 
 type SearchParams = Record<string, string | string[] | undefined>;
 

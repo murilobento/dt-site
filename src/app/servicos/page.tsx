@@ -5,11 +5,13 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { getContentSource } from "@/lib/content/source";
 import type { Segmento } from "@/lib/content/types";
 import { SEGMENTO_LABEL } from "@/lib/segmentos";
+import { buildMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Serviços | DT Construtora",
+export const metadata: Metadata = buildMetadata({
+  title: "Serviços",
   description: "Serviços de obras civis e infraestrutura executados pela DT Construtora.",
-};
+  path: "/servicos",
+});
 
 const SEGMENTOS: Segmento[] = ["obras-civis", "infraestrutura"];
 

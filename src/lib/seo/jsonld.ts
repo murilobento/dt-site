@@ -1,4 +1,4 @@
-import type { Obra } from "@/lib/content/types";
+import type { Configuracoes, Obra } from "@/lib/content/types";
 
 function absolute(siteUrl: string, path: string): string {
   return /^https?:\/\//.test(path) ? path : `${siteUrl}${path}`;
@@ -40,5 +40,43 @@ export function breadcrumbJsonLd(items: { name: string; url: string }[]): object
       name: item.name,
       item: item.url,
     })),
+  };
+}
+
+function postalAddress(c: Configuracoes): object {
+  const { logradouro, cidade, uf, cep } = c.endereco;
+  return {
+    "@type": "PostalAddress",
+    streetAddress: logradouro,
+    addressLocality: cidade,
+    addressRegion: uf,
+    postalCode: cep,
+    addressCountry: "BR",
+  };
+}
+
+export function organizationJsonLd(c: Configuracoes, siteUrl: string): object {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: c.razaoSocial,
+    legalName: c.razaoSocial,
+    url: siteUrl,
+    logo: `${siteUrl}/brand/logo.svg`,
+    address: postalAddress(c),
+    taxID: c.cnpj,
+    sameAs: c.redes.map((r) => r.url),
+  };
+}
+
+export function localBusinessJsonLd(c: Configuracoes, siteUrl: string): object {
+  return {
+    "@context": "https://schema.org",
+    "@type": "GeneralContractor",
+    name: c.razaoSocial,
+    url: `${siteUrl}/contato`,
+    image: `${siteUrl}/brand/logo.svg`,
+    address: postalAddress(c),
+    telephone: c.telefone,
   };
 }

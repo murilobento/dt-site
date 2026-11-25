@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { ServicoSections } from "@/components/services/ServicoSections";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -8,6 +9,9 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { getContentSource } from "@/lib/content/source";
 import { leadHref } from "@/lib/links";
 import { SEGMENTO_LABEL } from "@/lib/segmentos";
+import { breadcrumbJsonLd } from "@/lib/seo/jsonld";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { getSiteUrl } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -20,10 +24,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const servico = await getContentSource().getServico(slug);
   if (!servico) return {};
-  return {
-    title: `${servico.seo?.titulo ?? servico.titulo} | DT Construtora`,
+  return buildMetadata({
+    title: servico.seo?.titulo ?? servico.titulo,
     description: servico.seo?.descricao ?? servico.resumo,
-  };
+    path: `/servicos/${servico.slug}`,
+    image: { url: servico.imagem.url, width: servico.imagem.width, height: servico.imagem.height, alt: servico.imagem.alt },
+  });
 }
 
 export default async function ServicoPage({ params }: Props) {
@@ -32,9 +38,17 @@ export default async function ServicoPage({ params }: Props) {
   const servico = await source.getServico(slug);
   if (!servico) notFound();
   const obras = await source.getObrasPorServico(servico.slug);
+  const siteUrl = getSiteUrl();
 
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Início", url: `${siteUrl}/` },
+          { name: "Serviços", url: `${siteUrl}/servicos` },
+          { name: servico.titulo, url: `${siteUrl}/servicos/${servico.slug}` },
+        ])}
+      />
       <section className="relative isolate overflow-hidden bg-surface-inverse text-text-on-inverse">
         <Image
           src={servico.imagem.url}

@@ -15,6 +15,7 @@ import { leadHref } from "@/lib/links";
 import { SEGMENTO_LABEL } from "@/lib/segmentos";
 import { breadcrumbJsonLd, obraJsonLd } from "@/lib/seo/jsonld";
 import { getSiteUrl } from "@/lib/site";
+import { buildMetadata } from "@/lib/seo/metadata";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -32,13 +33,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const obra = await getContentSource().getObra(slug);
   if (!obra) return {};
-  return {
-    title: `${obra.seo?.titulo ?? obra.titulo} | DT Construtora`,
+  return buildMetadata({
+    title: obra.seo?.titulo ?? obra.titulo,
     description: obra.seo?.descricao ?? obra.descricao.slice(0, 155),
-    openGraph: {
-      images: [{ url: obra.capa.url, width: obra.capa.width, height: obra.capa.height, alt: obra.capa.alt }],
-    },
-  };
+    path: `/obras/${obra.slug}`,
+    image: { url: obra.capa.url, width: obra.capa.width, height: obra.capa.height, alt: obra.capa.alt },
+  });
 }
 
 export default async function ObraPage({ params }: Props) {

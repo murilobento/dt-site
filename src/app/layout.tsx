@@ -8,7 +8,10 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { SkipLink } from "@/components/layout/SkipLink";
 import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getContentSource } from "@/lib/content/source";
+import { organizationJsonLd } from "@/lib/seo/jsonld";
+import { getSiteUrl } from "@/lib/site";
 
 // Fontes variáveis auto-hospedadas (@fontsource-variable), subset latin.
 const archivo = localFont({
@@ -26,15 +29,17 @@ const inter = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: "DT Construtora",
   description: "DT Construtora e Consultoria",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const { whatsapp } = await getContentSource().getConfiguracoes();
+  const config = await getContentSource().getConfiguracoes();
   return (
     <html lang="pt-BR" className={`${archivo.variable} ${inter.variable}`}>
       <body>
+        <JsonLd data={organizationJsonLd(config, getSiteUrl())} />
         <ConsentProvider>
           <SkipLink />
           <Header />
@@ -42,7 +47,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             {children}
           </main>
           <Footer />
-          <WhatsAppButton phone={whatsapp} />
+          <WhatsAppButton phone={config.whatsapp} />
           <CookieBanner />
           <GtmLoader />
         </ConsentProvider>

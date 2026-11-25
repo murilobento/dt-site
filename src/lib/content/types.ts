@@ -46,6 +46,8 @@ export interface Obra {
   antesDepois?: { antes: Imagem; depois: Imagem };
   destaque: boolean;
   seo?: Seo;
+  /** ISO 8601, do `_updatedAt` do Sanity; ausente nas fixtures. */
+  atualizadoEm?: string;
 }
 
 export interface Servico {

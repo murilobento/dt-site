@@ -112,6 +112,7 @@ interface RawObra {
   antesDepois?: { antes?: RawImagem | null; depois?: RawImagem | null } | null;
   destaque?: boolean | null;
   seo?: Obra['seo'] | null;
+  atualizadoEm?: string | null;
 }
 
 const OBRA_PROJECAO = `{
@@ -131,7 +132,8 @@ const OBRA_PROJECAO = `{
     "depois": antesDepois.depois{alt, asset, crop, hotspot, "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height, "lqip": asset->metadata.lqip}
   }),
   destaque,
-  seo{titulo, descricao}
+  seo{titulo, descricao},
+  "atualizadoEm": _updatedAt
 }`;
 
 /** Obra sem slug ou sem capa é ignorada (dado incompleto nunca derruba a página). */
@@ -171,6 +173,7 @@ function mapObra(raw: RawObra | null | undefined): Obra | null {
     ...(antes && depois ? { antesDepois: { antes, depois } } : {}),
     destaque: !!raw.destaque,
     ...(seo && Object.keys(seo).length ? { seo } : {}),
+    ...(raw.atualizadoEm ? { atualizadoEm: raw.atualizadoEm } : {}),
   };
 }
 

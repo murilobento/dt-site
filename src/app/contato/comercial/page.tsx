@@ -6,11 +6,13 @@ import { getContentSource } from "@/lib/content/source";
 import type { Segmento } from "@/lib/content/types";
 import { SEGMENTO_LABEL } from "@/lib/segmentos";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { buildMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Solicitar proposta | DT Construtora",
+export const metadata: Metadata = buildMetadata({
+  title: "Solicitar proposta",
   description: "Conte sobre a obra e a equipe comercial da DT responde em até 2 dias úteis.",
-};
+  path: "/contato/comercial",
+});
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 

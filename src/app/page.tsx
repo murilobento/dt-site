@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { CTABand } from "@/components/home/CTABand";
 import { FeaturedProjects } from "@/components/home/FeaturedProjects";
 import { Hero } from "@/components/home/Hero";
@@ -8,6 +9,14 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Container } from "@/components/ui/Container";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { getContentSource } from "@/lib/content/source";
+import { buildMetadata } from "@/lib/seo/metadata";
+
+export const metadata: Metadata = buildMetadata({
+  title: "DT Construtora e Consultoria | Obras civis e infraestrutura",
+  description: "Construtora e consultoria em obras civis e infraestrutura, com sede em Regente Feijó (SP). Conheça serviços e obras.",
+  path: "/",
+  absoluteTitle: true,
+});
 
 export default async function Home() {
   const source = getContentSource();

@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { getContentSource } from "@/lib/content/source";
+import { localBusinessJsonLd } from "@/lib/seo/jsonld";
+import { getSiteUrl } from "@/lib/site";
+import { buildMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Contato | DT Construtora",
+export const metadata: Metadata = buildMetadata({
+  title: "Contato",
   description: "Endereço da sede e canais de contato por assunto: comercial, carreiras, fornecedores, denúncias e imprensa.",
-};
+  path: "/contato",
+});
 
 const DENUNCIAS = "Fale sem medo. O canal é externo, funciona 24 horas e aceita denúncias anônimas.";
 
@@ -33,6 +38,7 @@ export default async function ContatoPage() {
 
   return (
     <>
+      <JsonLd data={localBusinessJsonLd(c, getSiteUrl())} />
       <section className="bg-surface-inverse py-16 text-text-on-inverse md:py-24">
         <Container>
           <Eyebrow className="text-text-on-inverse-secondary">Fale conosco</Eyebrow>
