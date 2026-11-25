@@ -7,7 +7,7 @@ test("1280 px: itens e CTA visíveis sem drawer", async ({ page }) => {
     await expect(page.getByRole("navigation", { name: "Principal" }).getByRole("link", { name: l })).toBeVisible();
   }
   await expect(page.getByRole("button", { name: "Abrir menu" })).toBeHidden();
-  await expect(page.getByRole("link", { name: "Fale com a equipe" })).toHaveAttribute("href", "/contato/comercial");
+  await expect(page.getByRole("banner").getByRole("link", { name: "Fale com a equipe" })).toHaveAttribute("href", "/contato/comercial");
 });
 
 test("360 px: drawer abre por teclado, prende o foco, fecha com Esc e devolve o foco", async ({ page }) => {

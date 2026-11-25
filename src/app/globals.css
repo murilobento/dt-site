@@ -1,2 +1,21 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
+
+/* Entrada de seção: fade + 16px, uma vez, ligada à entrada na viewport. Sem suporte a
+   scroll-driven animations ou com reduced motion, a seção aparece já pronta. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 30%;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
