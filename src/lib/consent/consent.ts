@@ -65,3 +65,28 @@ export function writeConsentCookie(s: ConsentChoice): void {
     `${CONSENT_COOKIE}=${encodeURIComponent(serializeConsent(s))}` +
     `; path=/; max-age=${CONSENT_MAX_AGE_SECONDS}; SameSite=Lax${secure}`;
 }
+
+/** Remove `_ga` e `_ga_*` (path=/) no host e nos domínios pai. */
+export function clearGaCookies(): void {
+  const host = location.hostname;
+  const parts = host.split(".");
+  const domains = [undefined, host];
+  const isIp = /^[\d.]+$/.test(host) || host.includes(":");
+  if (!isIp) {
+    for (let i = 0; i < parts.length - 1; i++) domains.push(`.${parts.slice(i).join(".")}`);
+  }
+  const names = document.cookie
+    .split("; ")
+    .map((c) => c.split("=")[0])
+    .filter((n) => n === "_ga" || n.startsWith("_ga_"));
+  for (const name of names) {
+    for (const d of domains) {
+      document.cookie = `${name}=; path=/; max-age=0${d ? `; domain=${d}` : ""}`;
+    }
+  }
+}
+
+/** Alguma categoria concedida antes foi retirada na nova escolha. */
+export function revokesConsent(prev: ConsentState | null, next: ConsentChoice): boolean {
+  return !!prev && ((prev.desempenho && !next.desempenho) || (prev.marketing && !next.marketing));
+}

@@ -2,9 +2,12 @@
 
 import { createContext, useCallback, useContext, useMemo, useState, useSyncExternalStore } from "react";
 import type { ReactNode } from "react";
+import { pushConsentUpdate } from "@/lib/analytics/gtag";
 import {
+  clearGaCookies,
   parseConsent,
   readConsentCookieRaw,
+  revokesConsent,
   writeConsentCookie,
   type ConsentChoice,
   type ConsentState,
@@ -38,19 +41,16 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
   const state = useMemo(() => (raw === null ? null : parseConsent(raw)), [raw]);
 
   const save = useCallback((s: ConsentChoice) => {
-    if (parseConsent(readConsentCookieRaw())?.desempenho && !s.desempenho) {
-      // Revogação: o GTM já carregado deixa de armazenar/coletar.
-      const gtag = (...args: unknown[]) => (window.dataLayer ??= []).push(args);
-      gtag("consent", "update", {
-        analytics_storage: "denied",
-        ad_storage: "denied",
-        ad_user_data: "denied",
-        ad_personalization: "denied",
-      });
-    }
+    const revokes = revokesConsent(parseConsent(readConsentCookieRaw()), s);
     writeConsentCookie(s);
+    pushConsentUpdate(s);
     listeners.forEach((l) => l());
     setPreferencesOpen(false);
+    if (revokes) {
+      // O GTM já carregado não "descarrega": limpa os cookies do GA e recarrega.
+      clearGaCookies();
+      window.location.reload();
+    }
   }, []);
 
   const openPreferences = useCallback(() => setPreferencesOpen(true), []);

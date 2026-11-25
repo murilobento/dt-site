@@ -59,6 +59,9 @@ function PreferencesForm() {
           </span>
         </span>
       </label>
+      <p className="text-sm text-text-secondary">
+        Ao retirar um consentimento, a página será recarregada para aplicar a mudança.
+      </p>
       <Button type="submit">Salvar preferências</Button>
     </form>
   );

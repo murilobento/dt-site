@@ -20,7 +20,9 @@ test("nenhuma requisição ao GTM antes do aceite", async ({ page }) => {
   await page.getByRole("button", { name: "Recusar opcionais" }).click();
   await expect(banner(page)).toBeHidden();
   await page.reload();
-  await page.waitForTimeout(500);
+  // Prova de hidratação: o botão do rodapé só responde depois do React assumir a página.
+  await page.getByRole("contentinfo").getByRole("button", { name: "Preferências de cookies" }).click();
+  await expect(page.getByRole("dialog", { name: "Preferências de cookies" })).toBeVisible();
   await expect(banner(page)).toBeHidden();
   expect(hits).toHaveLength(0);
 });
@@ -90,4 +92,32 @@ test("páginas legais mostram versão e vigência no topo", async ({ page }) => 
   await page.goto("/cookies");
   await expect(page).toHaveTitle(/Política de Cookies/);
   await expect(page.getByText(/vigente desde 01\/01\/2025/)).toBeVisible();
+});
+
+test("revogar desempenho recarrega, remove cookies _ga e não chama o GTM", async ({ page, context }) => {
+  const hits = await trackGtm(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: "Aceitar todos" }).click();
+  await expect.poll(() => hits.length).toBeGreaterThan(0);
+  await page.evaluate(() => {
+    document.cookie = "_ga=GA1.1.1.1; path=/";
+    document.cookie = "_ga_TEST000=GS1.1.1; path=/";
+  });
+  await page.getByRole("contentinfo").getByRole("button", { name: "Preferências de cookies" }).click();
+  const dialog = page.getByRole("dialog", { name: "Preferências de cookies" });
+  await expect(dialog.getByRole("checkbox", { name: /Desempenho/ })).toBeChecked();
+  hits.length = 0;
+  await Promise.all([
+    page.waitForEvent("load"),
+    dialog.getByRole("checkbox", { name: /Desempenho/ }).uncheck().then(() =>
+      dialog.getByRole("button", { name: "Salvar preferências" }).click(),
+    ),
+  ]);
+  await expect(page.getByRole("contentinfo")).toBeVisible();
+  await page.getByRole("contentinfo").getByRole("button", { name: "Preferências de cookies" }).click();
+  await expect(page.getByRole("dialog", { name: "Preferências de cookies" })).toBeVisible();
+  const names = (await context.cookies()).map((c) => c.name);
+  expect(names).not.toContain("_ga");
+  expect(names.filter((n) => n.startsWith("_ga_"))).toEqual([]);
+  expect(hits).toHaveLength(0);
 });
