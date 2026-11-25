@@ -80,7 +80,7 @@ export function LeadForm({ segmentoInicial, origem, whatsappHref }: LeadFormProp
       </Field>
       <Field id="segmento" label="Segmento" error={errors.segmento}>
         {(a) => (
-          <select {...a} name="segmento" defaultValue={values.segmento ?? segmentoInicial ?? ""} className={CONTROL_CLASS}>
+          <select {...a} key={values.segmento ?? "inicial"} name="segmento" defaultValue={values.segmento ?? segmentoInicial ?? ""} className={CONTROL_CLASS}>
             <option value="">Selecione</option>
             {(Object.keys(SEGMENTO_LABEL) as Segmento[]).map((s) => (
               <option key={s} value={s}>
