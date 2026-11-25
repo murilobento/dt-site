@@ -19,4 +19,14 @@ describe("Button", () => {
     expect(cls).toContain("bg-surface-default");
     expect(cls).not.toContain("bg-brand-primary");
   });
+
+  it("primário tem contorno de foco explícito e visível", () => {
+    render(<Button>Enviar</Button>);
+    expect(screen.getByRole("button").className).toContain("focus-visible:outline-brand-primary");
+  });
+
+  it("primário inverse tem contorno de foco claro", () => {
+    render(<Button inverse>Enviar</Button>);
+    expect(screen.getByRole("button").className).toContain("focus-visible:outline-text-on-inverse");
+  });
 });

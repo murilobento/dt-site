@@ -1,6 +1,6 @@
 /* Design tokens da DT Construtora. Identidade monocromática derivada de brand/logo.svg.
-   Espaços: a base do Tailwind (--spacing: 4px) já gera a escala 4·8·16·24·32·48·64·96·128
-   como p-1, p-2, p-4, p-6, p-8, p-12, p-16, p-24, p-32. */
+   Espaços: mantemos a base de 4px do Tailwind (sem tokens discretos). Os componentes usam
+   apenas degraus da escala 4·8·16·24·32·48·64·96·128, isto é, p/m/gap 1, 2, 4, 6, 8, 12, 16, 24, 32. */
 @theme {
   --color-*: initial;
   --color-brand-primary: #111111;
