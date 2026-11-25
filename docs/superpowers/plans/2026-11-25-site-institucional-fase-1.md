@@ -118,7 +118,7 @@ tests/
 
 ---
 
-### Tarefa 1: Scaffold do projeto e CI
+### Task 1: Scaffold do projeto e CI
 
 **Arquivos:**
 - Criar: `package.json`, `next.config.ts`, `tsconfig.json`, `eslint.config.mjs`, `vitest.config.ts`, `playwright.config.ts`, `.github/workflows/ci.yml`, `.env.example`, `src/app/layout.tsx`, `src/app/page.tsx`
@@ -144,7 +144,7 @@ test('home responde e declara pt-BR', async ({ page }) => {
 - [ ] **Passo 5:** `npm run test:e2e` → PASSA; `npm run lint && npm run typecheck` sem erros.
 - [ ] **Passo 6:** commit `chore: scaffold Next.js, Vitest, Playwright e CI`.
 
-### Tarefa 2: Design tokens, fontes e primitivos de UI
+### Task 2: Design tokens, fontes e primitivos de UI
 
 **Arquivos:**
 - Criar: `src/styles/tokens.css`, `src/lib/design/contrast.ts`, `src/components/ui/{Button,Container,SectionHeader,Eyebrow}.tsx`
@@ -187,7 +187,7 @@ it('com href renderiza link', () => {
 - [ ] **Passo 4:** `npm test` → PASSA. Se um par reprovar, escurecer o tom no token e registrar no commit.
 - [ ] **Passo 5:** commit `feat: design tokens, fontes e primitivos`.
 
-### Tarefa 3: Modelo de conteúdo e fonte de fixtures
+### Task 3: Modelo de conteúdo e fonte de fixtures
 
 **Arquivos:**
 - Criar: `src/lib/content/types.ts`, `src/lib/content/source.ts`, `src/lib/content/fixtures-source.ts`, `src/lib/content/fixtures/{obras,servicos,clientes,numeros,configuracoes,paginaEmpresa,paginasLegais}.json`
@@ -266,7 +266,7 @@ it('todo número tem fonte e data de referência', async () =>
 - [ ] **Passo 4:** `npm test` → PASSA.
 - [ ] **Passo 5:** commit `feat: tipos de conteúdo e fonte de fixtures`.
 
-### Tarefa 4: Sanity — schemas, Studio, fonte de produção e revalidação
+### Task 4: Sanity — schemas, Studio, fonte de produção e revalidação
 
 **Arquivos:**
 - Criar: `sanity/schemas/*.ts`, `sanity/sanity.config.ts`, `src/app/studio/[[...tool]]/page.tsx`, `src/lib/content/sanity-source.ts`, `src/app/api/revalidate/route.ts`
@@ -306,7 +306,7 @@ it('imagens exigem alt', () => expect(requiredFields(obra, 'capa')).toContain('a
 - [ ] **Passo 5:** com o projeto Sanity da DT: `npx sanity dataset import` das fixtures convertidas (`scripts/seed-sanity.ts`), abrir `/studio`, editar uma obra, conferir que o webhook revalida em até 1 min.
 - [ ] **Passo 6:** commit `feat: Sanity schemas, Studio e revalidação por webhook`.
 
-### Tarefa 5: Layout global — header, drawer mobile, rodapé, skip link
+### Task 5: Layout global — header, drawer mobile, rodapé, skip link
 
 **Arquivos:**
 - Criar: `src/components/layout/{Header,MobileNav,Footer,SkipLink}.tsx`, `src/lib/nav.ts`
@@ -353,7 +353,7 @@ test('rodapé mostra razão social, CNPJ e links legais', async ({ page }) => { 
 - [ ] **Passo 4:** testes → PASSAM.
 - [ ] **Passo 5:** commit `feat: header, drawer mobile, rodapé e skip link`.
 
-### Tarefa 6: Consentimento LGPD, analytics e páginas legais
+### Task 6: Consentimento LGPD, analytics e páginas legais
 
 **Arquivos:**
 - Criar: `src/lib/consent/consent.ts`, `src/components/consent/{ConsentProvider,CookieBanner,GtmLoader}.tsx`, `src/lib/analytics/track.ts`, `src/app/privacidade/page.tsx`, `src/app/cookies/page.tsx`
@@ -408,7 +408,7 @@ test('rodapé reabre preferências', …);
 - [ ] **Passo 4:** testes → PASSAM.
 - [ ] **Passo 5:** commit `feat: consentimento LGPD, GTM condicionado e páginas legais`.
 
-### Tarefa 7: Botão flutuante de WhatsApp
+### Task 7: Botão flutuante de WhatsApp
 
 **Arquivos:**
 - Criar: `src/lib/whatsapp.ts`, `src/components/layout/WhatsAppButton.tsx`
@@ -436,7 +436,7 @@ it('serviço usa o nome do serviço', …'Olá! Vi o serviço Restauração no s
 - [ ] **Passo 2:** FALHA. **Passo 3:** implementar; botão 56 px, canto inferior direito, nome acessível "Falar no WhatsApp (abre em nova aba)", `track('whatsapp_click', { pagina: pathname })`, sobe acima do banner de cookies quando ele está aberto (sem sobrepor). **Passo 4:** PASSA (inclui e2e: botão visível em 360 px sem cobrir o botão do banner).
 - [ ] **Passo 5:** commit `feat: botão de WhatsApp com mensagem por página`.
 
-### Tarefa 8: Home
+### Task 8: Home
 
 **Arquivos:**
 - Criar: `src/components/home/{Hero,StatCounter,SegmentCards,FeaturedProjects,LogoWall,CTABand}.tsx`, `src/components/projects/ProjectCard.tsx`, `src/lib/format.ts`
@@ -488,7 +488,7 @@ test('clique no CTA do hero gera cta_click (com consentimento)', …);
 - [ ] **Passo 4:** PASSAM.
 - [ ] **Passo 5:** commit `feat: home`.
 
-### Tarefa 9: Serviços (índice e página de serviço)
+### Task 9: Serviços (índice e página de serviço)
 
 **Arquivos:**
 - Criar: `src/app/servicos/page.tsx`, `src/app/servicos/[slug]/page.tsx`, `src/lib/links.ts`
@@ -515,7 +515,7 @@ test('índice agrupa por segmento', …);
 - [ ] **Passo 2:** FALHA. **Passo 3:** `generateStaticParams` a partir de `getServicos`; `notFound()` para slug ausente; etapas como lista numerada; "Obras relacionadas" omitida se vazia. **Passo 4:** PASSA.
 - [ ] **Passo 5:** commit `feat: páginas de serviço`.
 
-### Tarefa 10: Obras — listagem com filtros e busca
+### Task 10: Obras — listagem com filtros e busca
 
 **Arquivos:**
 - Criar: `src/lib/text/normalize.ts`, `src/lib/obras/filter.ts`, `src/components/projects/FilterBar.tsx`, `src/app/obras/page.tsx`, `src/app/obras/ObrasExplorer.tsx` (client)
@@ -572,7 +572,7 @@ test('sem resultado mostra a mensagem do PRD', async ({ page }) => {
 - [ ] **Passo 4:** PASSAM.
 - [ ] **Passo 5:** commit `feat: listagem de obras com filtros na URL`.
 
-### Tarefa 11: Ficha de obra
+### Task 11: Ficha de obra
 
 **Arquivos:**
 - Criar: `src/app/obras/[slug]/page.tsx`, `src/components/projects/{ProjectSpecs,Gallery,Lightbox,BeforeAfter}.tsx`, `src/components/seo/JsonLd.tsx`, `src/lib/seo/jsonld.ts`
@@ -623,7 +623,7 @@ test('obra inexistente → 404', …);
 - [ ] **Passo 4:** PASSAM.
 - [ ] **Passo 5:** commit `feat: ficha de obra com galeria acessível e JSON-LD`.
 
-### Tarefa 12: Empresa
+### Task 12: Empresa
 
 **Arquivos:**
 - Criar: `src/app/empresa/page.tsx`, `src/components/company/{Timeline,ValuesGrid}.tsx`
@@ -652,7 +652,7 @@ test('mobile: timeline vira lista vertical com todos os marcos visíveis', …);
 - [ ] **Passo 2:** FALHA. **Passo 3:** desktop: Timeline como tablist horizontal (padrão ARIA Tabs: setas, Home, End, roving tabindex) com painel do marco; mobile (< 768 px): `<ol>` vertical com todos os marcos. Princípios em lista com ícone de check (`aria-hidden`). **Passo 4:** PASSA.
 - [ ] **Passo 5:** commit `feat: página Empresa com timeline acessível`.
 
-### Tarefa 13: Contato e formulário comercial
+### Task 13: Contato e formulário comercial
 
 **Arquivos:**
 - Criar: `src/lib/leads/{schema,routing,send}.ts`, `src/app/contato/page.tsx`, `src/app/contato/comercial/{page,actions}.ts(x)`, `src/components/forms/{LeadForm,Field}.tsx`
@@ -726,7 +726,7 @@ test('/contato tem sede e cartões por intenção', async ({ page }) => {
 - [ ] **Passo 4:** PASSAM.
 - [ ] **Passo 5:** commit `feat: contato e formulário comercial com roteamento por segmento`.
 
-### Tarefa 14: Página 404 e estados de erro
+### Task 14: Página 404 e estados de erro
 
 **Arquivos:**
 - Criar: `src/app/not-found.tsx`, `src/app/error.tsx`
@@ -735,7 +735,7 @@ test('/contato tem sede e cartões por intenção', async ({ page }) => {
 - [ ] **Passo 1:** teste: `/qualquer-coisa` → 404 com H1 "Página não encontrada", links para Home e Obras, `<meta name="robots" content="noindex">`.
 - [ ] **Passo 2:** FALHA. **Passo 3:** implementar. **Passo 4:** PASSA. **Passo 5:** commit `feat: páginas de erro`.
 
-### Tarefa 15: SEO técnico e redirecionamentos
+### Task 15: SEO técnico e redirecionamentos
 
 **Arquivos:**
 - Criar: `src/lib/seo/metadata.ts`, `src/app/sitemap.ts`, `src/app/robots.ts`, `src/lib/redirects.ts`
@@ -771,7 +771,7 @@ test('headers de segurança', async ({ request }) => {
 - [ ] **Passo 4:** PASSAM.
 - [ ] **Passo 5:** commit `feat: SEO técnico, headers de segurança e redirecionamentos`.
 
-### Tarefa 16: Gate de qualidade, observabilidade e deploy
+### Task 16: Gate de qualidade, observabilidade e deploy
 
 **Arquivos:**
 - Criar: `lighthouserc.json`, `tests/e2e/a11y.spec.ts`, `sentry.*.config.ts`, `docs/operacao.md`
