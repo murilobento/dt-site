@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { CookieBanner } from "@/components/consent/CookieBanner";
+import { ConsentProvider } from "@/components/consent/ConsentProvider";
+import { GtmLoader } from "@/components/consent/GtmLoader";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { SkipLink } from "@/components/layout/SkipLink";
@@ -29,12 +32,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="pt-BR" className={`${archivo.variable} ${inter.variable}`}>
       <body>
-        <SkipLink />
-        <Header />
-        <main id="conteudo" tabIndex={-1} className="outline-none">
-          {children}
-        </main>
-        <Footer />
+        <ConsentProvider>
+          <SkipLink />
+          <Header />
+          <main id="conteudo" tabIndex={-1} className="outline-none">
+            {children}
+          </main>
+          <Footer />
+          <CookieBanner />
+          <GtmLoader />
+        </ConsentProvider>
       </body>
     </html>
   );

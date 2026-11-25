@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PreferencesButton } from "@/components/consent/PreferencesButton";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
 import { getContentSource } from "@/lib/content/source";
@@ -62,6 +63,7 @@ export async function Footer() {
         <Container className="flex flex-col gap-2 py-6 text-sm text-text-on-inverse-secondary sm:flex-row sm:gap-6">
           <Link href="/privacidade" className={LINK}>Privacidade</Link>
           <Link href="/cookies" className={LINK}>Cookies</Link>
+          <PreferencesButton className={`${LINK} text-left`} />
           <a href={c.canalDenunciasUrl} target="_blank" rel="noopener noreferrer" className={LINK}>
             Canal de denúncias<span className="sr-only"> (abre em nova aba)</span>
           </a>
