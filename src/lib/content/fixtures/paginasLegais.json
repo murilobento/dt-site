@@ -1,0 +1,102 @@
+[
+  {
+    "slug": "privacidade",
+    "titulo": "Política de Privacidade [exemplo]",
+    "versao": "0.0-exemplo",
+    "vigencia": "2025-01-01",
+    "corpo": [
+      {
+        "_type": "block",
+        "_key": "b1",
+        "style": "h2",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "b1s",
+            "text": "Política de Privacidade [exemplo]",
+            "marks": []
+          }
+        ]
+      },
+      {
+        "_type": "block",
+        "_key": "b2",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "b2s",
+            "text": "Descrevemos aqui como tratamos dados pessoais conforme a LGPD. [exemplo]",
+            "marks": []
+          }
+        ]
+      },
+      {
+        "_type": "block",
+        "_key": "b3",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "b3s",
+            "text": "Este texto é apenas um exemplo e não tem valor jurídico. [exemplo]",
+            "marks": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "cookies",
+    "titulo": "Política de Cookies [exemplo]",
+    "versao": "0.0-exemplo",
+    "vigencia": "2025-01-01",
+    "corpo": [
+      {
+        "_type": "block",
+        "_key": "b1",
+        "style": "h2",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "b1s",
+            "text": "Política de Cookies [exemplo]",
+            "marks": []
+          }
+        ]
+      },
+      {
+        "_type": "block",
+        "_key": "b2",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "b2s",
+            "text": "Descrevemos aqui as categorias de cookies: essenciais, desempenho e marketing. [exemplo]",
+            "marks": []
+          }
+        ]
+      },
+      {
+        "_type": "block",
+        "_key": "b3",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "b3s",
+            "text": "Este texto é apenas um exemplo e não tem valor jurídico. [exemplo]",
+            "marks": []
+          }
+        ]
+      }
+    ]
+  }
+]

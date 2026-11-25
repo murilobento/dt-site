@@ -1,0 +1,31 @@
+{
+  "razaoSocial": "DT CONSTRUTORA E CONSULTORIA LTDA",
+  "cnpj": "53.675.601/0001-60",
+  "endereco": {
+    "logradouro": "Avenida José Bonifácio, 105, Sala 09, Centro",
+    "cidade": "Regente Feijó",
+    "uf": "SP",
+    "cep": "19570-005"
+  },
+  "telefone": "[exemplo] (00) 0000-0000",
+  "horario": "[exemplo] Segunda a sexta, 8h às 17h",
+  "whatsapp": "5514981734581",
+  "emailsLead": {
+    "obras-civis": "obras-civis@example.com",
+    "infraestrutura": "infraestrutura@example.com"
+  },
+  "canalDenunciasUrl": "https://example.com/canal-de-denuncias",
+  "emailCarreiras": "carreiras@example.com",
+  "emailFornecedores": "fornecedores@example.com",
+  "emailImprensa": "imprensa@example.com",
+  "redes": [
+    {
+      "rede": "linkedin",
+      "url": "https://www.linkedin.com/company/example"
+    },
+    {
+      "rede": "instagram",
+      "url": "https://www.instagram.com/example"
+    }
+  ]
+}
