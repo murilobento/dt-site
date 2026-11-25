@@ -14,10 +14,10 @@
 
 | Item | Necessário até |
 | --- | --- |
-| Repositório GitHub (ou acesso para criar `dt-construtora/site`) | Tarefa 1 |
-| Logo da DT em SVG (versões clara e escura) + cores da marca em hex | Tarefa 2 |
-| Projeto Sanity criado na conta da DT (plano Free) + token de leitura e de escrita | Tarefa 4 |
-| Razão social, CNPJ, endereço da sede, telefone, horário, redes sociais, número de WhatsApp comercial | Tarefa 5 |
+| Repositório `murilobento/dt-site` liberado para push nesta sessão | Tarefa 1 (push) |
+| ~~Logo da DT em SVG~~ recebido (monocromático, sem cor de marca) | Tarefa 2 |
+| Projeto Sanity criado ✓ — falta o Project ID e um token de escrita (Editor) | Tarefa 4 |
+| ~~Razão social, CNPJ, endereço, WhatsApp~~ recebidos; faltam telefone fixo (se houver), horário e redes sociais | Tarefa 5 |
 | E-mails de destino por segmento (Obras civis, Infraestrutura) | Tarefa 13 |
 | Conta Resend com domínio da DT verificado (DNS) | Tarefa 13 |
 | Chaves Cloudflare Turnstile | Tarefa 13 |
@@ -38,8 +38,10 @@ Ficam para as fases seguintes (planos próprios, ver fim do documento): RF-03 co
 - Idioma `pt-BR` em `<html lang>`, datas `dd/mm/aaaa`, números com separador `.` de milhar.
 - Menu principal: no máximo 6 itens, nenhum item "Mais"; cabe inline em 1280 px; abaixo de 1024 px vira drawer acessível por teclado.
 - CTA do header: "Fale com a equipe" → `/contato/comercial`.
-- Tokens de cor (trocar `brand.*` pelos hex da DT mantendo os papéis): `brand-primary #C3171B`, `brand-primary-bright #ED1C24` (nunca em texto pequeno), `brand-secondary #0088CB`, `surface-inverse #14213D`, `surface-default #FFFFFF`, `surface-muted #F4F4F2`, `text-primary #1A1A1A`, `text-secondary #5F6360`, `border #D9D9D6`, `success #1E7F4F`, `warning #B26B00`, `error #B3261E`.
-- Fontes: display Syne 600–700 só em H1–H2; texto Raleway 400/500/600. Escala (base 16, razão 1,25): 12 · 14 · 16 · 20 · 25 · 31 · 39 · 49 · 61 px. Altura de linha 1,5 corpo / 1,1 títulos.
+- Identidade: **monocromática, derivada do logo da DT** (`brand/logo.svg`, todo #000000). A paleta e as fontes da seção Design system do PRD eram da Neovia e **não se aplicam**. A cor vem das fotos de obra.
+- Tokens de cor: `brand-primary #111111` (CTAs, links ativos), `brand-primary-hover #333333`, `surface-inverse #111111` (hero, rodapé, faixas), `surface-default #FFFFFF`, `surface-muted #F4F4F4`, `text-primary #111111`, `text-secondary #5C5C5C`, `text-on-inverse #FFFFFF`, `text-on-inverse-secondary #BDBDBD`, `border #D9D9D9`, `success #1E7F4F`, `warning #B26B00`, `error #B3261E`. Sobre fundo escuro, o CTA primário inverte (fundo branco, texto #111111).
+- Logo: versão preta em fundo claro; versão branca (mesmo SVG com `fill="currentColor"`) em fundo escuro. Header usa só símbolo + "DT" (sem a linha "CONSTRUTORA E CONSULTORIA", ilegível abaixo de 160 px de largura); rodapé usa o logo completo.
+- Fontes: display Archivo 700–800 (geométrica e pesada como o "DT" do logo) em H1–H2; rótulos curtos (eyebrows) em Archivo 600 caixa-alta com `letter-spacing: 0.2em`, ecoando a linha "CONSTRUTORA E CONSULTORIA"; texto Inter 400/500/600. Escala (base 16, razão 1,25): 12 · 14 · 16 · 20 · 25 · 31 · 39 · 49 · 61 px. Altura de linha 1,5 corpo / 1,1 títulos.
 - Grid 12 colunas, largura máxima 1280 px, gutter 24 px (16 px no mobile). Espaços 4 · 8 · 16 · 24 · 32 · 48 · 64 · 96 · 128. Raio 4 px botões/inputs, 8 px cards. Sombra só em menu e WhatsApp.
 - Movimento: entrada fade + 16 px, 300 ms, ease-out, uma vez por seção; contadores ≤ 1,2 s; com `prefers-reduced-motion` nenhuma animação de entrada e contadores mostram o valor final.
 - Caixa-alta só em rótulos de até 3 palavras; nunca em parágrafos.
@@ -146,7 +148,7 @@ test('home responde e declara pt-BR', async ({ page }) => {
 
 **Arquivos:**
 - Criar: `src/styles/tokens.css`, `src/lib/design/contrast.ts`, `src/components/ui/{Button,Container,SectionHeader,Eyebrow}.tsx`
-- Modificar: `src/app/layout.tsx` (Syne + Raleway via `next/font/google`, `display: 'swap'`), `src/app/globals.css` (importa tokens)
+- Modificar: `src/app/layout.tsx` (Archivo + Inter via `next/font/google`, `display: 'swap'`), `src/app/globals.css` (importa tokens)
 - Teste: `tests/unit/design/contrast.test.ts`, `tests/unit/ui/Button.test.tsx`
 
 **Interfaces:**
@@ -164,6 +166,7 @@ it.each([
   ['text-secondary', 'surface-muted'],
   ['surface-default', 'surface-inverse'],
   ['error', 'surface-default'],
+  ['text-on-inverse-secondary', 'surface-inverse'],
 ])('%s sobre %s ≥ 4.5:1', (fg, bg) => {
   expect(contrastRatio(t[fg], t[bg])).toBeGreaterThanOrEqual(4.5);
 });
@@ -180,8 +183,8 @@ it('com href renderiza link', () => {
 ```
 
 - [ ] **Passo 2:** `npm test` → FALHA.
-- [ ] **Passo 3:** `tokens.css` com `@theme` contendo cores, `--font-display`, `--font-sans`, escala tipográfica, espaços e raios dos Global Constraints, já com os hex da DT nos `brand-*`. `contrastRatio` pela fórmula de luminância relativa WCAG 2.x. Foco visível global: `outline: 2px solid var(--color-brand-secondary); outline-offset: 2px`.
-- [ ] **Passo 4:** `npm test` → PASSA. Se um par da DT reprovar, escurecer o tom no token e registrar no commit.
+- [ ] **Passo 3:** `tokens.css` com `@theme` contendo cores, `--font-display`, `--font-sans`, escala tipográfica, espaços e raios dos Global Constraints, com a paleta monocromática dos Global Constraints. `contrastRatio` pela fórmula de luminância relativa WCAG 2.x. Foco visível global: `outline: 2px solid currentColor; outline-offset: 3px` (preto em fundo claro, branco em fundo escuro). Copiar `brand/logo.svg` para `public/brand/` e criar `src/components/ui/Logo.tsx` com `variant="completo"|"compacto"` e `fill="currentColor"`.
+- [ ] **Passo 4:** `npm test` → PASSA. Se um par reprovar, escurecer o tom no token e registrar no commit.
 - [ ] **Passo 5:** commit `feat: design tokens, fontes e primitivos`.
 
 ### Tarefa 3: Modelo de conteúdo e fonte de fixtures
@@ -259,7 +262,7 @@ it('todo número tem fonte e data de referência', async () =>
 ```
 
 - [ ] **Passo 2:** `npm test` → FALHA.
-- [ ] **Passo 3:** fixtures com 8 obras (mín. 2 por segmento, 4 com `destaque`, a obra `pinhalzinho-sc` completa com galeria de 4 fotos e antes/depois, 1 obra sem `termino`/`antesDepois`/`coordenadas`/`galeria` para o Review Focus 1, nomes de cidade com acento), 4 serviços (`obras-civis`; `conservacao`, `restauracao`, `construcao-rodoviaria`), 9 clientes (3 por tipo), 5 números, imagens em `public/fixtures/` (placeholders com proporção real). Texto marcado "[exemplo]" para não ir ao ar por engano.
+- [ ] **Passo 3:** fixtures com 8 obras (mín. 2 por segmento, 4 com `destaque`, a obra `pinhalzinho-sc` completa com galeria de 4 fotos e antes/depois, 1 obra sem `termino`/`antesDepois`/`coordenadas`/`galeria` para o Review Focus 1, nomes de cidade com acento), 4 serviços (`obras-civis`; `conservacao`, `restauracao`, `construcao-rodoviaria`), 9 clientes (3 por tipo), 5 números, imagens em `public/fixtures/` (placeholders com proporção real). Texto marcado "[exemplo]" para não ir ao ar por engano, **exceto `configuracoes.json`, que usa os dados reais**: razão social `DT CONSTRUTORA E CONSULTORIA LTDA`, CNPJ `53.675.601/0001-60`, endereço `Avenida José Bonifácio, 105, Sala 09, Centro, Regente Feijó - SP, CEP 19570-005`, WhatsApp `5514981734581`.
 - [ ] **Passo 4:** `npm test` → PASSA.
 - [ ] **Passo 5:** commit `feat: tipos de conteúdo e fonte de fixtures`.
 
@@ -481,7 +484,7 @@ test('clique no CTA do hero gera cta_click (com consentimento)', …);
 ```
 
 - [ ] **Passo 2:** FALHAM.
-- [ ] **Passo 3:** Hero em `surface-inverse` com `next/image` `priority`, slogan (H1 em Syne), subtítulo, CTAs "Fale com a equipe" (`primary`) e "Ver obras" (`secondary`). StatCounter: anima com `IntersectionObserver` + `requestAnimationFrame` em 1,2 s, uma vez; valor visual `aria-hidden`, texto final em `.sr-only`. SegmentCards: 2 cards (Obras Civis, Infraestrutura) listando serviços do segmento, cada serviço linka `/servicos/[slug]`. LogoWall: grade em escala de cinza, cor no hover e no foco. CTABand navy com "Solicitar proposta" → `/contato/comercial`. Entrada de seção com classe `reveal` respeitando reduced motion (CSS `@media`).
+- [ ] **Passo 3:** Hero em `surface-inverse` com `next/image` `priority`, slogan (H1 em Archivo), subtítulo, CTAs "Fale com a equipe" (`primary`) e "Ver obras" (`secondary`). StatCounter: anima com `IntersectionObserver` + `requestAnimationFrame` em 1,2 s, uma vez; valor visual `aria-hidden`, texto final em `.sr-only`. SegmentCards: 2 cards (Obras Civis, Infraestrutura) listando serviços do segmento, cada serviço linka `/servicos/[slug]`. LogoWall: grade em escala de cinza, cor no hover e no foco. CTABand navy com "Solicitar proposta" → `/contato/comercial`. Entrada de seção com classe `reveal` respeitando reduced motion (CSS `@media`).
 - [ ] **Passo 4:** PASSAM.
 - [ ] **Passo 5:** commit `feat: home`.
 
