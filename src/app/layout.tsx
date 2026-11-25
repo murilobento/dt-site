@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
-import { Archivo, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const archivo = Archivo({
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
+// Fontes variáveis auto-hospedadas (@fontsource-variable), subset latin.
+const archivo = localFont({
+  src: "../../node_modules/@fontsource-variable/archivo/files/archivo-latin-wght-normal.woff2",
+  weight: "600 800",
   display: "swap",
   variable: "--font-archivo",
 });
 
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const inter = localFont({
+  src: "../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2",
+  weight: "400 600",
   display: "swap",
   variable: "--font-inter",
 });
