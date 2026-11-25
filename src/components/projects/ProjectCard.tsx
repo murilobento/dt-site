@@ -1,12 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatPeriodo } from "@/lib/format";
-import type { Obra, Segmento } from "@/lib/content/types";
-
-const SEGMENTO_LABEL: Record<Segmento, string> = {
-  "obras-civis": "Obras civis",
-  infraestrutura: "Infraestrutura",
-};
+import { SEGMENTO_LABEL } from "@/lib/segmentos";
+import type { Obra } from "@/lib/content/types";
 
 type ProjectCardProps = {
   obra: Obra;

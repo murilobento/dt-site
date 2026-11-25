@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Reveal } from "@/components/ui/Reveal";
 import { Container } from "@/components/ui/Container";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import type { Cliente, TipoCliente } from "@/lib/content/types";
@@ -15,7 +16,7 @@ function Logo({ cliente }: { cliente: Cliente }) {
   const img = (
     <Image
       src={cliente.logo.url}
-      alt={cliente.logo.alt || cliente.nome}
+      alt={cliente.nome}
       width={cliente.logo.width}
       height={cliente.logo.height}
       sizes="160px"
@@ -39,7 +40,7 @@ export function LogoWall({ clientes }: { clientes: Cliente[] }) {
   if (grupos.length === 0) return null;
 
   return (
-    <section className="reveal bg-surface-muted py-16 md:py-24">
+    <Reveal className="bg-surface-muted py-16 md:py-24">
       <Container>
         <SectionHeader eyebrow="Clientes" title="Quem confia na DT" />
         <div className="mt-12 space-y-12">
@@ -57,6 +58,6 @@ export function LogoWall({ clientes }: { clientes: Cliente[] }) {
           ))}
         </div>
       </Container>
-    </section>
+    </Reveal>
   );
 }

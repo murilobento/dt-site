@@ -1,30 +1,30 @@
 import Link from "next/link";
+import { Reveal } from "@/components/ui/Reveal";
 import { Container } from "@/components/ui/Container";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { SEGMENTO_LABEL } from "@/lib/segmentos";
 import type { Segmento, Servico } from "@/lib/content/types";
 
-const SEGMENTOS: { id: Segmento; titulo: string; descricao: string }[] = [
+const SEGMENTOS: { id: Segmento; descricao: string }[] = [
   {
     id: "obras-civis",
-    titulo: "Obras civis",
     descricao: "Edificações, reformas e estruturas executadas com controle de prazo e qualidade.",
   },
   {
     id: "infraestrutura",
-    titulo: "Infraestrutura",
     descricao: "Conservação, restauração e construção de rodovias, com equipe e equipamentos próprios.",
   },
 ];
 
 export function SegmentCards({ servicos }: { servicos: Servico[] }) {
   return (
-    <section className="reveal bg-surface-muted py-16 md:py-24">
+    <Reveal className="bg-surface-muted py-16 md:py-24">
       <Container>
         <SectionHeader eyebrow="O que fazemos" title="Dois segmentos, uma só equipe" />
         <div className="mt-12 grid gap-6 md:grid-cols-2">
           {SEGMENTOS.map((seg) => (
             <article key={seg.id} className="rounded-card border border-border bg-surface-default p-8">
-              <h3 className="font-display text-xl font-extrabold text-text-primary">{seg.titulo}</h3>
+              <h3 className="font-display text-xl font-extrabold text-text-primary">{SEGMENTO_LABEL[seg.id]}</h3>
               <p className="mt-4 text-base text-text-secondary">{seg.descricao}</p>
               <ul className="mt-6 divide-y divide-border border-t border-border">
                 {servicos
@@ -45,6 +45,6 @@ export function SegmentCards({ servicos }: { servicos: Servico[] }) {
           ))}
         </div>
       </Container>
-    </section>
+    </Reveal>
   );
 }

@@ -1,5 +1,6 @@
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { Button } from "@/components/ui/Button";
+import { Reveal } from "@/components/ui/Reveal";
 import { Container } from "@/components/ui/Container";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import type { Obra } from "@/lib/content/types";
@@ -7,7 +8,7 @@ import type { Obra } from "@/lib/content/types";
 export function FeaturedProjects({ obras }: { obras: Obra[] }) {
   if (obras.length === 0) return null;
   return (
-    <section className="reveal py-16 md:py-24">
+    <Reveal className="py-16 md:py-24">
       <Container>
         <SectionHeader eyebrow="Obras em destaque" title="Veja o que já executamos" />
         <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -23,6 +24,6 @@ export function FeaturedProjects({ obras }: { obras: Obra[] }) {
           </Button>
         </div>
       </Container>
-    </section>
+    </Reveal>
   );
 }
