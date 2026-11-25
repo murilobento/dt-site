@@ -46,6 +46,10 @@ const COMMON_HEADERS = [
 ];
 
 const nextConfig: NextConfig = {
+  images: {
+    formats: ["image/avif", "image/webp"],
+    remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io", pathname: "/images/**" }],
+  },
   async redirects() {
     return LEGACY_REDIRECTS;
   },
