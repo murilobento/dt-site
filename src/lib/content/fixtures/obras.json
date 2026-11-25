@@ -28,7 +28,7 @@
     "destaque": true,
     "cliente": {
       "nome": "Nome do Cliente A",
-      "tipo": "privado"
+      "tipo": "concessionaria"
     },
     "coordenadas": {
       "lat": -23.5505,
@@ -88,7 +88,7 @@
     "termino": "2025-02",
     "cliente": {
       "nome": "Nome do Cliente B",
-      "tipo": "publico"
+      "tipo": "concessionaria"
     },
     "coordenadas": {
       "lat": -26.8461,
@@ -143,7 +143,7 @@
     "destaque": true,
     "cliente": {
       "nome": "Nome do Cliente C",
-      "tipo": "privado"
+      "tipo": "concessionaria"
     },
     "coordenadas": {
       "lat": -22.2194,
@@ -184,7 +184,7 @@
     "termino": "2024-10",
     "cliente": {
       "nome": "Nome do Cliente D",
-      "tipo": "concessionaria"
+      "tipo": "publico"
     },
     "coordenadas": {
       "lat": -22.1256,
@@ -253,7 +253,7 @@
     "termino": "2023-07",
     "cliente": {
       "nome": "Nome do Cliente F",
-      "tipo": "concessionaria"
+      "tipo": "publico"
     },
     "coordenadas": {
       "lat": -27.1006,
@@ -283,7 +283,7 @@
     "termino": "2022-12",
     "cliente": {
       "nome": "Nome do Cliente G",
-      "tipo": "publico"
+      "tipo": "privado"
     },
     "coordenadas": {
       "lat": -22.2171,

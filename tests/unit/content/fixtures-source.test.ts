@@ -51,6 +51,12 @@ describe('fixturesSource', () => {
     expect(c.map((x) => x.ordem)).toEqual([...c.map((x) => x.ordem)].sort((a, b) => a - b));
     expect(c.some((x) => x.nome === 'Nome do Cliente A')).toBe(true);
   });
+  it('todo cliente de obra existe em clientes com mesmo nome e tipo', async () => {
+    const clientes = await src.getClientes();
+    for (const o of await src.getObras())
+      if (o.cliente)
+        expect(clientes.some((c) => c.nome === o.cliente!.nome && c.tipo === o.cliente!.tipo)).toBe(true);
+  });
   it('serviços e configurações', async () => {
     expect((await src.getServicos()).map((s) => s.slug).sort()).toEqual(
       ['conservacao', 'construcao-rodoviaria', 'obras-civis', 'restauracao'],
