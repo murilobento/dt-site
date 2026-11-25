@@ -76,10 +76,4 @@ describe('getContentSource', () => {
     expect(getContentSource()).toBe(src);
     vi.unstubAllEnvs();
   });
-  it('sem fixtures, falha claramente enquanto o Sanity não existe', async () => {
-    vi.stubEnv('CONTENT_SOURCE', 'sanity');
-    const { getContentSource } = await import('@/lib/content/source');
-    expect(() => getContentSource()).toThrow('Sanity source not configured yet');
-    vi.unstubAllEnvs();
-  });
 });

@@ -1,5 +1,6 @@
 import 'server-only';
 import { fixturesSource } from './fixtures-source';
+import { sanitySource } from './sanity-source';
 import type {
   Cliente, Configuracoes, Numero, Obra, PaginaEmpresa, PaginaLegal, Servico,
 } from './types';
@@ -24,6 +25,5 @@ export interface ContentSource {
 /** CONTENT_SOURCE = 'fixtures' | 'sanity' (padrão: sanity). */
 export function getContentSource(): ContentSource {
   if (process.env.CONTENT_SOURCE === 'fixtures') return fixturesSource;
-  // Task 4 substitui por sanitySource.
-  throw new Error('Sanity source not configured yet');
+  return sanitySource;
 }
