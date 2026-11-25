@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Footer } from "@/components/layout/Footer";
+import { Header } from "@/components/layout/Header";
+import { SkipLink } from "@/components/layout/SkipLink";
 
 // Fontes variáveis auto-hospedadas (@fontsource-variable), subset latin.
 const archivo = localFont({
@@ -25,7 +28,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="pt-BR" className={`${archivo.variable} ${inter.variable}`}>
-      <body>{children}</body>
+      <body>
+        <SkipLink />
+        <Header />
+        <main id="conteudo" tabIndex={-1} className="outline-none">
+          {children}
+        </main>
+        <Footer />
+      </body>
     </html>
   );
 }
