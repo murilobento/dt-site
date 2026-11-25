@@ -47,3 +47,10 @@ test("clique registra whatsapp_click quando há consentimento, sem abrir wa.me",
   const events = await page.evaluate(() => (window.dataLayer as { event?: string; pagina?: string }[]).filter((d) => d.event === "whatsapp_click"));
   expect(events).toEqual([{ event: "whatsapp_click", pagina: "/" }]);
 });
+
+test("borda branca mantém o contorno visível sobre o rodapé escuro", async ({ page }) => {
+  await page.goto("/");
+  const a = link(page);
+  await expect(a).toHaveCSS("border-top-color", "rgb(255, 255, 255)");
+  await expect(a).toHaveCSS("border-top-width", "2px");
+});

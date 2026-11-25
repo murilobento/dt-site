@@ -23,10 +23,11 @@ export function WhatsAppButton({ phone }: { phone: string }) {
       rel="noopener noreferrer"
       aria-label="Falar no WhatsApp (abre em nova aba)"
       onClick={(e) => {
+        // Mutação intencional: o título só existe no cliente; vale para este clique (o link abre em nova aba).
         e.currentTarget.href = buildWhatsAppUrl(phone, pathname, currentPageTitle());
         track("whatsapp_click", { pagina: pathname });
       }}
-      className="fixed right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-brand-primary text-text-on-inverse shadow-overlay hover:bg-brand-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary lg:right-6"
+      className="fixed right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full border-2 border-white bg-brand-primary text-text-on-inverse shadow-overlay hover:bg-brand-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary focus-visible:ring-2 focus-visible:ring-white lg:right-6"
       style={{ bottom: "calc(var(--cookie-banner-h, 0px) + 16px)" }}
     >
       <svg aria-hidden="true" viewBox="0 0 24 24" className="h-7 w-7" fill="currentColor">
