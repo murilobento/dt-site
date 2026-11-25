@@ -4,6 +4,7 @@ import { obra } from '../../../sanity/schemas/obra';
 import { numero } from '../../../sanity/schemas/numero';
 import { servico } from '../../../sanity/schemas/servico';
 import { cliente } from '../../../sanity/schemas/cliente';
+import { paginaLegal } from '../../../sanity/schemas/paginaLegal';
 import { paginaEmpresa } from '../../../sanity/schemas/paginaEmpresa';
 import { requiredFields } from './requiredFields';
 
@@ -34,6 +35,11 @@ describe('schemas Sanity', () => {
     };
     expect(requiredFields(galeria.of[0])).toContain('alt');
     expect(requiredFields(obra, 'antesDepois')).toEqual(expect.arrayContaining(['antes', 'depois']));
+  });
+
+  it('paginaLegal não tem campo slug obrigatório (vem do _id do singleton)', () => {
+    expect(paginaLegal.fields.map((f) => f.name)).not.toContain('slug');
+    expect(requiredFields(paginaLegal)).toEqual(expect.arrayContaining(['titulo', 'versao', 'vigencia', 'corpo']));
   });
 
   it('registra todos os tipos de documento esperados', () => {

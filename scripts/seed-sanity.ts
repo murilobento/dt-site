@@ -132,7 +132,9 @@ async function build() {
     ),
   });
 
-  for (const p of legais) docs.push({ _id: `paginaLegal-${p.slug}`, _type: 'paginaLegal', ...p });
+  for (const { slug: paginaSlug, ...p } of legais) {
+    docs.push({ _id: `paginaLegal-${paginaSlug}`, _type: 'paginaLegal', ...p });
+  }
 
   return docs;
 }

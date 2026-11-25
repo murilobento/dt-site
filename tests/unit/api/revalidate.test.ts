@@ -10,7 +10,7 @@ import { POST } from '@/app/api/revalidate/route';
 const SECRET = 'segredo-de-teste';
 
 async function req(body: unknown, secret: string | null = SECRET) {
-  const raw = JSON.stringify(body);
+  const raw = typeof body === 'string' ? body : JSON.stringify(body);
   const headers: Record<string, string> = { 'content-type': 'application/json' };
   if (secret) headers[SIGNATURE_HEADER_NAME] = await encodeSignatureHeader(raw, Date.now(), secret);
   return new NextRequest('http://localhost/api/revalidate', { method: 'POST', body: raw, headers });
@@ -20,9 +20,10 @@ async function call(r: NextRequest) {
   // parseBody espera 3 s pela consistência do Content Lake; avançamos o relógio falso até terminar.
   let res: Response | undefined;
   const p = POST(r).then((x) => (res = x));
-  for (let i = 0; i < 200 && !res; i++) {
-    await vi.advanceTimersByTimeAsync(1000);
-    await new Promise<void>((resolve) => setImmediate(resolve));
+  const limite = Date.now() + 4000;
+  while (!res && Date.now() < limite) {
+    if (vi.getTimerCount() > 0) await vi.advanceTimersByTimeAsync(3000);
+    else await new Promise<void>((resolve) => setImmediate(resolve));
   }
   await p;
   return res as Response;
@@ -43,8 +44,23 @@ describe('POST /api/revalidate', () => {
   });
 
   it('sem cabeçalho de assinatura → 401', async () => {
+    const erro = vi.spyOn(console, 'error').mockImplementation(() => {});
     const res = await call(await req({ _type: 'obra' }, null));
     expect(res.status).toBe(401);
+    expect(revalidateTag).not.toHaveBeenCalled();
+    expect(erro).toHaveBeenCalledWith('Missing signature header');
+    erro.mockRestore();
+  });
+
+  it('corpo malformado com assinatura inválida → 401', async () => {
+    const res = await call(await req('{nope', 'outro-segredo'));
+    expect(res.status).toBe(401);
+    expect(revalidateTag).not.toHaveBeenCalled();
+  });
+
+  it('corpo malformado com assinatura válida → 400', async () => {
+    const res = await call(await req('{nope'));
+    expect(res.status).toBe(400);
     expect(revalidateTag).not.toHaveBeenCalled();
   });
 

@@ -115,6 +115,23 @@ describe('sanitySource', () => {
     expect(fetchMock.mock.calls[0][2].next.tags).toEqual(['configuracoes']);
   });
 
+  it('getPaginaLegal deriva o slug do _id do singleton', async () => {
+    fetchMock.mockResolvedValue({ titulo: 'Cookies', versao: '1', vigencia: '2025-01-01', corpo: [] });
+    const p = await sanitySource.getPaginaLegal('cookies');
+    expect(p).toEqual({ slug: 'cookies', titulo: 'Cookies', versao: '1', vigencia: '2025-01-01', corpo: [] });
+    expect(fetchMock.mock.calls[0][1]).toEqual({ id: 'paginaLegal-cookies' });
+  });
+
+  it('descarta imagem sem alt: galeria filtra o item e obra sem alt na capa é excluída', async () => {
+    fetchMock.mockResolvedValue([
+      { ...rawObra, galeria: [rawImagem('g1', 'Fachada'), { ...rawImagem('g2', ''), alt: '  ' }] },
+      { ...rawObra, slug: 'sem-alt', capa: { ...rawObra.capa, alt: null } },
+    ]);
+    const obras = await sanitySource.getObras();
+    expect(obras.map((o) => o.slug)).toEqual(['pinhalzinho-sc']);
+    expect(obras[0].galeria.map((g) => g.alt)).toEqual(['Fachada']);
+  });
+
   it('getPaginaLegal lança erro claro quando o documento não existe', async () => {
     fetchMock.mockResolvedValue(null);
     await expect(sanitySource.getPaginaLegal('privacidade')).rejects.toThrow(/privacidade/);

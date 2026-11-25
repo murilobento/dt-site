@@ -68,14 +68,15 @@ const IMG = (campo: string) =>
   `${campo}{alt, asset, crop, hotspot, "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height, "lqip": asset->metadata.lqip}`;
 
 function imagemOuNull(raw: RawImagem | null | undefined): Imagem | null {
-  if (!raw?.asset) return null;
+  // Sem asset ou sem alt a imagem é descartada: alt vazio tornaria conteúdo em imagem decorativa.
+  if (!raw?.asset || !raw.alt?.trim()) return null;
   const url = createImageUrlBuilder({ projectId: projectId(), dataset: dataset() })
     .image(raw as never)
     .auto('format')
     .url();
   return {
     url,
-    alt: raw.alt ?? '',
+    alt: raw.alt,
     width: raw.width ?? 0,
     height: raw.height ?? 0,
     ...(raw.lqip ? { lqip: raw.lqip } : {}),
@@ -380,12 +381,14 @@ export const sanitySource: ContentSource = {
   },
 
   async getPaginaLegal(slug) {
-    return singleton<PaginaLegal>(
+    const doc = await singleton<Omit<PaginaLegal, 'slug'>>(
       'paginaLegal',
       `paginaLegal-${slug}`,
-      `{slug, titulo, versao, vigencia, corpo}`,
+      `{titulo, versao, vigencia, corpo}`,
     ).catch((e: unknown) => {
       throw new Error(`Página legal não encontrada: ${slug}. ${(e as Error).message}`);
     });
+    // O slug identifica o singleton pelo _id; não é um campo editável.
+    return { slug, titulo: doc.titulo, versao: doc.versao, vigencia: doc.vigencia, corpo: doc.corpo };
   },
 };

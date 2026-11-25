@@ -4,21 +4,8 @@ export const paginaLegal = defineType({
   name: 'paginaLegal',
   title: 'Página legal',
   type: 'document',
+  // O slug (privacidade/cookies) vem do _id fixo do singleton (paginaLegal-<slug>), não de um campo.
   fields: [
-    defineField({
-      name: 'slug',
-      title: 'Página',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Política de privacidade', value: 'privacidade' },
-          { title: 'Política de cookies', value: 'cookies' },
-        ],
-        layout: 'radio',
-      },
-      readOnly: true,
-      validation: (r) => r.required(),
-    }),
     defineField({ name: 'titulo', title: 'Título', type: 'string', validation: (r) => r.required() }),
     defineField({ name: 'versao', title: 'Versão', type: 'string', validation: (r) => r.required() }),
     defineField({
