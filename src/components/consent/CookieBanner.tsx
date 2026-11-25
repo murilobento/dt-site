@@ -93,7 +93,10 @@ function PreferencesDialog() {
 
 export function CookieBanner() {
   const { state, ready, save, openPreferences } = useConsent();
-  const visible = ready && state === null;
+  // O banner vai no HTML do servidor (entra no primeiro paint em vez de surgir só após a hidratação,
+  // o que o tornava o LCP). Quem já decidiu não o vê: o script do layout marca `data-consent="decided"`
+  // antes do paint e o CSS esconde o `data-ssr`; depois de hidratar, só o estado do React manda.
+  const visible = !ready || state === null;
   const ref = useRef<HTMLElement>(null);
 
   // Expõe a altura do banner para outros elementos fixos (ex.: botão do WhatsApp).
@@ -119,6 +122,7 @@ export function CookieBanner() {
           role="region"
           aria-label="Cookies"
           data-cookie-banner
+          data-ssr={ready ? undefined : ""}
           className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-surface-default text-text-primary shadow-none"
         >
           <div className="mx-auto flex w-full max-w-page flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between">

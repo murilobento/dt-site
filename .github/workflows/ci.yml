@@ -22,3 +22,23 @@ jobs:
       - run: npm run test:e2e
         env:
           CONTENT_SOURCE: fixtures
+
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+        env:
+          CONTENT_SOURCE: fixtures
+      - run: npx playwright install --with-deps chromium
+      - name: Lighthouse CI (bloqueia o merge)
+        run: |
+          export CHROME_PATH="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")"
+          npx lhci autorun
+        env:
+          CONTENT_SOURCE: fixtures

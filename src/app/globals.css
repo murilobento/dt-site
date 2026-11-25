@@ -14,3 +14,8 @@
     transform: translateY(16px);
   }
 }
+
+/* Banner de cookies renderizado no servidor: escondido antes da hidratação para quem já decidiu. */
+html[data-consent="decided"] [data-cookie-banner][data-ssr] {
+  display: none;
+}

@@ -1,3 +1,4 @@
+import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 import { LEGACY_REDIRECTS } from "./src/lib/redirects";
 
@@ -75,4 +76,17 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+const sentryEnabled = Boolean(process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN);
+
+/**
+ * Sem DSN a config sai intacta (Sentry é no-op). Upload de source maps só com SENTRY_AUTH_TOKEN:
+ * o build nunca exige token.
+ */
+export default sentryEnabled
+  ? withSentryConfig(nextConfig, {
+      silent: true,
+      telemetry: false,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      sourcemaps: { disable: !process.env.SENTRY_AUTH_TOKEN },
+    })
+  : nextConfig;
