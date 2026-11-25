@@ -7,6 +7,8 @@ import { GtmLoader } from "@/components/consent/GtmLoader";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { SkipLink } from "@/components/layout/SkipLink";
+import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
+import { getContentSource } from "@/lib/content/source";
 
 // Fontes variáveis auto-hospedadas (@fontsource-variable), subset latin.
 const archivo = localFont({
@@ -28,7 +30,8 @@ export const metadata: Metadata = {
   description: "DT Construtora e Consultoria",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const { whatsapp } = await getContentSource().getConfiguracoes();
   return (
     <html lang="pt-BR" className={`${archivo.variable} ${inter.variable}`}>
       <body>
@@ -39,6 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             {children}
           </main>
           <Footer />
+          <WhatsAppButton phone={whatsapp} />
           <CookieBanner />
           <GtmLoader />
         </ConsentProvider>
