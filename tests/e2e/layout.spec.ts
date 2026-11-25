@@ -24,6 +24,23 @@ test("360 px: drawer abre por teclado, prende o foco, fecha com Esc e devolve o 
   await expect(btn).toBeFocused();
 });
 
+test("360 px: CTA do header some, mas continua no drawer", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await page.goto("/");
+  await expect(page.getByRole("banner").getByRole("link", { name: "Fale com a equipe" })).toBeHidden();
+  await page.getByRole("button", { name: "Abrir menu" }).click();
+  await expect(page.getByRole("dialog").getByRole("link", { name: "Fale com a equipe" })).toBeVisible();
+});
+
+test("drawer fecha ao ampliar a janela para 1024 px ou mais", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Abrir menu" }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+});
+
 test("360 px: clicar em um link fecha o drawer", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 740 });
   await page.goto("/");

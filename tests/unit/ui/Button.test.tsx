@@ -29,4 +29,18 @@ describe("Button", () => {
     render(<Button inverse>Enviar</Button>);
     expect(screen.getByRole("button").className).toContain("focus-visible:outline-text-on-inverse");
   });
+
+  it("className do chamador substitui utilitários conflitantes da base", () => {
+    render(<Button className="hidden">Enviar</Button>);
+    const cls = screen.getByRole("button").className.split(" ");
+    expect(cls).toContain("hidden");
+    expect(cls).not.toContain("inline-flex");
+  });
+
+  it("merge preserva cor e tamanho de texto da base", () => {
+    render(<Button>Enviar</Button>);
+    const cls = screen.getByRole("button").className.split(" ");
+    expect(cls).toContain("text-base");
+    expect(cls).toContain("text-text-on-inverse");
+  });
 });

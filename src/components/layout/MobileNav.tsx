@@ -2,7 +2,7 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { CTA, NAV_ITEMS } from "@/lib/nav";
 
@@ -10,6 +10,16 @@ import { CTA, NAV_ITEMS } from "@/lib/nav";
 export function MobileNav() {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
+
+  // Ao chegar em >=1024 px o drawer fica oculto por CSS; fecha para não deixar foco preso invisível.
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 64rem)");
+    const onChange = (e: MediaQueryListEvent) => {
+      if (e.matches) setOpen(false);
+    };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger

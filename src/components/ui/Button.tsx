@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { twMerge } from "tailwind-merge";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 type Variant = "primary" | "secondary" | "ghost";
@@ -36,7 +37,7 @@ function styles(variant: Variant, inverse: boolean): string {
 
 export function Button(props: ButtonProps) {
   const { variant = "primary", inverse = false, className = "", children, ...rest } = props;
-  const cls = `${BASE} ${styles(variant, inverse)} ${className}`.trim();
+  const cls = twMerge(BASE, styles(variant, inverse), className);
   if (rest.href !== undefined) {
     return (
       <Link className={cls} {...(rest as React.ComponentProps<typeof Link>)}>
