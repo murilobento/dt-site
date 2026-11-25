@@ -40,6 +40,7 @@ test("e-mail inválido mostra a microcopy", async ({ page }) => {
   await expect(page.getByText("Confira o e-mail. Ele precisa ter @ e um domínio, como nome@empresa.com.br.")).toBeVisible();
   await expect(page.getByLabel("Nome", { exact: true })).toHaveValue("João Silva");
   await expect(page.getByLabel("E-mail")).toBeFocused();
+  await expect(page.getByLabel("Segmento")).toHaveValue("obras-civis");
 });
 
 test("envio válido mostra a mensagem de sucesso", async ({ page }) => {

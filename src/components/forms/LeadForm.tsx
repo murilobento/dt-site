@@ -34,7 +34,7 @@ export function LeadForm({ segmentoInicial, origem, whatsappHref }: LeadFormProp
 
   useEffect(() => {
     if (state.status === "success") {
-      track("lead_submit", { segmento: formRef.current?.querySelector<HTMLSelectElement>("#segmento")?.value ?? "" });
+      track("lead_submit", { segmento: state.segmento });
     }
     if (state.status !== "error") return;
     window.turnstile?.reset(); // o token é de uso único

@@ -6,8 +6,8 @@ const DEFAULT_FROM = "Site DT <site@dtconstrutora.com.br>";
 
 const oneLine = (s: string) => s.replace(/[\r\n]+/g, " ").trim();
 
-export function buildSubject(lead: Lead): string {
-  return `[Site] Lead ${lead.segmento} — ${oneLine(lead.empresa)}`;
+export function buildSubject(lead: Lead, unverified = false): string {
+  return `${unverified ? "[não verificado] " : ""}[Site] Lead ${lead.segmento} — ${oneLine(lead.empresa)}`;
 }
 
 function buildText(lead: Lead): string {
@@ -30,17 +30,19 @@ function buildText(lead: Lead): string {
 }
 
 /** Envia o lead por Resend; lança em falha. Sem RESEND_API_KEY apenas registra um resumo sem dados pessoais. */
-export async function sendLeadEmail(lead: Lead, to: string): Promise<void> {
+export async function sendLeadEmail(lead: Lead, to: string, opts: { unverified?: boolean } = {}): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.info(`[leads] transporte log: lead segmento=${lead.segmento} empresa="${oneLine(lead.empresa)}"`);
+    // Em produção a ausência da chave descarta o lead: precisa aparecer como erro no monitoramento.
+    const log = process.env.NODE_ENV === "production" ? console.error : console.info;
+    log(`[leads] RESEND_API_KEY ausente, transporte log: lead segmento=${lead.segmento}`);
     return;
   }
   const { error } = await new Resend(apiKey).emails.send({
     from: process.env.LEAD_FROM_EMAIL || DEFAULT_FROM,
     to,
     replyTo: lead.email,
-    subject: buildSubject(lead),
+    subject: buildSubject(lead, opts.unverified),
     text: buildText(lead),
   });
   if (error) throw new Error(`Resend: ${error.name}`);

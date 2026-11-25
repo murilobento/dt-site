@@ -32,7 +32,7 @@ describe("submitLead", () => {
   });
   it("Turnstile inválido → erro genérico, sem e-mail", async () => {
     vi.mocked(verifyTurnstile).mockResolvedValue(false);
-    const s = await submitLead(idle, fd(valido));
+    const s = await submitLead(idle, fd({ ...valido, "cf-turnstile-response": "ruim" }));
     expect(s).toMatchObject({
       status: "error",
       message: "Não foi possível validar o envio. Recarregue a página e tente de novo.",
@@ -42,6 +42,23 @@ describe("submitLead", () => {
   it("repassa token e IP ao Turnstile", async () => {
     await submitLead(idle, fd({ ...valido, "cf-turnstile-response": "tok" }));
     expect(verifyTurnstile).toHaveBeenCalledWith("tok", "9.9.9.9");
+  });
+  it("com secret e sem token (sem JS) envia com marca de não verificado", async () => {
+    vi.stubEnv("TURNSTILE_SECRET_KEY", "secret");
+    const s = await submitLead(idle, fd(valido));
+    expect(s.status).toBe("success");
+    expect(verifyTurnstile).not.toHaveBeenCalled();
+    expect(sendLeadEmail).toHaveBeenCalledWith(expect.anything(), cfg.emailsLead.infraestrutura, { unverified: true });
+    vi.unstubAllEnvs();
+  });
+  it("com secret e token verificado envia sem marca", async () => {
+    vi.stubEnv("TURNSTILE_SECRET_KEY", "secret");
+    await submitLead(idle, fd({ ...valido, "cf-turnstile-response": "ok" }));
+    expect(sendLeadEmail).toHaveBeenCalledWith(expect.anything(), cfg.emailsLead.infraestrutura, { unverified: false });
+    vi.unstubAllEnvs();
+  });
+  it("sucesso devolve o segmento", async () => {
+    expect(await submitLead(idle, fd(valido))).toEqual({ status: "success", segmento: "infraestrutura" });
   });
   it("campos inválidos → erros por campo e valores preservados, sem e-mail", async () => {
     const s = await submitLead(idle, fd({ ...valido, email: "joao", consentimento: false }));
@@ -67,6 +84,7 @@ describe("submitLead", () => {
     expect(sendLeadEmail).toHaveBeenCalledWith(
       expect.objectContaining({ segmento: "infraestrutura", origem: "restauracao" }),
       cfg.emailsLead.infraestrutura,
+      { unverified: false },
     );
   });
 });

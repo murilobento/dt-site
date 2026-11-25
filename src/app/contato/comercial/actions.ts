@@ -1,7 +1,9 @@
 "use server";
 
 import { headers } from "next/headers";
+import type { Segmento } from "@/lib/content/types";
 import { getContentSource } from "@/lib/content/source";
+import { SEGMENTO_LABEL } from "@/lib/segmentos";
 import { leadSchema, type Lead } from "@/lib/leads/schema";
 import { resolveLeadRecipient } from "@/lib/leads/routing";
 import { sendLeadEmail } from "@/lib/leads/send";
@@ -15,7 +17,7 @@ export type LeadFormState =
       values: Partial<Lead>;
       message?: string;
     }
-  | { status: "success" };
+  | { status: "success"; segmento: Segmento };
 
 const TEXT_FIELDS = ["nome", "empresa", "cargo", "email", "telefone", "segmento", "tipoObra", "local", "mensagem", "origem"] as const;
 
@@ -29,7 +31,10 @@ function text(formData: FormData, key: string): string {
 
 export async function submitLead(_prev: LeadFormState, formData: FormData): Promise<LeadFormState> {
   // Honeypot: robôs preenchem; fingimos sucesso para não dar pista.
-  if (text(formData, "website").trim() !== "") return { status: "success" };
+  if (text(formData, "website").trim() !== "") {
+    const seg = text(formData, "segmento");
+    return { status: "success", segmento: (seg in SEGMENTO_LABEL ? seg : "obras-civis") as Segmento };
+  }
 
   const raw: Record<string, unknown> = {};
   for (const k of TEXT_FIELDS) {
@@ -54,17 +59,21 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
   void _consentimento;
 
   const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() || undefined;
-  if (!(await verifyTurnstile(text(formData, "cf-turnstile-response"), ip))) {
+  // Token presente deve passar. Token ausente com secret configurado é o caminho sem JavaScript:
+  // aceitamos, mas o e-mail segue marcado como não verificado.
+  const token = text(formData, "cf-turnstile-response");
+  const unverified = !token && Boolean(process.env.TURNSTILE_SECRET_KEY);
+  if (token && !(await verifyTurnstile(token, ip))) {
     return { status: "error", fieldErrors: {}, values, message: MSG_TURNSTILE };
   }
 
   try {
     const cfg = await getContentSource().getConfiguracoes();
-    await sendLeadEmail(lead, resolveLeadRecipient(lead.segmento, cfg));
+    await sendLeadEmail(lead, resolveLeadRecipient(lead.segmento, cfg), { unverified });
   } catch (err) {
     // Sem PII no log: só o tipo do erro.
     console.error("[leads] falha no envio:", err instanceof Error ? err.message : "desconhecido");
     return { status: "error", fieldErrors: {}, values, message: MSG_SEND };
   }
-  return { status: "success" };
+  return { status: "success", segmento: lead.segmento };
 }
