@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "../styles/tokens.css";
+@import "../../styles/tokens.css";
 
 /* Entrada de seção (componente Reveal): fade + 16px, 240ms, curva de entrada do layout, uma vez. O Reveal só
    marca `data-reveal="pending"` depois da hidratação e sem reduced motion; sem JS o conteúdo fica visível. */

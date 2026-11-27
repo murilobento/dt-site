@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import ErrorPage from "@/app/error";
+import ErrorPage from "@/app/(site)/error";
 
 describe("error.tsx", () => {
   it("mostra mensagem amigável sem detalhes do erro e chama retry", async () => {

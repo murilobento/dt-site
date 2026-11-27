@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef } from "react";
-import { submitLead, type LeadFormState } from "@/app/contato/actions";
+import { submitLead, type LeadFormState } from "@/app/(site)/contato/actions";
 import { Button } from "@/components/ui/Button";
 import { track } from "@/lib/analytics/track";
 import { DISCIPLINA_OPCAO, DISCIPLINAS, type Disciplina } from "@/lib/disciplinas";

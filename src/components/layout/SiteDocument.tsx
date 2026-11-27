@@ -1,55 +1,26 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
 import { CookieBanner } from "@/components/consent/CookieBanner";
 import { ConsentProvider } from "@/components/consent/ConsentProvider";
 import { GtmLoader } from "@/components/consent/GtmLoader";
 import { VercelTelemetry } from "@/components/consent/VercelTelemetry";
-import { Footer } from "@/components/layout/Footer";
-import { Header } from "@/components/layout/Header";
-import { SkipLink } from "@/components/layout/SkipLink";
-import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { CONSENT_COOKIE } from "@/lib/consent/consent";
 import { getContentSource } from "@/lib/content/source";
+import { FONT_VARIABLES } from "@/lib/fonts";
 import { organizationJsonLd } from "@/lib/seo/jsonld";
 import { getSiteUrl } from "@/lib/site";
-
-// Fontes variáveis auto-hospedadas (@fontsource-variable), subset latin.
-const jost = localFont({
-  src: "../../node_modules/@fontsource-variable/jost/files/jost-latin-wght-normal.woff2",
-  weight: "500 700",
-  display: "swap",
-  variable: "--font-jost",
-});
-
-const radioCanadaBig = localFont({
-  src: "../../node_modules/@fontsource-variable/radio-canada-big/files/radio-canada-big-latin-wght-normal.woff2",
-  weight: "400 700",
-  display: "swap",
-  variable: "--font-radio-canada-big",
-});
-
-const sourceCodePro = localFont({
-  src: "../../node_modules/@fontsource-variable/source-code-pro/files/source-code-pro-latin-wght-normal.woff2",
-  weight: "500 600",
-  display: "swap",
-  variable: "--font-source-code-pro",
-});
-
-export const metadata: Metadata = {
-  metadataBase: new URL(getSiteUrl()),
-  title: "DT Construtora",
-  description: "DT Construtora e Consultoria",
-};
+import { Footer } from "./Footer";
+import { Header } from "./Header";
+import { SkipLink } from "./SkipLink";
+import { WhatsAppButton } from "./WhatsAppButton";
 
 /** Roda antes do primeiro paint: evita o flash do banner de cookies para quem já decidiu. */
 const CONSENT_FLAG = `if(document.cookie.indexOf("${CONSENT_COOKIE}=")>-1)document.documentElement.dataset.consent="decided"`;
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
+/** Documento completo do site (html, cabeçalho, rodapé, consentimento). Usado pelo layout raiz do grupo (site) e pelo 404 global. */
+export async function SiteDocument({ children }: { children: React.ReactNode }) {
   const config = await getContentSource().getConfiguracoes();
   return (
-    <html lang="pt-BR" className={`${jost.variable} ${radioCanadaBig.variable} ${sourceCodePro.variable}`}>
+    <html lang="pt-BR" className={FONT_VARIABLES}>
       <body>
         <script dangerouslySetInnerHTML={{ __html: CONSENT_FLAG }} />
         {/* Sem JS o banner não funciona (e nada é rastreado): não deixa um bloco morto cobrindo a página. */}

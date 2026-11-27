@@ -47,6 +47,8 @@ const COMMON_HEADERS = [
 ];
 
 const nextConfig: NextConfig = {
+  // 404 de URLs sem rota com dois layouts raiz (site e Studio): ver src/app/global-not-found.tsx.
+  experimental: { globalNotFound: true },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io", pathname: "/images/**" }],

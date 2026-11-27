@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("@/app/contato/actions", () => ({
+vi.mock("@/app/(site)/contato/actions", () => ({
   submitLead: vi.fn(async () => ({ status: "success", segmento: "infraestrutura", disciplina: "sau-pre" })),
 }));
 vi.mock("@/lib/analytics/track", () => ({ track: vi.fn() }));

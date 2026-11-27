@@ -6,7 +6,7 @@ vi.mock("@/lib/leads/turnstile", () => ({ verifyTurnstile: vi.fn() }));
 vi.mock("next/headers", () => ({ headers: async () => new Headers({ "x-forwarded-for": "9.9.9.9, 1.1.1.1" }) }));
 vi.mock("@/lib/content/source", () => ({ getContentSource: () => ({ getConfiguracoes: async () => cfg }) }));
 
-import { submitCandidatura, type CandidaturaFormState } from "@/app/compliance/actions";
+import { submitCandidatura, type CandidaturaFormState } from "@/app/(site)/compliance/actions";
 import { sendCandidaturaEmail } from "@/lib/leads/send";
 import { verifyTurnstile } from "@/lib/leads/turnstile";
 

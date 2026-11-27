@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef } from "react";
-import { submitCandidatura, type CandidaturaFormState } from "@/app/compliance/actions";
+import { submitCandidatura, type CandidaturaFormState } from "@/app/(site)/compliance/actions";
 import { Button } from "@/components/ui/Button";
 import { CONTROL_CLASS, Field } from "./Field";
 import { ConsentField, Honeypot, recoverAfterError, RequiredLegend, TurnstileWidget } from "./FormGuards";

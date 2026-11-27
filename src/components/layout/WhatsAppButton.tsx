@@ -2,9 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import { track } from "@/lib/analytics/track";
+import { TITLE_SUFFIX } from "@/lib/seo/metadata";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
-
-const TITLE_SUFFIX = " | DT Construtora";
 
 function currentPageTitle(): string {
   const title = document.title;
