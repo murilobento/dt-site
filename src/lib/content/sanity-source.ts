@@ -3,7 +3,8 @@ import { createClient } from 'next-sanity';
 import { createImageUrlBuilder } from '@sanity/image-url';
 import type { ContentSource } from './source';
 import type {
-  Cliente, Configuracoes, Imagem, Numero, Obra, PaginaEmpresa, PaginaLegal, Servico, TipoCliente,
+  Cliente, Configuracoes, Diferencial, Imagem, Numero, Obra, PaginaCompliance, PaginaEmpresa, PaginaLegal,
+  Servico, TipoCliente,
 } from './types';
 
 const API_VERSION = '2025-01-01';
@@ -17,6 +18,9 @@ const TAGS = {
   numero: ['numero'],
   configuracoes: ['configuracoes'],
   paginaEmpresa: ['paginaEmpresa'],
+  paginaCompliance: ['paginaCompliance'],
+  // os diferenciais são um campo do singleton `configuracoes`
+  diferenciais: ['configuracoes'],
   paginaLegal: ['paginaLegal'],
 } as const;
 
@@ -96,6 +100,7 @@ interface RawObra {
   slug: string;
   titulo: string;
   segmento: Obra['segmento'];
+  categoria?: Obra['categoria'] | null;
   servicos?: (string | null)[] | null;
   cliente?: { nome?: string; tipo?: TipoCliente } | null;
   cidade: string;
@@ -106,6 +111,12 @@ interface RawObra {
   status: Obra['status'];
   extensao?: Obra['extensao'] | null;
   diferencialTecnico?: string | null;
+  codigoContrato?: string | null;
+  norma?: string | null;
+  desafio?: string | null;
+  solucao?: string | null;
+  quantitativos?: ({ rotulo?: string | null; valor?: string | null } | null)[] | null;
+  etapas?: ({ titulo?: string | null; descricao?: string | null } | null)[] | null;
   descricao: string;
   capa?: RawImagem | null;
   galeria?: (RawImagem | null)[] | null;
@@ -117,14 +128,17 @@ interface RawObra {
 
 const OBRA_PROJECAO = `{
   "slug": slug.current,
-  titulo, segmento,
+  titulo, segmento, categoria,
   "servicos": servicos[]->slug.current,
   "cliente": cliente->{nome, tipo},
   cidade, uf,
   "coordenadas": coordenadas{lat, lng},
   inicio, termino, status,
   extensao{valor, unidade},
-  diferencialTecnico, descricao,
+  diferencialTecnico, codigoContrato, norma, desafio, solucao,
+  "quantitativos": quantitativos[]{rotulo, valor},
+  "etapas": etapas[]{titulo, descricao},
+  descricao,
   ${IMG('capa')},
   "galeria": galeria[]{alt, asset, crop, hotspot, "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height, "lqip": asset->metadata.lqip},
   "antesDepois": select(defined(antesDepois.antes.asset) && defined(antesDepois.depois.asset) => {
@@ -136,23 +150,37 @@ const OBRA_PROJECAO = `{
   "atualizadoEm": _updatedAt
 }`;
 
-/** Obra sem slug ou sem capa é ignorada (dado incompleto nunca derruba a página). */
-const OBRA_BASE = `_type == "obra" && ${PUBLICADO} && defined(slug.current) && defined(capa.asset)`;
+/** Obra sem slug, capa ou categoria é ignorada (dado incompleto nunca derruba a página). */
+const OBRA_BASE = `_type == "obra" && ${PUBLICADO} && defined(slug.current) && defined(capa.asset) && defined(categoria)`;
+
+/** Mantém só itens com todos os textos preenchidos; devolve `undefined` se nada sobrar. */
+function paresOuUndefined<K extends string>(
+  itens: ({ [P in K]?: string | null } | null)[] | null | undefined,
+  campos: readonly K[],
+): { [P in K]: string }[] | undefined {
+  const ok = (itens ?? []).filter(
+    (i): i is { [P in K]: string } => !!i && campos.every((c) => !!i[c]?.trim()),
+  );
+  return ok.length ? ok.map((i) => Object.fromEntries(campos.map((c) => [c, i[c]])) as { [P in K]: string }) : undefined;
+}
 
 function mapObra(raw: RawObra | null | undefined): Obra | null {
   if (!raw) return null;
   const capa = imagemOuNull(raw.capa);
-  if (!raw.slug || !capa) return null;
+  if (!raw.slug || !capa || !raw.categoria) return null;
 
   const galeria = (raw.galeria ?? []).map(imagemOuNull).filter((i): i is Imagem => i !== null);
   const antes = imagemOuNull(raw.antesDepois?.antes);
   const depois = imagemOuNull(raw.antesDepois?.depois);
   const seo = raw.seo ? semNulos(raw.seo) : undefined;
+  const quantitativos = paresOuUndefined(raw.quantitativos, ['rotulo', 'valor'] as const);
+  const etapas = paresOuUndefined(raw.etapas, ['titulo', 'descricao'] as const);
 
   return {
     slug: raw.slug,
     titulo: raw.titulo,
     segmento: raw.segmento,
+    categoria: raw.categoria,
     servicos: (raw.servicos ?? []).filter((s): s is string => !!s),
     ...(raw.cliente?.nome && raw.cliente.tipo
       ? { cliente: { nome: raw.cliente.nome, tipo: raw.cliente.tipo } }
@@ -167,6 +195,12 @@ function mapObra(raw: RawObra | null | undefined): Obra | null {
       ? { extensao: { valor: raw.extensao.valor, unidade: raw.extensao.unidade } }
       : {}),
     ...(raw.diferencialTecnico ? { diferencialTecnico: raw.diferencialTecnico } : {}),
+    ...(raw.codigoContrato ? { codigoContrato: raw.codigoContrato } : {}),
+    ...(raw.norma ? { norma: raw.norma } : {}),
+    ...(raw.desafio ? { desafio: raw.desafio } : {}),
+    ...(raw.solucao ? { solucao: raw.solucao } : {}),
+    ...(quantitativos ? { quantitativos } : {}),
+    ...(etapas ? { etapas } : {}),
     descricao: raw.descricao,
     capa,
     galeria,
@@ -186,6 +220,9 @@ interface RawServico {
   slug: string;
   titulo: string;
   segmento: Servico['segmento'];
+  categoria?: Servico['categoria'] | null;
+  subtitulo?: string | null;
+  icone?: Servico['icone'] | null;
   resumo: string;
   escopo?: string[] | null;
   etapas?: { titulo: string; descricao: string }[] | null;
@@ -195,22 +232,25 @@ interface RawServico {
 }
 
 const SERVICO_PROJECAO = `{
-  "slug": slug.current, titulo, segmento, resumo, escopo,
+  "slug": slug.current, titulo, segmento, categoria, subtitulo, icone, resumo, escopo,
   "etapas": etapas[]{titulo, descricao},
   equipamentos,
   ${IMG('imagem')},
   seo{titulo, descricao}
 }`;
-const SERVICO_BASE = `_type == "servico" && ${PUBLICADO} && defined(slug.current) && defined(imagem.asset)`;
+const SERVICO_BASE = `_type == "servico" && ${PUBLICADO} && defined(slug.current) && defined(imagem.asset) && defined(categoria)`;
 
 function mapServico(raw: RawServico | null | undefined): Servico | null {
   const imagem = imagemOuNull(raw?.imagem);
-  if (!raw || !raw.slug || !imagem) return null;
+  if (!raw || !raw.slug || !imagem || !raw.categoria) return null;
   const seo = raw.seo ? semNulos(raw.seo) : undefined;
   return {
     slug: raw.slug,
     titulo: raw.titulo,
     segmento: raw.segmento,
+    categoria: raw.categoria,
+    ...(raw.subtitulo ? { subtitulo: raw.subtitulo } : {}),
+    ...(raw.icone ? { icone: raw.icone } : {}),
     resumo: raw.resumo,
     escopo: raw.escopo ?? [],
     etapas: (raw.etapas ?? []).map((e) => ({ titulo: e.titulo, descricao: e.descricao })),
@@ -381,6 +421,36 @@ export const sanitySource: ContentSource = {
       valores: (raw.valores ?? []).map((v) => ({ titulo: v.titulo, descricao: v.descricao })),
       principios: raw.principios ?? [],
     };
+  },
+
+  async getPaginaCompliance() {
+    const raw = await singleton<{
+      pilares?: (Omit<PaginaCompliance['pilares'][number], 'itens'> & { itens?: string[] | null })[] | null;
+      vagas?: { titulo: string; requisito?: string | null; regime?: string | null; descricao: string }[] | null;
+    }>(
+      'paginaCompliance',
+      'paginaCompliance',
+      `{"pilares": pilares[]{titulo, descricao, icone, itens}, "vagas": vagas[]{titulo, requisito, regime, descricao}}`,
+    );
+    return {
+      pilares: (raw.pilares ?? []).map((p) => ({
+        titulo: p.titulo, descricao: p.descricao, icone: p.icone, itens: p.itens ?? [],
+      })),
+      vagas: (raw.vagas ?? []).map(({ titulo, requisito, regime, descricao }) =>
+        semNulos({ titulo, requisito, regime, descricao }) as PaginaCompliance['vagas'][number],
+      ),
+    };
+  },
+
+  async getDiferenciais() {
+    const raw = await singleton<{ diferenciais?: (Diferencial | null)[] | null }>(
+      'diferenciais',
+      'configuracoes',
+      `{"diferenciais": diferenciais[]{titulo, descricao, icone}}`,
+    );
+    return (raw.diferenciais ?? [])
+      .filter((d): d is Diferencial => !!d?.titulo && !!d.descricao && !!d.icone)
+      .map((d) => ({ titulo: d.titulo, descricao: d.descricao, icone: d.icone }));
   },
 
   async getPaginaLegal(slug) {

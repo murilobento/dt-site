@@ -5,13 +5,13 @@ import type { Obra } from "@/lib/content/types";
 
 const img = { url: "/i.jpg", alt: "a", width: 10, height: 10 };
 const completa: Obra = {
-  slug: "p", titulo: "P", segmento: "infraestrutura", servicos: ["restauracao", "inexistente"],
+  slug: "p", titulo: "P", segmento: "infraestrutura", categoria: "rodoviaria", servicos: ["restauracao", "inexistente"],
   cliente: { nome: "Cliente B", tipo: "concessionaria" }, cidade: "Pinhalzinho", uf: "SC",
   inicio: "2024-06", termino: "2025-02", status: "concluida", extensao: { valor: 18.5, unidade: "km" },
   descricao: "d", capa: img, galeria: [], destaque: false,
 };
 const minima: Obra = {
-  slug: "m", titulo: "M", segmento: "obras-civis", servicos: [], cidade: "Álvares Machado", uf: "SP",
+  slug: "m", titulo: "M", segmento: "obras-civis", categoria: "edificacoes", servicos: [], cidade: "Álvares Machado", uf: "SP",
   inicio: "2024-05", status: "em-andamento", descricao: "d", capa: img, galeria: [], destaque: false,
 };
 

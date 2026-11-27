@@ -21,6 +21,7 @@ const rawObra = {
   slug: 'pinhalzinho-sc',
   titulo: 'Restauração em Pinhalzinho',
   segmento: 'infraestrutura',
+  categoria: 'rodoviaria',
   servicos: ['restauracao'],
   cliente: { nome: 'Cliente A', tipo: 'publico' },
   cidade: 'Pinhalzinho',
@@ -31,6 +32,12 @@ const rawObra = {
   status: 'em-andamento',
   extensao: null,
   diferencialTecnico: null,
+  codigoContrato: null,
+  norma: null,
+  desafio: null,
+  solucao: null,
+  quantitativos: null,
+  etapas: null,
   descricao: 'Descrição',
   capa: rawImagem('abc123', 'Vista aérea da rodovia em Pinhalzinho, SC'),
   galeria: null,
@@ -60,10 +67,79 @@ describe('sanitySource', () => {
     fetchMock.mockResolvedValue([rawObra]);
     const [o] = await sanitySource.getObras();
     expect(o.galeria).toEqual([]);
-    for (const k of ['termino', 'coordenadas', 'extensao', 'antesDepois', 'diferencialTecnico', 'seo'] as const) {
+    for (const k of ['termino', 'coordenadas', 'extensao', 'antesDepois', 'diferencialTecnico', 'seo',
+      'codigoContrato', 'norma', 'desafio', 'solucao', 'quantitativos', 'etapas'] as const) {
       expect(o[k]).toBeUndefined();
     }
     expect(JSON.stringify(o)).not.toContain('null');
+  });
+
+  it('mapeia categoria e os campos novos da ficha técnica da obra', async () => {
+    fetchMock.mockResolvedValue([
+      {
+        ...rawObra,
+        codigoContrato: 'Contrato X',
+        norma: 'DNIT',
+        desafio: 'D',
+        solucao: 'S',
+        quantitativos: [{ rotulo: 'CBUQ', valor: '1 t' }, { rotulo: '', valor: 'x' }, null],
+        etapas: [{ titulo: 'E1', descricao: 'd1' }],
+      },
+    ]);
+    const [o] = await sanitySource.getObras();
+    expect(o.categoria).toBe('rodoviaria');
+    expect(o).toMatchObject({ codigoContrato: 'Contrato X', norma: 'DNIT', desafio: 'D', solucao: 'S' });
+    expect(o.quantitativos).toEqual([{ rotulo: 'CBUQ', valor: '1 t' }]);
+    expect(o.etapas).toEqual([{ titulo: 'E1', descricao: 'd1' }]);
+    expect(fetchMock.mock.calls[0][0]).toContain('defined(categoria)');
+  });
+
+  it('obra sem categoria é excluída (como obra sem capa)', async () => {
+    fetchMock.mockResolvedValue([{ ...rawObra, categoria: null }, rawObra]);
+    expect(await sanitySource.getObras()).toHaveLength(1);
+    fetchMock.mockResolvedValue({ ...rawObra, categoria: null });
+    expect(await sanitySource.getObra('pinhalzinho-sc')).toBeNull();
+  });
+
+  it('mapeia categoria, subtítulo e ícone do serviço; sem categoria é excluído', async () => {
+    const rawServico = {
+      slug: 'restauracao', titulo: 'R', segmento: 'infraestrutura', categoria: 'infraestrutura',
+      subtitulo: 'CBUQ • Fresagem', icone: 'estrada', resumo: 'r', escopo: null, etapas: null, equipamentos: null,
+      imagem: rawImagem('s1', 'Equipe em obra'), seo: null,
+    };
+    fetchMock.mockResolvedValue([rawServico, { ...rawServico, slug: 'x', categoria: null }]);
+    const r = await sanitySource.getServicos();
+    expect(r).toHaveLength(1);
+    expect(r[0]).toMatchObject({ categoria: 'infraestrutura', subtitulo: 'CBUQ • Fresagem', icone: 'estrada' });
+    fetchMock.mockResolvedValue([{ ...rawServico, subtitulo: null, icone: null }]);
+    const [s] = await sanitySource.getServicos();
+    expect(s.subtitulo).toBeUndefined();
+    expect(s.icone).toBeUndefined();
+  });
+
+  it('getDiferenciais lê o array do singleton configuracoes', async () => {
+    fetchMock.mockResolvedValue({
+      diferenciais: [{ titulo: 'T', descricao: 'D', icone: 'controle' }, { titulo: '', descricao: 'x', icone: 'controle' }],
+    });
+    expect(await sanitySource.getDiferenciais()).toEqual([{ titulo: 'T', descricao: 'D', icone: 'controle' }]);
+    expect(fetchMock.mock.calls[0][1]).toEqual({ id: 'configuracoes' });
+    expect(fetchMock.mock.calls[0][2].next.tags).toEqual(['configuracoes']);
+    fetchMock.mockResolvedValue({ diferenciais: null });
+    expect(await sanitySource.getDiferenciais()).toEqual([]);
+  });
+
+  it('getPaginaCompliance mapeia pilares e vagas (opcionais ausentes viram undefined)', async () => {
+    fetchMock.mockResolvedValue({
+      pilares: [{ titulo: 'P', descricao: 'd', icone: 'etica', itens: null }],
+      vagas: [{ titulo: 'V', requisito: null, regime: 'CLT', descricao: 'd' }],
+    });
+    const p = await sanitySource.getPaginaCompliance();
+    expect(p.pilares).toEqual([{ titulo: 'P', descricao: 'd', icone: 'etica', itens: [] }]);
+    expect(p.vagas).toEqual([{ titulo: 'V', regime: 'CLT', descricao: 'd' }]);
+    expect(fetchMock.mock.calls[0][1]).toEqual({ id: 'paginaCompliance' });
+    expect(fetchMock.mock.calls[0][2].next.tags).toEqual(['paginaCompliance']);
+    fetchMock.mockResolvedValue({ pilares: null, vagas: null });
+    expect(await sanitySource.getPaginaCompliance()).toEqual({ pilares: [], vagas: [] });
   });
 
   it('getObra exclui rascunhos e devolve null quando não acha', async () => {

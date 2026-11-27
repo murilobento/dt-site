@@ -11,7 +11,9 @@
 import { readFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { createClient } from 'next-sanity';
-import type { Cliente, Configuracoes, Imagem, Numero, Obra, PaginaEmpresa, PaginaLegal, Servico } from '../src/lib/content/types';
+import type {
+  Cliente, Configuracoes, Diferencial, Imagem, Numero, Obra, PaginaCompliance, PaginaEmpresa, PaginaLegal, Servico,
+} from '../src/lib/content/types';
 
 const ROOT = join(__dirname, '..');
 const FIXTURES = join(ROOT, 'src/lib/content/fixtures');
@@ -68,6 +70,8 @@ async function build() {
   const numeros = json<Numero[]>('numeros.json');
   const cfg = json<Configuracoes>('configuracoes.json');
   const empresa = json<PaginaEmpresa>('paginaEmpresa.json');
+  const compliance = json<PaginaCompliance>('paginaCompliance.json');
+  const diferenciais = json<Diferencial[]>('diferenciais.json');
   const legais = json<PaginaLegal[]>('paginasLegais.json');
 
   const clientePorNome = new Map(clientes.map((c) => [c.nome, `cliente-${slugify(c.nome)}`]));
@@ -76,6 +80,7 @@ async function build() {
   for (const [i, s] of servicos.entries()) {
     docs.push({
       _id: servicoId(s.slug), _type: 'servico', titulo: s.titulo, slug: slug(s.slug), segmento: s.segmento,
+      categoria: s.categoria, ...(s.subtitulo ? { subtitulo: s.subtitulo } : {}), ...(s.icone ? { icone: s.icone } : {}),
       ordem: i, resumo: s.resumo, escopo: s.escopo, equipamentos: s.equipamentos,
       etapas: s.etapas.map((e, j) => ({ _key: key('etapa', j), _type: 'etapa', ...e })),
       imagem: await imagem(s.imagem), ...(s.seo ? { seo: { _type: 'seo', ...s.seo } } : {}),
@@ -93,7 +98,7 @@ async function build() {
     const clienteId = o.cliente ? clientePorNome.get(o.cliente.nome) : undefined;
     if (o.cliente && !clienteId) throw new Error(`Obra ${o.slug}: cliente "${o.cliente.nome}" não está em clientes.json`);
     docs.push({
-      _id: `obra-${o.slug}`, _type: 'obra', titulo: o.titulo, slug: slug(o.slug), segmento: o.segmento,
+      _id: `obra-${o.slug}`, _type: 'obra', titulo: o.titulo, slug: slug(o.slug), segmento: o.segmento, categoria: o.categoria,
       servicos: o.servicos.map((s, j) => ({ _key: key('srv', j), ...ref(servicoId(s)) })),
       ...(clienteId ? { cliente: ref(clienteId) } : {}),
       cidade: o.cidade, uf: o.uf,
@@ -101,6 +106,14 @@ async function build() {
       inicio: o.inicio, ...(o.termino ? { termino: o.termino } : {}), status: o.status,
       ...(o.extensao ? { extensao: o.extensao } : {}),
       ...(o.diferencialTecnico ? { diferencialTecnico: o.diferencialTecnico } : {}),
+      ...(o.codigoContrato ? { codigoContrato: o.codigoContrato } : {}),
+      ...(o.norma ? { norma: o.norma } : {}),
+      ...(o.desafio ? { desafio: o.desafio } : {}),
+      ...(o.solucao ? { solucao: o.solucao } : {}),
+      ...(o.quantitativos
+        ? { quantitativos: o.quantitativos.map((q, j) => ({ _key: key('qtd', j), _type: 'quantitativo', ...q })) }
+        : {}),
+      ...(o.etapas ? { etapas: o.etapas.map((e, j) => ({ _key: key('etapa', j), _type: 'etapa', ...e })) } : {}),
       descricao: o.descricao, capa: await imagem(o.capa),
       galeria: await Promise.all(o.galeria.map(async (g, j) => ({ _key: key('gal', j), ...(await imagem(g)) }))),
       ...(o.antesDepois
@@ -118,6 +131,7 @@ async function build() {
     _id: 'configuracoes', _type: 'configuracoes', ...cfg,
     emailsLead: { obrasCivis: cfg.emailsLead['obras-civis'], infraestrutura: cfg.emailsLead.infraestrutura },
     redes: cfg.redes.map((r, i) => ({ _key: key('rede', i), _type: 'redeSocial', ...r })),
+    diferenciais: diferenciais.map((d, i) => ({ _key: key('dif', i), _type: 'diferencial', ...d })),
   });
 
   docs.push({
@@ -130,6 +144,14 @@ async function build() {
         ...(m.imagem ? { imagem: await imagem(m.imagem) } : {}),
       })),
     ),
+  });
+
+  docs.push({
+    _id: 'paginaCompliance', _type: 'paginaCompliance',
+    pilares: compliance.pilares.map((p, i) => ({
+      _key: key('pilar', i), _type: 'pilar', titulo: p.titulo, descricao: p.descricao, icone: p.icone, itens: p.itens,
+    })),
+    vagas: compliance.vagas.map((v, i) => ({ _key: key('vaga', i), _type: 'vaga', ...v })),
   });
 
   for (const { slug: paginaSlug, ...p } of legais) {

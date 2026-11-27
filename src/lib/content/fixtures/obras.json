@@ -37,7 +37,8 @@
     "extensao": {
       "valor": 12000,
       "unidade": "m²"
-    }
+    },
+    "categoria": "edificacoes"
   },
   {
     "slug": "pinhalzinho-sc",
@@ -112,7 +113,44 @@
         "width": 1600,
         "height": 1000
       }
-    }
+    },
+    "categoria": "rodoviaria",
+    "codigoContrato": "Contrato 00/0000 • Lote 01 [exemplo]",
+    "norma": "DNIT / DER [exemplo]",
+    "desafio": "Trecho com trincamento por fadiga e afundamento em trilha de roda, que exigia intervenção sem interromper o escoamento do tráfego local. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "solucao": "Desvio operacional em faixas alternadas, fresagem, recomposição em CBUQ e instalação de drenos profundos longitudinais. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "quantitativos": [
+      {
+        "rotulo": "CBUQ aplicado",
+        "valor": "00.000 t [exemplo]"
+      },
+      {
+        "rotulo": "Fresagem",
+        "valor": "000.000 m² [exemplo]"
+      },
+      {
+        "rotulo": "Drenos profundos",
+        "valor": "0.000 m [exemplo]"
+      },
+      {
+        "rotulo": "Prazo executado",
+        "valor": "00 meses [exemplo]"
+      }
+    ],
+    "etapas": [
+      {
+        "titulo": "Mobilização e controle de tráfego [exemplo]",
+        "descricao": "Canteiro, sinalização de obra e levantamento deflectométrico. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Drenagem e recomposição estrutural [exemplo]",
+        "descricao": "Drenos, fresagem e controle de compactação. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Revestimento e entrega [exemplo]",
+        "descricao": "Capa asfáltica, ensaios, sinalização e as-built. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      }
+    ]
   },
   {
     "slug": "regente-feijo-sp",
@@ -152,7 +190,8 @@
     "extensao": {
       "valor": 3200,
       "unidade": "m²"
-    }
+    },
+    "categoria": "edificacoes"
   },
   {
     "slug": "presidente-prudente-sp",
@@ -193,7 +232,8 @@
     "extensao": {
       "valor": 42,
       "unidade": "km"
-    }
+    },
+    "categoria": "rodoviaria"
   },
   {
     "slug": "rodovia-exemplo-sp",
@@ -227,7 +267,8 @@
     "extensao": {
       "valor": 9.3,
       "unidade": "km"
-    }
+    },
+    "categoria": "rodoviaria"
   },
   {
     "slug": "ponte-exemplo-sc",
@@ -258,7 +299,8 @@
     "coordenadas": {
       "lat": -27.1006,
       "lng": -52.6152
-    }
+    },
+    "categoria": "rodoviaria"
   },
   {
     "slug": "edificio-exemplo-sp",
@@ -292,7 +334,8 @@
     "extensao": {
       "valor": 2100,
       "unidade": "m²"
-    }
+    },
+    "categoria": "edificacoes"
   },
   {
     "slug": "obra-minima-exemplo",
@@ -309,6 +352,30 @@
     "capa": {
       "url": "/fixtures/obra-obra-minima-exemplo.webp",
       "alt": "Vista da obra em Álvares Machado, SP [exemplo]",
+      "width": 1600,
+      "height": 1000
+    },
+    "galeria": [],
+    "destaque": false,
+    "categoria": "edificacoes"
+  },
+  {
+    "slug": "sau-exemplo-sp",
+    "titulo": "Base operacional (SAU) em rodovia concedida [exemplo]",
+    "segmento": "infraestrutura",
+    "categoria": "saupre",
+    "servicos": [
+      "saus-pres"
+    ],
+    "cidade": "Presidente Prudente",
+    "uf": "SP",
+    "inicio": "2024-09",
+    "termino": "2025-04",
+    "status": "concluida",
+    "descricao": "Construção de base operacional de atendimento ao usuário. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "capa": {
+      "url": "/fixtures/obra-presidente-prudente-sp.webp",
+      "alt": "Base operacional de atendimento ao usuário, Presidente Prudente, SP [exemplo]",
       "width": 1600,
       "height": 1000
     },

@@ -1,5 +1,5 @@
 import { defineField, defineType } from 'sanity';
-import { anoMes, imagem, SEGMENTOS, slugField, UFS } from './fields';
+import { anoMes, CATEGORIAS_OBRA, imagem, SEGMENTOS, slugField, UFS } from './fields';
 
 const MAX_DESTAQUES = 6;
 
@@ -15,6 +15,13 @@ export const obra = defineType({
       title: 'Segmento',
       type: 'string',
       options: { list: SEGMENTOS, layout: 'radio' },
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'categoria',
+      title: 'Categoria (filtro do portfólio)',
+      type: 'string',
+      options: { list: CATEGORIAS_OBRA, layout: 'radio' },
       validation: (r) => r.required(),
     }),
     defineField({
@@ -82,6 +89,42 @@ export const obra = defineType({
       ],
     }),
     defineField({ name: 'diferencialTecnico', title: 'Diferencial técnico', type: 'text', rows: 3 }),
+    defineField({ name: 'codigoContrato', title: 'Código do contrato', type: 'string' }),
+    defineField({ name: 'norma', title: 'Norma / órgão', description: 'Ex.: DNIT / DER.', type: 'string' }),
+    defineField({ name: 'desafio', title: 'Desafio', type: 'text', rows: 4 }),
+    defineField({ name: 'solucao', title: 'Solução', type: 'text', rows: 4 }),
+    defineField({
+      name: 'quantitativos',
+      title: 'Quantitativos',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          name: 'quantitativo',
+          fields: [
+            defineField({ name: 'rotulo', title: 'Rótulo', type: 'string', validation: (r) => r.required() }),
+            defineField({ name: 'valor', title: 'Valor', type: 'string', validation: (r) => r.required() }),
+          ],
+          preview: { select: { title: 'rotulo', subtitle: 'valor' } },
+        },
+      ],
+    }),
+    defineField({
+      name: 'etapas',
+      title: 'Etapas',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          name: 'etapa',
+          fields: [
+            defineField({ name: 'titulo', title: 'Título', type: 'string', validation: (r) => r.required() }),
+            defineField({ name: 'descricao', title: 'Descrição', type: 'text', rows: 3, validation: (r) => r.required() }),
+          ],
+          preview: { select: { title: 'titulo' } },
+        },
+      ],
+    }),
     defineField({ name: 'descricao', title: 'Descrição', type: 'text', rows: 6, validation: (r) => r.required() }),
     imagem('capa', 'Imagem de capa'),
     defineField({

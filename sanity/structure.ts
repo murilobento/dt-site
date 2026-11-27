@@ -4,6 +4,7 @@ import type { StructureResolver } from 'sanity/structure';
 const SINGLETONS = [
   { id: 'configuracoes', type: 'configuracoes', title: 'Configurações do site' },
   { id: 'paginaEmpresa', type: 'paginaEmpresa', title: 'Página Empresa' },
+  { id: 'paginaCompliance', type: 'paginaCompliance', title: 'Página Compliance' },
   { id: 'paginaLegal-privacidade', type: 'paginaLegal', title: 'Política de privacidade' },
   { id: 'paginaLegal-cookies', type: 'paginaLegal', title: 'Política de cookies' },
 ] as const;

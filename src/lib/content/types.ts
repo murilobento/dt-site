@@ -3,6 +3,11 @@ import type { PortableTextBlock } from '@portabletext/types';
 export type { PortableTextBlock };
 
 export type Segmento = 'obras-civis' | 'infraestrutura';
+export type CategoriaServico = 'infraestrutura' | 'edificacoes' | 'consultoria';
+export type IconeServico =
+  | 'estrada' | 'terraplanagem' | 'drenagem' | 'base-operacional' | 'edificio'
+  | 'reforma' | 'fundacao' | 'fiscalizacao' | 'projeto' | 'laudo';
+export type CategoriaObra = 'rodoviaria' | 'saupre' | 'edificacoes';
 export type StatusObra = 'em-andamento' | 'concluida';
 export type TipoCliente = 'concessionaria' | 'publico' | 'privado';
 export type UF =
@@ -27,6 +32,7 @@ export interface Obra {
   slug: string;
   titulo: string;
   segmento: Segmento;
+  categoria: CategoriaObra;
   /** slugs de Servico */
   servicos: string[];
   cliente?: { nome: string; tipo: TipoCliente };
@@ -40,6 +46,13 @@ export interface Obra {
   status: StatusObra;
   extensao?: { valor: number; unidade: 'km' | 'm²' };
   diferencialTecnico?: string;
+  codigoContrato?: string;
+  /** Norma ou órgão de referência, ex.: "DNIT / DER". */
+  norma?: string;
+  desafio?: string;
+  solucao?: string;
+  quantitativos?: { rotulo: string; valor: string }[];
+  etapas?: { titulo: string; descricao: string }[];
   descricao: string;
   capa: Imagem;
   galeria: Imagem[];
@@ -53,7 +66,12 @@ export interface Obra {
 export interface Servico {
   slug: string;
   titulo: string;
+  /** Roteamento de leads (e-mail de destino); a navegação usa `categoria`. */
   segmento: Segmento;
+  categoria: CategoriaServico;
+  /** Ex.: "CBUQ • Fresagem • Restauração". */
+  subtitulo?: string;
+  icone?: IconeServico;
   resumo: string;
   escopo: string[];
   etapas: { titulo: string; descricao: string }[];
@@ -112,4 +130,20 @@ export interface PaginaLegal {
   /** YYYY-MM-DD */
   vigencia: string;
   corpo: PortableTextBlock[];
+}
+
+export interface Diferencial {
+  titulo: string;
+  descricao: string;
+  icone: 'controle' | 'seguranca' | 'planejamento' | 'atendimento';
+}
+
+export interface PaginaCompliance {
+  pilares: {
+    titulo: string;
+    descricao: string;
+    icone: 'etica' | 'seguranca' | 'ambiental';
+    itens: string[];
+  }[];
+  vagas: { titulo: string; requisito?: string; regime?: string; descricao: string }[];
 }

@@ -1,0 +1,52 @@
+{
+  "pilares": [
+    {
+      "titulo": "Ética e governança corporativa",
+      "descricao": "Código de conduta aplicado a colaboradores, fornecedores e parceiros. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+      "icone": "etica",
+      "itens": [
+        "Conformidade à Lei Anticorrupção (Lei 12.846/2013)",
+        "Due diligence técnica e fiscal de subcontratados",
+        "Transparência em medições e aditivos contratuais"
+      ]
+    },
+    {
+      "titulo": "Segurança do trabalho e rodoviária",
+      "descricao": "Operação em faixa de domínio sob tráfego com protocolos preventivos. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+      "icone": "seguranca",
+      "itens": [
+        "Treinamentos em NR-10, NR-18, NR-35 e sinalização viária",
+        "DDS diário em todas as frentes de serviço",
+        "Plano de atendimento a emergências em campo"
+      ]
+    },
+    {
+      "titulo": "Gestão ambiental de obra",
+      "descricao": "Prevenção de passivos ambientais em terraplanagem, usinagem e bota-fora. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+      "icone": "ambiental",
+      "itens": [
+        "Rastreabilidade de resíduos da construção (PGRCC)",
+        "Controle de carreamento de sólidos e drenagem provisória",
+        "Condicionantes de licenciamento monitoradas por obra"
+      ]
+    }
+  ],
+  "vagas": [
+    {
+      "titulo": "Engenheiro civil residente (rodoviária) [exemplo]",
+      "requisito": "Registro ativo no CREA [exemplo]",
+      "regime": "Tempo integral [exemplo]",
+      "descricao": "Gestão técnica e físico-financeira de frentes de pavimentação, terraplanagem e drenagem. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+    },
+    {
+      "titulo": "Técnico em segurança do trabalho [exemplo]",
+      "requisito": "Registro no MTE [exemplo]",
+      "regime": "Obra viária [exemplo]",
+      "descricao": "Implementação de PGR, inspeções em faixa de domínio e treinamentos de NRs. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+    },
+    {
+      "titulo": "Mestre de obras [exemplo]",
+      "descricao": "Coordenação de equipes de campo em edificações e drenagens. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+    }
+  ]
+}

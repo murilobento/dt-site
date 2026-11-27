@@ -5,7 +5,7 @@ import { isValidSignature as assinaturaConfere, SIGNATURE_HEADER_NAME } from '@s
 
 /** Uma tag de cache por `_type` (ver TAGS em sanity-source.ts). */
 const TAGS_VALIDAS = new Set([
-  'obra', 'servico', 'cliente', 'numero', 'configuracoes', 'paginaEmpresa', 'paginaLegal',
+  'obra', 'servico', 'cliente', 'numero', 'configuracoes', 'paginaEmpresa', 'paginaCompliance', 'paginaLegal',
 ]);
 
 /**

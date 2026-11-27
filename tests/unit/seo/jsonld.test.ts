@@ -4,7 +4,7 @@ import { breadcrumbJsonLd, obraJsonLd } from "@/lib/seo/jsonld";
 
 const img = { url: "/capa.webp", alt: "a", width: 10, height: 10 };
 const obra: Obra = {
-  slug: "pinhalzinho-sc", titulo: "Restauração em Pinhalzinho", segmento: "infraestrutura", servicos: [],
+  slug: "pinhalzinho-sc", titulo: "Restauração em Pinhalzinho", segmento: "infraestrutura", categoria: "rodoviaria", servicos: [],
   cidade: "Pinhalzinho", uf: "SC", inicio: "2024-06", termino: "2025-02", status: "concluida",
   descricao: "d", capa: img, galeria: [{ ...img, url: "/g1.webp" }], destaque: false,
   coordenadas: { lat: -26.8, lng: -52.9 },

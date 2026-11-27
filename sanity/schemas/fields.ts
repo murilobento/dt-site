@@ -5,6 +5,23 @@ export const SEGMENTOS = [
   { title: 'Infraestrutura', value: 'infraestrutura' },
 ];
 
+export const CATEGORIAS_SERVICO = [
+  { title: 'Infraestrutura rodoviária', value: 'infraestrutura' },
+  { title: 'Edificações e reformas', value: 'edificacoes' },
+  { title: 'Consultoria técnica', value: 'consultoria' },
+];
+
+export const ICONES_SERVICO = [
+  'estrada', 'terraplanagem', 'drenagem', 'base-operacional', 'edificio',
+  'reforma', 'fundacao', 'fiscalizacao', 'projeto', 'laudo',
+];
+
+export const CATEGORIAS_OBRA = [
+  { title: 'Rodoviária e drenagem', value: 'rodoviaria' },
+  { title: 'SAUs e PREs', value: 'saupre' },
+  { title: 'Edificações e reformas', value: 'edificacoes' },
+];
+
 export const TIPOS_CLIENTE = [
   { title: 'Concessionária', value: 'concessionaria' },
   { title: 'Público', value: 'publico' },

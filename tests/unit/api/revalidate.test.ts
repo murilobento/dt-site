@@ -77,7 +77,7 @@ describe('POST /api/revalidate', () => {
     expect(revalidateTag).toHaveBeenCalledWith('obra', { expire: 0 });
   });
 
-  it.each(['obra', 'servico', 'cliente', 'numero', 'configuracoes', 'paginaEmpresa', 'paginaLegal'])(
+  it.each(['obra', 'servico', 'cliente', 'numero', 'configuracoes', 'paginaEmpresa', 'paginaCompliance', 'paginaLegal'])(
     'aceita _type %s',
     async (t) => {
       const res = await call(await req({ _type: t }));

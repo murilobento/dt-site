@@ -1,6 +1,6 @@
 import type { ContentSource } from './source';
 import type {
-  Cliente, Configuracoes, Numero, Obra, PaginaEmpresa, PaginaLegal, Servico,
+  Cliente, Configuracoes, Diferencial, Numero, Obra, PaginaCompliance, PaginaEmpresa, PaginaLegal, Servico,
 } from './types';
 import obrasJson from './fixtures/obras.json';
 import servicosJson from './fixtures/servicos.json';
@@ -8,6 +8,8 @@ import clientesJson from './fixtures/clientes.json';
 import numerosJson from './fixtures/numeros.json';
 import configuracoesJson from './fixtures/configuracoes.json';
 import paginaEmpresaJson from './fixtures/paginaEmpresa.json';
+import paginaComplianceJson from './fixtures/paginaCompliance.json';
+import diferenciaisJson from './fixtures/diferenciais.json';
 import paginasLegaisJson from './fixtures/paginasLegais.json';
 
 const obras = obrasJson as Obra[];
@@ -16,6 +18,8 @@ const clientes = clientesJson as Cliente[];
 const numeros = numerosJson as Numero[];
 const configuracoes = configuracoesJson as Configuracoes;
 const paginaEmpresa = paginaEmpresaJson as PaginaEmpresa;
+const paginaCompliance = paginaComplianceJson as PaginaCompliance;
+const diferenciais = diferenciaisJson as Diferencial[];
 const paginasLegais = paginasLegaisJson as PaginaLegal[];
 
 const obrasOrdenadas = [...obras].sort((a, b) => b.inicio.localeCompare(a.inicio));
@@ -50,6 +54,12 @@ export const fixturesSource: ContentSource = {
   },
   async getPaginaEmpresa() {
     return paginaEmpresa;
+  },
+  async getPaginaCompliance() {
+    return paginaCompliance;
+  },
+  async getDiferenciais() {
+    return diferenciais;
   },
   async getPaginaLegal(slug) {
     const p = paginasLegais.find((x) => x.slug === slug);

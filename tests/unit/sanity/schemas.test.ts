@@ -6,6 +6,8 @@ import { servico } from '../../../sanity/schemas/servico';
 import { cliente } from '../../../sanity/schemas/cliente';
 import { paginaLegal } from '../../../sanity/schemas/paginaLegal';
 import { paginaEmpresa } from '../../../sanity/schemas/paginaEmpresa';
+import { paginaCompliance } from '../../../sanity/schemas/paginaCompliance';
+import { configuracoes } from '../../../sanity/schemas/configuracoes';
 import { requiredFields } from './requiredFields';
 
 describe('schemas Sanity', () => {
@@ -21,8 +23,27 @@ describe('schemas Sanity', () => {
 
   it('obra exige slug, titulo, capa, datas e localização', () => {
     expect(requiredFields(obra)).toEqual(
-      expect.arrayContaining(['slug', 'titulo', 'capa', 'segmento', 'cidade', 'uf', 'inicio', 'status', 'descricao']),
+      expect.arrayContaining(['slug', 'titulo', 'capa', 'segmento', 'cidade', 'uf', 'inicio', 'status', 'descricao', 'categoria']),
     );
+  });
+
+  it('serviço exige categoria; subtítulo e ícone são opcionais', () => {
+    expect(requiredFields(servico)).toContain('categoria');
+    expect(requiredFields(servico)).not.toEqual(expect.arrayContaining(['subtitulo', 'icone']));
+  });
+
+  it('campos novos da ficha da obra são opcionais', () => {
+    const req = requiredFields(obra);
+    for (const f of ['codigoContrato', 'norma', 'desafio', 'solucao', 'quantitativos', 'etapas'])
+      expect(req).not.toContain(f);
+    expect(obra.fields.map((f) => f.name)).toEqual(
+      expect.arrayContaining(['codigoContrato', 'norma', 'desafio', 'solucao', 'quantitativos', 'etapas']),
+    );
+  });
+
+  it('configuracoes tem diferenciais e paginaCompliance tem pilares e vagas', () => {
+    expect(configuracoes.fields.map((f) => f.name)).toContain('diferenciais');
+    expect(paginaCompliance.fields.map((f) => f.name)).toEqual(['pilares', 'vagas']);
   });
 
   it('slug de obra e servico é obrigatório', () => {
@@ -44,7 +65,7 @@ describe('schemas Sanity', () => {
 
   it('registra todos os tipos de documento esperados', () => {
     expect(documentTypes.map((t) => t.name).sort()).toEqual(
-      ['cliente', 'configuracoes', 'numero', 'obra', 'paginaEmpresa', 'paginaLegal', 'servico'],
+      ['cliente', 'configuracoes', 'numero', 'obra', 'paginaCompliance', 'paginaEmpresa', 'paginaLegal', 'servico'],
     );
     expect(paginaEmpresa.name).toBe('paginaEmpresa');
   });

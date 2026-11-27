@@ -7,6 +7,7 @@ const base: Servico = {
   slug: "x",
   titulo: "X",
   segmento: "infraestrutura",
+  categoria: "infraestrutura",
   resumo: "r",
   escopo: ["Item de escopo"],
   etapas: [{ titulo: "Etapa 1", descricao: "desc" }],

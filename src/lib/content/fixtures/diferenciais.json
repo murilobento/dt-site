@@ -1,0 +1,22 @@
+[
+  {
+    "titulo": "Controle tecnológico próprio [exemplo]",
+    "descricao": "Ensaios de compactação, granulometria e ligantes rastreados por lote. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "icone": "controle"
+  },
+  {
+    "titulo": "Segurança viária e NRs [exemplo]",
+    "descricao": "Sinalização de obra sob tráfego e conformidade às normas regulamentadoras. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "icone": "seguranca"
+  },
+  {
+    "titulo": "Planejamento executivo [exemplo]",
+    "descricao": "Cronogramas físico-financeiros transparentes com medições auditáveis. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "icone": "planejamento"
+  },
+  {
+    "titulo": "Atendimento público e privado [exemplo]",
+    "descricao": "Contratos com concessionárias, prefeituras, órgãos estaduais e indústria. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "icone": "atendimento"
+  }
+]

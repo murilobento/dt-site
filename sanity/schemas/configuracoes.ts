@@ -68,6 +68,29 @@ export const configuracoes = defineType({
         },
       ],
     }),
+    defineField({
+      name: 'diferenciais',
+      title: 'Diferenciais (home)',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          name: 'diferencial',
+          fields: [
+            defineField({ name: 'titulo', title: 'Título', type: 'string', validation: (r) => r.required() }),
+            defineField({ name: 'descricao', title: 'Descrição', type: 'text', rows: 3, validation: (r) => r.required() }),
+            defineField({
+              name: 'icone',
+              title: 'Ícone',
+              type: 'string',
+              options: { list: ['controle', 'seguranca', 'planejamento', 'atendimento'] },
+              validation: (r) => r.required(),
+            }),
+          ],
+          preview: { select: { title: 'titulo' } },
+        },
+      ],
+    }),
     defineField({ name: 'siglaValores', title: 'Sigla dos valores', type: 'string' }),
   ],
   preview: { prepare: () => ({ title: 'Configurações do site' }) },

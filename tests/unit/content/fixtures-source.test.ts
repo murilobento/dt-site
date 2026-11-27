@@ -26,9 +26,9 @@ describe('fixturesSource', () => {
       expect(n.fonte).toBeTruthy();
       expect(n.dataReferencia).toMatch(/^\d{4}-\d{2}/);
     }));
-  it('tem 8 obras, 2+ por segmento, e a obra mínima sem opcionais', async () => {
+  it('tem 9 obras, 2+ por segmento, e a obra mínima sem opcionais', async () => {
     const r = await src.getObras();
-    expect(r).toHaveLength(8);
+    expect(r).toHaveLength(9);
     for (const s of ['obras-civis', 'infraestrutura'] as const)
       expect(r.filter((o) => o.segmento === s).length).toBeGreaterThanOrEqual(2);
     const m = await src.getObra('obra-minima-exemplo');
@@ -39,9 +39,30 @@ describe('fixturesSource', () => {
     expect(m!.galeria).toEqual([]);
     expect(m!.cliente).toBeUndefined();
     expect(m!.extensao).toBeUndefined();
+    for (const k of ['codigoContrato', 'norma', 'desafio', 'solucao', 'quantitativos', 'etapas'] as const)
+      expect(m![k]).toBeUndefined();
     const p = await src.getObra('pinhalzinho-sc');
     expect(p!.galeria).toHaveLength(4);
     expect(p!.antesDepois).toBeDefined();
+    expect(p!.categoria).toBe('rodoviaria');
+    for (const k of ['codigoContrato', 'norma', 'desafio', 'solucao'] as const) expect(p![k]).toBeTruthy();
+    expect(p!.quantitativos!.length).toBeGreaterThan(0);
+    expect(p!.etapas!.length).toBeGreaterThan(0);
+  });
+  it('obras cobrem as 3 categorias (rodoviária ≥ 2) e os serviços citados existem', async () => {
+    const obras = await src.getObras();
+    const n = (c: string) => obras.filter((o) => o.categoria === c).length;
+    expect(n('rodoviaria')).toBeGreaterThanOrEqual(2);
+    expect(n('saupre')).toBeGreaterThanOrEqual(1);
+    expect(n('edificacoes')).toBeGreaterThanOrEqual(1);
+    const slugs = (await src.getServicos()).map((s) => s.slug);
+    for (const o of obras) for (const s of o.servicos) expect(slugs).toContain(s);
+  });
+  it('dados de exemplo nunca usam Curitiba/PR, (41) ou CREA-PR', async () => {
+    const todo = JSON.stringify([
+      await src.getObras(), await src.getServicos(), await src.getPaginaCompliance(), await src.getDiferenciais(),
+    ]);
+    expect(todo).not.toMatch(/Curitiba|\(41\)|CREA-PR/);
   });
   it('clientes: 3 por tipo, ordenados por ordem asc', async () => {
     const c = await src.getClientes();
@@ -58,14 +79,33 @@ describe('fixturesSource', () => {
         expect(clientes.some((c) => c.nome === o.cliente!.nome && c.tipo === o.cliente!.tipo)).toBe(true);
   });
   it('serviços e configurações', async () => {
-    expect((await src.getServicos()).map((s) => s.slug).sort()).toEqual(
-      ['conservacao', 'construcao-rodoviaria', 'obras-civis', 'restauracao'],
-    );
+    const servicos = await src.getServicos();
+    expect(servicos.map((s) => s.slug)).toContain('restauracao');
+    for (const c of ['infraestrutura', 'edificacoes', 'consultoria'] as const)
+      expect(servicos.filter((s) => s.categoria === c).length).toBeGreaterThanOrEqual(2);
+    const seg = { infraestrutura: 'infraestrutura', edificacoes: 'obras-civis', consultoria: 'infraestrutura' } as const;
+    for (const s of servicos) expect(s.segmento).toBe(seg[s.categoria]);
+    expect(new Set(servicos.map((s) => s.slug)).size).toBe(servicos.length);
     expect(await src.getServico('x')).toBeNull();
     const cfg = await src.getConfiguracoes();
     expect(cfg.cnpj).toBe('53.675.601/0001-60');
     expect(cfg.whatsapp).toBe('5514981734581');
     expect((await src.getPaginaLegal('cookies')).slug).toBe('cookies');
+  });
+});
+
+describe('fixturesSource: compliance e diferenciais', () => {
+  it('compliance tem 3 pilares com itens e vagas; uma vaga sem requisito/regime', async () => {
+    const c = await src.getPaginaCompliance();
+    expect(c.pilares.map((p) => p.icone)).toEqual(['etica', 'seguranca', 'ambiental']);
+    expect(c.pilares.every((p) => p.itens.length > 0)).toBe(true);
+    expect(c.vagas.length).toBeGreaterThanOrEqual(2);
+    expect(c.vagas.every((v) => v.titulo.includes('[exemplo]'))).toBe(true);
+    expect(c.vagas.some((v) => v.requisito === undefined && v.regime === undefined)).toBe(true);
+  });
+  it('diferenciais: 4, um por ícone', async () => {
+    const d = await src.getDiferenciais();
+    expect(d.map((x) => x.icone).sort()).toEqual(['atendimento', 'controle', 'planejamento', 'seguranca']);
   });
 });
 
