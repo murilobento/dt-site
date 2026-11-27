@@ -2,12 +2,22 @@
 
 import Link from "next/link";
 import Script from "next/script";
+import { useCallback, useEffect, useRef } from "react";
+
+interface TurnstileApi {
+  render: (container: HTMLElement, options: Record<string, unknown>) => string;
+  remove: (widgetId: string) => void;
+  reset: (widgetId?: string) => void;
+}
 
 declare global {
   interface Window {
-    turnstile?: { reset: () => void };
+    turnstile?: TurnstileApi;
   }
 }
+
+/** Atributo do contêiner com o id do widget; permite o reset a partir do formulário. */
+const WIDGET_ID_ATTR = "data-turnstile-widget-id";
 
 /** Honeypot: invisível para pessoas e leitores de tela. */
 /** Legenda "* Campos obrigatórios", ao lado do botão de envio. */
@@ -26,21 +36,59 @@ export function Honeypot() {
   );
 }
 
-/** Widget do Cloudflare Turnstile; sem site key (dev/e2e offline) não renderiza nada. */
+/**
+ * Widget do Cloudflare Turnstile; sem site key (dev/e2e offline) não renderiza nada.
+ * Renderização explícita: o api.js só processa `.cf-turnstile` implícitos na primeira carga, então após uma
+ * navegação client-side o widget sumiria. Aqui cada montagem chama `turnstile.render` e a desmontagem, `remove`.
+ * O Turnstile injeta o input `cf-turnstile-response` dentro do contêiner, que fica dentro do <form>.
+ */
 export function TurnstileWidget() {
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const widgetIdRef = useRef<string | null>(null);
+
+  const renderWidget = useCallback(() => {
+    const container = containerRef.current;
+    const api = window.turnstile;
+    if (!siteKey || !container || !api || widgetIdRef.current !== null) return;
+    const id = api.render(container, {
+      sitekey: siteKey,
+      appearance: "interaction-only",
+      "response-field-name": "cf-turnstile-response",
+    });
+    widgetIdRef.current = id;
+    container.setAttribute(WIDGET_ID_ATTR, id);
+  }, [siteKey]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    // Script já carregado (navegação client-side); senão o onReady do <Script> chama renderWidget.
+    renderWidget();
+    return () => {
+      const id = widgetIdRef.current;
+      widgetIdRef.current = null;
+      container?.removeAttribute(WIDGET_ID_ATTR);
+      if (id !== null) window.turnstile?.remove(id);
+    };
+  }, [renderWidget]);
+
   if (!siteKey) return null;
   return (
     <>
-      <div className="cf-turnstile" data-sitekey={siteKey} data-appearance="interaction-only" data-response-field-name="cf-turnstile-response" />
-      <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="lazyOnload" />
+      <div ref={containerRef} />
+      <Script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+        strategy="lazyOnload"
+        onReady={renderWidget}
+      />
     </>
   );
 }
 
 /** Após um erro: o token do Turnstile é de uso único, e o foco vai ao primeiro campo inválido (ou à mensagem geral). */
 export function recoverAfterError(form: HTMLFormElement | null) {
-  window.turnstile?.reset();
+  const widgetId = form?.querySelector(`[${WIDGET_ID_ATTR}]`)?.getAttribute(WIDGET_ID_ATTR);
+  if (widgetId) window.turnstile?.reset(widgetId);
   const first = form?.querySelector<HTMLElement>("[aria-invalid='true']");
   (first ?? form?.querySelector<HTMLElement>("[data-form-message]"))?.focus();
 }
