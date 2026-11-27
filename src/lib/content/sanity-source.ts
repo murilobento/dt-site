@@ -238,17 +238,18 @@ const SERVICO_PROJECAO = `{
   ${IMG('imagem')},
   seo{titulo, descricao}
 }`;
-const SERVICO_BASE = `_type == "servico" && ${PUBLICADO} && defined(slug.current) && defined(imagem.asset) && defined(categoria)`;
+const SERVICO_BASE = `_type == "servico" && ${PUBLICADO} && defined(slug.current) && defined(imagem.asset)`;
 
 function mapServico(raw: RawServico | null | undefined): Servico | null {
   const imagem = imagemOuNull(raw?.imagem);
-  if (!raw || !raw.slug || !imagem || !raw.categoria) return null;
+  if (!raw || !raw.slug || !imagem) return null;
   const seo = raw.seo ? semNulos(raw.seo) : undefined;
   return {
     slug: raw.slug,
     titulo: raw.titulo,
     segmento: raw.segmento,
-    categoria: raw.categoria,
+    // Serviço publicado antes do campo existir: deriva a categoria do segmento.
+    categoria: raw.categoria ?? (raw.segmento === 'obras-civis' ? 'edificacoes' : 'infraestrutura'),
     ...(raw.subtitulo ? { subtitulo: raw.subtitulo } : {}),
     ...(raw.icone ? { icone: raw.icone } : {}),
     resumo: raw.resumo,

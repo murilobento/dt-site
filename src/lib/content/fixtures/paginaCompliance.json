@@ -1,7 +1,7 @@
 {
   "pilares": [
     {
-      "titulo": "Ética e governança corporativa",
+      "titulo": "Ética e governança corporativa [exemplo]",
       "descricao": "Código de conduta aplicado a colaboradores, fornecedores e parceiros. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
       "icone": "etica",
       "itens": [
@@ -11,7 +11,7 @@
       ]
     },
     {
-      "titulo": "Segurança do trabalho e rodoviária",
+      "titulo": "Segurança do trabalho e rodoviária [exemplo]",
       "descricao": "Operação em faixa de domínio sob tráfego com protocolos preventivos. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
       "icone": "seguranca",
       "itens": [
@@ -21,7 +21,7 @@
       ]
     },
     {
-      "titulo": "Gestão ambiental de obra",
+      "titulo": "Gestão ambiental de obra [exemplo]",
       "descricao": "Prevenção de passivos ambientais em terraplanagem, usinagem e bota-fora. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
       "icone": "ambiental",
       "itens": [

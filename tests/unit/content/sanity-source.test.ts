@@ -101,16 +101,21 @@ describe('sanitySource', () => {
     expect(await sanitySource.getObra('pinhalzinho-sc')).toBeNull();
   });
 
-  it('mapeia categoria, subtítulo e ícone do serviço; sem categoria é excluído', async () => {
+  it('mapeia categoria, subtítulo e ícone do serviço; sem categoria deriva do segmento', async () => {
     const rawServico = {
       slug: 'restauracao', titulo: 'R', segmento: 'infraestrutura', categoria: 'infraestrutura',
       subtitulo: 'CBUQ • Fresagem', icone: 'estrada', resumo: 'r', escopo: null, etapas: null, equipamentos: null,
       imagem: rawImagem('s1', 'Equipe em obra'), seo: null,
     };
-    fetchMock.mockResolvedValue([rawServico, { ...rawServico, slug: 'x', categoria: null }]);
+    fetchMock.mockResolvedValue([
+      rawServico,
+      { ...rawServico, slug: 'x', categoria: null },
+      { ...rawServico, slug: 'y', categoria: null, segmento: 'obras-civis' },
+    ]);
     const r = await sanitySource.getServicos();
-    expect(r).toHaveLength(1);
-    expect(r[0]).toMatchObject({ categoria: 'infraestrutura', subtitulo: 'CBUQ • Fresagem', icone: 'estrada' });
+    expect(fetchMock.mock.calls[0][0]).not.toContain('defined(categoria)');
+    expect(r.map((x) => x.categoria)).toEqual(['infraestrutura', 'infraestrutura', 'edificacoes']);
+    expect(r[0]).toMatchObject({ subtitulo: 'CBUQ • Fresagem', icone: 'estrada' });
     fetchMock.mockResolvedValue([{ ...rawServico, subtitulo: null, icone: null }]);
     const [s] = await sanitySource.getServicos();
     expect(s.subtitulo).toBeUndefined();
