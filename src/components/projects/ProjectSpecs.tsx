@@ -6,12 +6,21 @@ import { formatNumber, formatPeriodo } from "@/lib/format";
 type Row = { label: string; value: ReactNode };
 
 /** Ficha técnica em `<dl>`. Linhas sem dado são omitidas por inteiro. */
-export function ProjectSpecs({ obra, servicos = [] }: { obra: Obra; servicos?: Pick<Servico, "slug" | "titulo">[] }) {
+export function ProjectSpecs({
+  obra,
+  servicos = [],
+  compact = false,
+}: {
+  obra: Obra;
+  servicos?: Pick<Servico, "slug" | "titulo">[];
+  /** Só as linhas que a faixa de metadados da ficha não mostra (cliente e serviços). */
+  compact?: boolean;
+}) {
   const rows: Row[] = [];
-  if (obra.cidade && obra.uf) rows.push({ label: "Local", value: `${obra.cidade}/${obra.uf}` });
+  if (!compact && obra.cidade && obra.uf) rows.push({ label: "Local", value: `${obra.cidade}/${obra.uf}` });
   if (obra.cliente?.nome) rows.push({ label: "Cliente", value: obra.cliente.nome });
-  rows.push({ label: "Período", value: formatPeriodo(obra.inicio, obra.termino) });
-  if (obra.extensao) {
+  if (!compact) rows.push({ label: "Período", value: formatPeriodo(obra.inicio, obra.termino) });
+  if (!compact && obra.extensao) {
     rows.push({
       label: obra.extensao.unidade === "km" ? "Extensão" : "Área",
       value: `${formatNumber(obra.extensao.valor)} ${obra.extensao.unidade}`,
@@ -27,7 +36,7 @@ export function ProjectSpecs({ obra, servicos = [] }: { obra: Obra; servicos?: P
         <ul className="flex flex-col gap-1">
           {links.map((s) => (
             <li key={s.slug}>
-              <Link href={`/servicos/${s.slug}`} className="underline underline-offset-4 hover:text-brand-primary-hover">
+              <Link href={`/servicos/${s.slug}`} className="underline underline-offset-4 hover:text-secondary">
                 {s.titulo}
               </Link>
             </li>
@@ -36,16 +45,24 @@ export function ProjectSpecs({ obra, servicos = [] }: { obra: Obra; servicos?: P
       ),
     });
   }
-  rows.push({ label: "Status", value: obra.status === "em-andamento" ? "Em andamento" : "Concluída" });
+  if (!compact) rows.push({ label: "Status", value: obra.status === "em-andamento" ? "Em andamento" : "Concluída" });
 
-  return (
+  if (rows.length === 0) return null;
+  const lista = (
     <dl className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
       {rows.map((r) => (
-        <div key={r.label} className="border-t border-border pt-4">
-          <dt className="text-sm font-semibold text-text-secondary">{r.label}</dt>
-          <dd className="mt-1 text-base text-text-primary">{r.value}</dd>
+        <div key={r.label} className="border-t border-outline-variant pt-4">
+          <dt className="text-sm font-semibold text-on-surface-variant">{r.label}</dt>
+          <dd className="mt-1 text-base text-on-surface">{r.value}</dd>
         </div>
       ))}
     </dl>
+  );
+  if (!compact) return lista;
+  return (
+    <section className="flex flex-col gap-6">
+      <h2 className="font-headline text-headline-md text-on-surface">Ficha técnica</h2>
+      {lista}
+    </section>
   );
 }

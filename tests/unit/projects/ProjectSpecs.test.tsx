@@ -41,4 +41,13 @@ describe("ProjectSpecs", () => {
     expect(screen.getByText("Área")).toBeInTheDocument();
     expect(screen.getByText("142.000 m²")).toBeInTheDocument();
   });
+
+  it("compact mostra só cliente e serviços; vazio não renderiza nada", () => {
+    render(<ProjectSpecs obra={completa} servicos={[{ slug: "restauracao", titulo: "Restauração" }]} compact />);
+    expect(screen.getByText("Cliente B")).toBeInTheDocument();
+    expect(screen.queryByText("Local")).toBeNull();
+    expect(screen.queryByText("Status")).toBeNull();
+    const { container } = render(<ProjectSpecs obra={minima} compact />);
+    expect(container).toBeEmptyDOMElement();
+  });
 });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fixturesSource } from '@/lib/content/fixtures-source';
-import { filterObras, parseObraFilters, serializeObraFilters, type ObraFilters } from '@/lib/obras/filter';
+import { clientesDasObras, filterObras, parseObraFilters, serializeObraFilters, type ObraFilters } from '@/lib/obras/filter';
 import { normalizeForSearch } from '@/lib/text/normalize';
 
 const obras = await fixturesSource.getObras();
@@ -38,6 +38,24 @@ describe('filterObras', () => {
     const r = filterObras(obras, {});
     expect(r).toHaveLength(obras.length);
     expect(r.map((o) => o.slug)).toContain('obra-minima-exemplo');
+  });
+});
+
+describe('categoria e cliente', () => {
+  it('filtra por categoria', () => {
+    const r = filterObras(obras, { categoria: 'saupre' });
+    expect(r.length).toBeGreaterThan(0);
+    expect(r.every((o) => o.categoria === 'saupre')).toBe(true);
+  });
+  it('categoria inválida é ignorada; válida é mantida e serializada primeiro', () => {
+    expect(parseObraFilters(new URLSearchParams('categoria=xx'))).toEqual({});
+    expect(parseObraFilters(new URLSearchParams('categoria=saupre'))).toEqual({ categoria: 'saupre' });
+    expect(serializeObraFilters({ q: 'a', categoria: 'edificacoes' })).toBe('categoria=edificacoes&q=a');
+  });
+  it('cliente desconhecido é descartado quando a lista é informada', () => {
+    const clientes = clientesDasObras(obras);
+    expect(parseObraFilters(new URLSearchParams('cliente=Inexistente'), { clientes })).toEqual({});
+    expect(parseObraFilters(new URLSearchParams(`cliente=${encodeURIComponent(clientes[0])}`), { clientes })).toEqual({ cliente: clientes[0] });
   });
 });
 

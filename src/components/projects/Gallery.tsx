@@ -27,7 +27,7 @@ export function Gallery({ fotos }: { fotos: Imagem[] }) {
                 setIndex(i);
               }}
               aria-label={`Ampliar foto ${i + 1}: ${foto.alt}`}
-              className="relative block aspect-[8/5] w-full overflow-hidden rounded-card bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+              className="relative block aspect-[8/5] w-full overflow-hidden rounded-md bg-surface-container focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <Image
                 src={foto.url}

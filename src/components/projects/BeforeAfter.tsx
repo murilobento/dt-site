@@ -13,10 +13,10 @@ export function BeforeAfter({ antesDepois }: Props) {
     <div className="grid gap-6 md:grid-cols-2">
       {items.map(({ rotulo, img }) => (
         <figure key={rotulo}>
-          <div className="relative aspect-[8/5] overflow-hidden rounded-card bg-surface-muted">
+          <div className="relative aspect-[8/5] overflow-hidden rounded-md bg-surface-container">
             <Image src={img.url} alt={img.alt} fill sizes="(min-width: 48rem) 50vw, 100vw" className="object-cover" />
           </div>
-          <figcaption className="mt-2 text-sm font-semibold text-text-secondary">{rotulo}</figcaption>
+          <figcaption className="mt-2 text-sm font-semibold text-on-surface-variant">{rotulo}</figcaption>
         </figure>
       ))}
     </div>

@@ -32,10 +32,11 @@ test("lightbox: botões Anterior, Próxima e Fechar", async ({ page }) => {
 test("obra completa tem todas as seções e uma única imagem prioritária", async ({ page }) => {
   await page.goto("/obras/pinhalzinho-sc");
   await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
-  for (const h of ["Ficha técnica", "Diferencial técnico", "Sobre a obra", "Galeria", "Antes e depois"]) {
+  for (const h of ["Desafio", "Solução", "Quantitativos executados", "Etapas da execução", "Ficha técnica", "Diferencial técnico", "Galeria", "Antes e depois"]) {
     await expect(page.getByRole("heading", { level: 2, name: h })).toBeVisible();
   }
   await expect(page.locator("img[fetchpriority='high']")).toHaveCount(1);
+  await expect(page.getByRole("list").filter({ has: page.getByRole("heading", { level: 3 }) }).locator("li")).toHaveCount(3);
   await expect(page.getByRole("link", { name: "Restauração", exact: false }).first()).toHaveAttribute(
     "href",
     /\/servicos\/restauracao/,
@@ -44,14 +45,14 @@ test("obra completa tem todas as seções e uma única imagem prioritária", asy
 
 test("obra sem galeria nem antes/depois não mostra essas seções", async ({ page }) => {
   await page.goto("/obras/obra-minima-exemplo");
-  await expect(page.getByRole("heading", { level: 2, name: "Ficha técnica" })).toBeVisible();
-  for (const h of ["Galeria", "Antes e depois", "Diferencial técnico"]) {
+  await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
+  for (const h of ["Galeria", "Antes e depois", "Diferencial técnico", "Desafio", "Solução", "Quantitativos executados", "Etapas da execução"]) {
     await expect(page.getByRole("heading", { name: h })).toHaveCount(0);
   }
   await expect(page.getByText(/undefined|null/)).toHaveCount(0);
-  await expect(page.getByText("Extensão")).toHaveCount(0);
+  for (const l of ["Extensão", "Contrato", "Normativa"]) await expect(page.getByText(l, { exact: true })).toHaveCount(0);
   await expect(page.getByText("Cliente", { exact: true })).toHaveCount(0);
-  await expect(page.getByText("desde ago/2025")).toBeVisible();
+  await expect(page.getByText("Em andamento • desde ago/2025")).toBeVisible();
 });
 
 test("CTA final usa a microcopy e o segmento da obra", async ({ page }) => {

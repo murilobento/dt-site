@@ -6,7 +6,7 @@ import { FilterBar } from "@/components/projects/FilterBar";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { Button } from "@/components/ui/Button";
 import { track } from "@/lib/analytics/track";
-import { filterObras, parseObraFilters, serializeObraFilters, type ObraFilters } from "@/lib/obras/filter";
+import { clientesDasObras, filterObras, parseObraFilters, serializeObraFilters, type ObraFilters } from "@/lib/obras/filter";
 import type { Obra, UF } from "@/lib/content/types";
 
 const DEBOUNCE_MS = 250;
@@ -25,32 +25,37 @@ export function ObrasExplorer({ obras, initialFilters, servicoNomes }: Props) {
   const searchParams = useSearchParams();
   const jsActive = useSyncExternalStore(subscribeNoop, () => true, () => false);
 
+  const ufs = useMemo(() => [...new Set(obras.map((o) => o.uf))].sort() as UF[], [obras]);
+  const clientes = useMemo(() => clientesDasObras(obras), [obras]);
+
   const [filters, setFilters] = useState<ObraFilters>(initialFilters);
   const [qInput, setQInput] = useState(initialFilters.q ?? "");
+  const [moreOpen, setMoreOpen] = useState(
+    Boolean(initialFilters.uf || initialFilters.status || initialFilters.cliente || initialFilters.q),
+  );
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const lastWritten = useRef(serializeObraFilters(initialFilters));
+  // Sempre o filtro mais recente: o callback do debounce não pode ler um closure velho.
+  const filtersRef = useRef(initialFilters);
 
   // Navegação externa (link, voltar) muda a URL: adota os filtros dela.
   const urlQuery = searchParams.toString();
   useEffect(() => {
-    const fromUrl = parseObraFilters(new URLSearchParams(urlQuery));
+    const fromUrl = parseObraFilters(new URLSearchParams(urlQuery), { clientes });
     const serialized = serializeObraFilters(fromUrl);
     if (serialized === lastWritten.current) return;
     lastWritten.current = serialized;
+    filtersRef.current = fromUrl;
     setFilters(fromUrl);
     setQInput(fromUrl.q ?? "");
-  }, [urlQuery]);
+  }, [urlQuery, clientes]);
 
   useEffect(() => () => clearTimeout(timer.current), []);
 
-  const ufs = useMemo(() => [...new Set(obras.map((o) => o.uf))].sort() as UF[], [obras]);
-  const clientes = useMemo(
-    () => [...new Set(obras.flatMap((o) => (o.cliente ? [o.cliente.nome] : [])))].sort((a, b) => a.localeCompare(b, "pt-BR")),
-    [obras],
-  );
   const resultado = useMemo(() => filterObras(obras, filters, servicoNomes), [obras, filters, servicoNomes]);
 
   function apply(next: ObraFilters) {
+    filtersRef.current = next;
     setFilters(next);
     const qs = serializeObraFilters(next);
     lastWritten.current = qs;
@@ -58,23 +63,27 @@ export function ObrasExplorer({ obras, initialFilters, servicoNomes }: Props) {
   }
 
   function onSelect(key: Exclude<keyof ObraFilters, "q">, value: string) {
-    const next = { ...filters, [key]: value || undefined } as ObraFilters;
+    const next = { ...filtersRef.current, [key]: value || undefined } as ObraFilters;
     if (!value) delete next[key];
     track("filter_use", { filtro: key, valor: value || "todos" });
+    apply(next);
+  }
+
+  function commitSearch(value: string) {
+    clearTimeout(timer.current);
+    const q = value.trim();
+    const next = { ...filtersRef.current };
+    if (q) next.q = q;
+    else delete next.q;
+    if ((next.q ?? "") === (filtersRef.current.q ?? "")) return;
+    track("filter_use", { filtro: "q", valor: q });
     apply(next);
   }
 
   function onSearch(value: string) {
     setQInput(value);
     clearTimeout(timer.current);
-    timer.current = setTimeout(() => {
-      const q = value.trim();
-      const next = { ...filters };
-      if (q) next.q = q;
-      else delete next.q;
-      track("filter_use", { filtro: "q", valor: q });
-      apply(next);
-    }, DEBOUNCE_MS);
+    timer.current = setTimeout(() => commitSearch(value), DEBOUNCE_MS);
   }
 
   function onClear() {
@@ -86,9 +95,10 @@ export function ObrasExplorer({ obras, initialFilters, servicoNomes }: Props) {
 
   const ativo = Object.keys(filters).length > 0 || qInput.trim() !== "";
   const vazio = resultado.length === 0;
+  const countLabel = resultado.length === 1 ? "1 obra exibida" : `${resultado.length} obras exibidas`;
 
   return (
-    <>
+    <div className="flex flex-col gap-8">
       <FilterBar
         filters={filters}
         qInput={qInput}
@@ -96,28 +106,33 @@ export function ObrasExplorer({ obras, initialFilters, servicoNomes }: Props) {
         clientes={clientes}
         jsActive={jsActive}
         showClear={ativo && !vazio}
+        countLabel={countLabel}
+        moreOpen={moreOpen}
+        onToggleMore={() => setMoreOpen((v) => !v)}
         onSelect={onSelect}
         onSearch={onSearch}
+        onSearchNow={() => commitSearch(qInput)}
         onClear={onClear}
       />
       <h2 className="sr-only">Resultados</h2>
-      <p role="status" aria-live="polite" className="mt-8 text-base font-semibold text-text-primary">
-        {resultado.length === 1 ? "1 obra" : `${resultado.length} obras`}
-      </p>
       {vazio ? (
-        <div className="mt-6 rounded-card border border-border bg-surface-muted p-8">
-          <p className="text-lg text-text-primary">Nenhuma obra com esses filtros. Limpe um filtro para ver mais.</p>
-          <Button className="mt-6" onClick={onClear}>Limpar filtros</Button>
+        <div className="rounded-md border border-outline-variant bg-surface-container-low p-8">
+          <p className="font-body text-body-lg text-on-surface">Nenhuma obra com esses filtros. Limpe um filtro para ver mais.</p>
+          {jsActive ? (
+            <Button className="mt-6" onClick={onClear}>Limpar filtros</Button>
+          ) : (
+            <Button className="mt-6" href="/obras">Limpar filtros</Button>
+          )}
         </div>
       ) : (
-        <ul className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <ul className="grid items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">
           {resultado.map((o) => (
-            <li key={o.slug}>
+            <li key={o.slug} className="flex">
               <ProjectCard obra={o} />
             </li>
           ))}
         </ul>
       )}
-    </>
+    </div>
   );
 }
