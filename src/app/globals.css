@@ -1,13 +1,13 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
 
-/* Entrada de seção (componente Reveal): fade + 16px, 300ms, ease-out, uma vez. O Reveal só
+/* Entrada de seção (componente Reveal): fade + 16px, 240ms, curva de entrada do layout, uma vez. O Reveal só
    marca `data-reveal="pending"` depois da hidratação e sem reduced motion; sem JS o conteúdo fica visível. */
 @media (prefers-reduced-motion: no-preference) {
   [data-reveal] {
     transition:
-      opacity 300ms ease-out,
-      transform 300ms ease-out;
+      opacity var(--transition-duration-surface-enter) var(--ease-surface-enter),
+      transform var(--transition-duration-surface-enter) var(--ease-surface-enter);
   }
   [data-reveal="pending"] {
     opacity: 0;

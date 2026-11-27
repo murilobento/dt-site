@@ -2,13 +2,18 @@ import { describe, expect, it } from "vitest";
 import { CTA, NAV_ITEMS } from "@/lib/nav";
 
 describe("NAV_ITEMS", () => {
-  it('menu tem no máximo 6 itens e nenhum "Mais"', () => {
-    expect(NAV_ITEMS.length).toBeLessThanOrEqual(6);
-    expect(NAV_ITEMS.map((i) => i.label)).not.toContain("Mais");
+  it("tem exatamente os 6 itens do layout, na ordem, sem \"Mais\"", () => {
+    expect(NAV_ITEMS).toEqual([
+      { label: "Serviços", href: "/servicos" },
+      { label: "Obras", href: "/obras" },
+      { label: "Consultoria", href: "/servicos#consultoria" },
+      { label: "Sobre Nós", href: "/sobre" },
+      { label: "Compliance", href: "/compliance" },
+      { label: "Contato", href: "/contato" },
+    ]);
   });
 
-  it("traz Empresa, Serviços, Obras e Contato; CTA vai para o comercial", () => {
-    expect(NAV_ITEMS.map((i) => i.href)).toEqual(["/empresa", "/servicos", "/obras", "/contato"]);
-    expect(CTA).toEqual({ label: "Fale com a equipe", href: "/contato/comercial" });
+  it("CTA \"Solicitar proposta\" vai para /contato", () => {
+    expect(CTA).toEqual({ label: "Solicitar proposta", href: "/contato" });
   });
 });

@@ -53,4 +53,6 @@ test("borda branca mantém o contorno visível sobre o rodapé escuro", async ({
   const a = link(page);
   await expect(a).toHaveCSS("border-top-color", "rgb(255, 255, 255)");
   await expect(a).toHaveCSS("border-top-width", "2px");
+  // fundo navy do layout (brand-navy #0F2942)
+  await expect(a).toHaveCSS("background-color", "rgb(15, 41, 66)");
 });

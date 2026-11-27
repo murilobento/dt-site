@@ -1,27 +1,117 @@
-/* Design tokens da DT Construtora. Identidade monocromática derivada de brand/logo.svg.
-   Espaços: mantemos a base de 4px do Tailwind (sem tokens discretos). Os componentes usam
-   apenas degraus da escala 4·8·16·24·32·48·64·96·128, isto é, p/m/gap 1, 2, 4, 6, 8, 12, 16, 24, 32. */
+/* Design tokens da DT Construtora (Layout v2). Nomes e valores vêm do index.css do layout do cliente,
+   sem o prefixo `light-`. Espaços: além dos tokens gutter-*, a base de 4px do Tailwind continua valendo. */
 @theme {
   --color-*: initial;
-  --color-brand-primary: #111111;
-  --color-brand-primary-hover: #333333;
-  --color-surface-inverse: #111111;
-  --color-surface-default: #ffffff;
-  --color-surface-muted: #f4f4f4;
-  --color-text-primary: #111111;
-  --color-text-secondary: #5c5c5c;
-  --color-text-on-inverse: #ffffff;
-  --color-text-on-inverse-secondary: #bdbdbd;
-  --color-border: #d9d9d9;
+  --color-white: #ffffff;
+  --color-accent: #d97707;
+  --color-brand-navy: #0f2942;
+  --color-primary: #001428;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #0f2942;
+  --color-on-primary-container: #d1e4ff;
+  --color-secondary: #904d00;
+  --color-secondary-container: #fe932c;
+  --color-on-secondary-container: #2f1500;
+  --color-error: #ba1a1a;
+  --color-surface: #faf9fb;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f5f3f5;
+  --color-surface-container: #efedf0;
+  --color-surface-container-high: #e9e8ea;
+  --color-on-surface: #1b1c1e;
+  --color-on-surface-variant: #43474d;
+  --color-outline: #74777e;
+  --color-outline-variant: #c3c6ce;
+  --color-inverse-surface: #2f3032;
+  --color-inverse-on-surface: #f2f0f3;
+
+  /* Legacy aliases: remover após Layout v2 Task 7. Os componentes ainda não migrados usam os nomes
+     antigos; cada um aponta para o valor novo mais próximo para as páginas continuarem renderizando. */
+  --color-brand-primary: #001428; /* = primary */
+  --color-brand-primary-hover: #0f2942; /* = brand-navy */
+  --color-surface-inverse: #0f2942; /* = brand-navy */
+  --color-surface-default: #ffffff; /* = surface-container-lowest */
+  --color-surface-muted: #f5f3f5; /* = surface-container-low */
+  --color-text-primary: #1b1c1e; /* = on-surface */
+  --color-text-secondary: #43474d; /* = on-surface-variant */
+  --color-text-on-inverse: #ffffff; /* = white */
+  --color-text-on-inverse-secondary: #d1e4ff; /* = on-primary-container */
+  --color-border: #c3c6ce; /* = outline-variant */
   --color-success: #1e7f4f;
   --color-warning: #b26b00;
-  --color-error: #b3261e;
 
-  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-headline: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-title: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-radio-canada-big), ui-sans-serif, system-ui, sans-serif;
+  --font-label: var(--font-radio-canada-big), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-radio-canada-big), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-source-code-pro), ui-monospace, monospace;
 
-  /* Escala tipográfica: base 16, razão 1,25 */
+  /* Escala tipográfica do layout */
   --text-*: initial;
+  --text-display-lg: 52px;
+  --text-display-lg--line-height: 58px;
+  --text-display-lg--letter-spacing: -0.75px;
+  --text-display-lg--font-weight: 700;
+
+  --text-display-lg-mobile: 32px;
+  --text-display-lg-mobile--line-height: 38px;
+  --text-display-lg-mobile--letter-spacing: -0.25px;
+  --text-display-lg-mobile--font-weight: 700;
+
+  --text-headline-lg: 36px;
+  --text-headline-lg--line-height: 44px;
+  --text-headline-lg--letter-spacing: -0.5px;
+  --text-headline-lg--font-weight: 600;
+
+  --text-headline-lg-mobile: 26px;
+  --text-headline-lg-mobile--line-height: 32px;
+  --text-headline-lg-mobile--letter-spacing: -0.25px;
+  --text-headline-lg-mobile--font-weight: 600;
+
+  --text-headline-md: 26px;
+  --text-headline-md--line-height: 32px;
+  --text-headline-md--letter-spacing: -0.2px;
+  --text-headline-md--font-weight: 600;
+
+  --text-title-lg: 20px;
+  --text-title-lg--line-height: 28px;
+  --text-title-lg--letter-spacing: 0px;
+  --text-title-lg--font-weight: 600;
+
+  --text-title-md: 16px;
+  --text-title-md--line-height: 24px;
+  --text-title-md--letter-spacing: 0px;
+  --text-title-md--font-weight: 600;
+
+  --text-body-lg: 17px;
+  --text-body-lg--line-height: 26px;
+  --text-body-lg--letter-spacing: 0px;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 15px;
+  --text-body-md--line-height: 22px;
+  --text-body-md--letter-spacing: 0px;
+  --text-body-md--font-weight: 400;
+
+  --text-label-lg: 14px;
+  --text-label-lg--line-height: 20px;
+  --text-label-lg--letter-spacing: 0.1px;
+  --text-label-lg--font-weight: 600;
+
+  --text-label-sm: 12px;
+  --text-label-sm--line-height: 16px;
+  --text-label-sm--letter-spacing: 0.4px;
+  --text-label-sm--font-weight: 600;
+
+  --text-mono-md: 13px;
+  --text-mono-md--line-height: 18px;
+  --text-mono-md--letter-spacing: 0px;
+  --text-mono-md--font-weight: 500;
+
+
+  /* Legacy aliases (text-xs…text-5xl): remover após Layout v2 Task 7 */
   --text-xs: 0.75rem;
   --text-xs--line-height: 1.5;
   --text-sm: 0.875rem;
@@ -41,14 +131,35 @@
   --text-5xl: 3.8125rem;
   --text-5xl--line-height: 1.1;
 
+  --spacing-gutter-xs: 4px;
+  --spacing-gutter-sm: 8px;
+  --spacing-gutter-md: 16px;
+  --spacing-gutter-lg: 24px;
+  --spacing-gutter-xl: 32px;
+  --spacing-section: 64px;
+  --spacing-page-margin: 24px;
+
   --radius-*: initial;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+  /* Legacy aliases: remover após Layout v2 Task 7 */
   --radius-control: 4px;
   --radius-card: 8px;
 
   --shadow-*: initial;
   --shadow-overlay: 0 8px 24px rgb(0 0 0 / 0.16);
 
-  --container-page: 80rem;
+  --transition-duration-state-change: 120ms;
+  --transition-duration-surface-enter: 240ms;
+  --transition-duration-surface-exit: 160ms;
+  --ease-state-change: ease-out;
+  --ease-surface-enter: cubic-bezier(0.2, 0, 0, 1);
+  --ease-surface-exit: cubic-bezier(0.3, 0, 1, 1);
+
+  --container-page: 75rem;
   --breakpoint-*: initial;
   --breakpoint-sm: 40rem;
   --breakpoint-md: 48rem;
@@ -58,25 +169,31 @@
 
 @layer base {
   body {
-    background: var(--color-surface-default);
-    color: var(--color-text-primary);
-    font-family: var(--font-sans);
+    background: var(--color-surface);
+    color: var(--color-on-surface);
+    font-family: var(--font-body);
     line-height: 1.5;
   }
 
   h1,
-  h2 {
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
-    font-weight: 800;
-    line-height: 1.1;
+    line-height: 1.15;
+  }
+
+  h1,
+  h2 {
+    font-weight: 700;
   }
 
   h3,
   h4 {
-    line-height: 1.1;
+    font-weight: 600;
   }
 
-  /* Foco visível: preto em fundo claro, branco em fundo escuro (herda a cor do texto) */
+  /* Foco visível: herda a cor do texto (navy em fundo claro, branco em fundo escuro) */
   :focus-visible {
     outline: 2px solid currentColor;
     outline-offset: 3px;

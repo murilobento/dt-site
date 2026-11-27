@@ -12,17 +12,15 @@ export function SectionHeader({ eyebrow, title, lead, tone = "light" }: SectionH
   return (
     <header className="max-w-3xl">
       {eyebrow && (
-        <Eyebrow className={dark ? "text-text-on-inverse-secondary" : "text-text-secondary"}>
-          {eyebrow}
-        </Eyebrow>
+        <Eyebrow className={dark ? "text-on-primary-container" : "text-on-surface-variant"}>{eyebrow}</Eyebrow>
       )}
       <h2
-        className={`mt-2 text-2xl md:text-3xl ${dark ? "text-text-on-inverse" : "text-text-primary"}`}
+        className={`mt-2 font-headline text-headline-lg-mobile text-balance lg:text-headline-lg ${dark ? "text-white" : "text-primary"}`}
       >
         {title}
       </h2>
       {lead && (
-        <p className={`mt-4 text-lg ${dark ? "text-text-on-inverse-secondary" : "text-text-secondary"}`}>
+        <p className={`mt-4 font-body text-body-lg text-pretty ${dark ? "text-on-primary-container" : "text-on-surface-variant"}`}>
           {lead}
         </p>
       )}

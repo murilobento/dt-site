@@ -16,18 +16,25 @@ import { organizationJsonLd } from "@/lib/seo/jsonld";
 import { getSiteUrl } from "@/lib/site";
 
 // Fontes variáveis auto-hospedadas (@fontsource-variable), subset latin.
-const archivo = localFont({
-  src: "../../node_modules/@fontsource-variable/archivo/files/archivo-latin-wght-normal.woff2",
-  weight: "600 800",
+const jost = localFont({
+  src: "../../node_modules/@fontsource-variable/jost/files/jost-latin-wght-normal.woff2",
+  weight: "500 700",
   display: "swap",
-  variable: "--font-archivo",
+  variable: "--font-jost",
 });
 
-const inter = localFont({
-  src: "../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2",
-  weight: "400 600",
+const radioCanadaBig = localFont({
+  src: "../../node_modules/@fontsource-variable/radio-canada-big/files/radio-canada-big-latin-wght-normal.woff2",
+  weight: "400 700",
   display: "swap",
-  variable: "--font-inter",
+  variable: "--font-radio-canada-big",
+});
+
+const sourceCodePro = localFont({
+  src: "../../node_modules/@fontsource-variable/source-code-pro/files/source-code-pro-latin-wght-normal.woff2",
+  weight: "500 600",
+  display: "swap",
+  variable: "--font-source-code-pro",
 });
 
 export const metadata: Metadata = {
@@ -42,7 +49,7 @@ const CONSENT_FLAG = `if(document.cookie.indexOf("${CONSENT_COOKIE}=")>-1)docume
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const config = await getContentSource().getConfiguracoes();
   return (
-    <html lang="pt-BR" className={`${archivo.variable} ${inter.variable}`}>
+    <html lang="pt-BR" className={`${jost.variable} ${radioCanadaBig.variable} ${sourceCodePro.variable}`}>
       <body>
         <script dangerouslySetInnerHTML={{ __html: CONSENT_FLAG }} />
         {/* Sem JS o banner não funciona (e nada é rastreado): não deixa um bloco morto cobrindo a página. */}

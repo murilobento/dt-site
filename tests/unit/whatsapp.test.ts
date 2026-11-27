@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { buildWhatsAppUrl, formatWhatsAppDisplay } from "@/lib/whatsapp";
 
 const PHONE = "5565999990000";
 const text = (u: string) => new URL(u).searchParams.get("text");
@@ -33,4 +33,13 @@ describe("buildWhatsAppUrl", () => {
 
   it("higieniza o telefone para só dígitos", () =>
     expect(new URL(buildWhatsAppUrl("+55 (65) 99999-0000", "/")).pathname).toBe("/5565999990000"));
+});
+
+describe("formatWhatsAppDisplay", () => {
+  it("formata celular brasileiro", () => {
+    expect(formatWhatsAppDisplay("5514981734581")).toBe("+55 (14) 98173-4581");
+  });
+  it("número fora do padrão volta só com dígitos", () => {
+    expect(formatWhatsAppDisplay("+1 555 0100")).toBe("+15550100");
+  });
 });

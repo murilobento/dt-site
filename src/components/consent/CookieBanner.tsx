@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { useConsent } from "./ConsentProvider";
 
-const CHECK = "mt-1 h-5 w-5 accent-brand-primary";
+const CHECK = "mt-1 h-5 w-5 accent-primary";
 
 /** Montado só com o diálogo aberto: o estado inicial vem da decisão salva, nunca pré-marcado. */
 function PreferencesForm() {
@@ -25,8 +25,8 @@ function PreferencesForm() {
       <label className="flex gap-3">
         <input type="checkbox" className={CHECK} checked disabled readOnly />
         <span>
-          <span className="block font-semibold">Essenciais</span>
-          <span className="block text-sm text-text-secondary">
+          <span className="block font-label text-label-lg">Essenciais</span>
+          <span className="block font-body text-body-md text-on-surface-variant">
             Necessários para o site funcionar e lembrar esta escolha. Sempre ativos.
           </span>
         </span>
@@ -39,8 +39,8 @@ function PreferencesForm() {
           onChange={(e) => setDesempenho(e.target.checked)}
         />
         <span>
-          <span className="block font-semibold">Desempenho</span>
-          <span className="block text-sm text-text-secondary">
+          <span className="block font-label text-label-lg">Desempenho</span>
+          <span className="block font-body text-body-md text-on-surface-variant">
             Medem como o site é usado, para melhorarmos páginas e conteúdo.
           </span>
         </span>
@@ -53,16 +53,16 @@ function PreferencesForm() {
           onChange={(e) => setMarketing(e.target.checked)}
         />
         <span>
-          <span className="block font-semibold">Marketing</span>
-          <span className="block text-sm text-text-secondary">
+          <span className="block font-label text-label-lg">Marketing</span>
+          <span className="block font-body text-body-md text-on-surface-variant">
             Permitem medir campanhas e mostrar anúncios mais relevantes.
           </span>
         </span>
       </label>
-      <p className="text-sm text-text-secondary">
+      <p className="font-body text-body-md text-on-surface-variant">
         Ao retirar um consentimento, a página será recarregada para aplicar a mudança.
       </p>
-      <Button type="submit">Salvar preferências</Button>
+      <Button type="submit" variant="accent">Salvar preferências</Button>
     </form>
   );
 }
@@ -72,16 +72,16 @@ function PreferencesDialog() {
   return (
     <Dialog.Root open={preferencesOpen} onOpenChange={setPreferencesOpen}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[60] bg-surface-inverse/50" />
+        <Dialog.Overlay className="fixed inset-0 z-[60] bg-brand-navy/50" />
         <Dialog.Content
           aria-describedby={undefined}
-          className="fixed left-1/2 top-1/2 z-[70] max-h-[90vh] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-card bg-surface-default p-6 text-text-primary"
+          className="fixed left-1/2 top-1/2 z-[70] max-h-[90vh] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-surface-container-lowest p-6 text-on-surface"
         >
-          <Dialog.Title className="font-display text-2xl font-bold">Preferências de cookies</Dialog.Title>
+          <Dialog.Title className="font-headline text-headline-md text-primary">Preferências de cookies</Dialog.Title>
           <PreferencesForm />
           <Dialog.Close
             aria-label="Fechar"
-            className="absolute right-4 top-4 min-h-12 min-w-12 text-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+            className="absolute right-4 top-4 min-h-12 min-w-12 text-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             <span aria-hidden="true">×</span>
           </Dialog.Close>
@@ -123,10 +123,10 @@ export function CookieBanner() {
           aria-label="Cookies"
           data-cookie-banner
           data-ssr={ready ? undefined : ""}
-          className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-surface-default text-text-primary shadow-none"
+          className="fixed inset-x-0 bottom-0 z-50 border-t border-outline-variant bg-surface-container-lowest text-on-surface shadow-none"
         >
           <div className="mx-auto flex w-full max-w-page flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
-            <p className="max-w-3xl text-sm">
+            <p className="max-w-3xl font-body text-body-md">
               Usamos cookies essenciais para o site funcionar e, com a sua permissão, cookies de desempenho e
               marketing. Saiba mais na{" "}
               <Link href="/cookies" className="font-semibold underline underline-offset-4">

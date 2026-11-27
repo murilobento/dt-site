@@ -13,3 +13,10 @@ export function buildWhatsAppUrl(phone: string, pathname: string, pageTitle?: st
   const digits = phone.replace(/\D/g, "");
   return `https://wa.me/${digits}?text=${encodeURIComponent(messageFor(pathname, pageTitle))}`;
 }
+
+/** "5514981734581" → "+55 (14) 98173-4581" (celular BR). Outros formatos voltam como "+dígitos". */
+export function formatWhatsAppDisplay(phone: string): string {
+  const d = phone.replace(/\D/g, "");
+  const m = /^55(\d{2})(\d{4,5})(\d{4})$/.exec(d);
+  return m ? `+55 (${m[1]}) ${m[2]}-${m[3]}` : `+${d}`;
+}
