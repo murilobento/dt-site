@@ -29,7 +29,7 @@ npx tsx --env-file=.env.local scripts/seed-sanity.ts --dry-run   # lista os 30 d
 npx tsx --env-file=.env.local scripts/seed-sanity.ts             # envia imagens e documentos
 ```
 
-O script é idempotente (`_id` = `<tipo>-<slug>`; singletons: `configuracoes`, `paginaEmpresa`, `paginaLegal-privacidade`, `paginaLegal-cookies`) e usa `createOrReplace`: rodar de novo **sobrescreve** edições feitas no Studio nesses documentos. Use só no dataset vazio ou de teste.
+O script é idempotente (`_id` = `<tipo>-<slug>`; singletons: `configuracoes`, `paginaEmpresa` ("Página Sobre" no Studio), `paginaCompliance`, `paginaLegal-privacidade`, `paginaLegal-cookies`) e usa `createOrReplace`: rodar de novo **sobrescreve** edições feitas no Studio nesses documentos. Use só no dataset vazio ou de teste.
 
 ## 4. Webhook de revalidação
 
@@ -43,7 +43,7 @@ sanity.io/manage > API > Webhooks > Create webhook:
 - Secret: o mesmo valor de `SANITY_REVALIDATE_SECRET`
 - Drafts: desligado (só publicações disparam)
 
-A rota valida a assinatura (401 se inválida), espera 3 s pela consistência do Content Lake e expira a tag do `_type` (`obra`, `servico`, `cliente`, `numero`, `configuracoes`, `paginaEmpresa`, `paginaLegal`). Obra despublicada ou com slug trocado devolve 404 na requisição seguinte.
+A rota valida a assinatura (401 se inválida), espera 3 s pela consistência do Content Lake e expira a tag do `_type` (`obra`, `servico`, `cliente`, `numero`, `configuracoes`, `paginaEmpresa`, `paginaCompliance`, `paginaLegal`). Obra despublicada ou com slug trocado devolve 404 na requisição seguinte.
 
 ## 5. Verificação manual
 

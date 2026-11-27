@@ -3,7 +3,7 @@ import { imagem } from './fields';
 
 export const paginaEmpresa = defineType({
   name: 'paginaEmpresa',
-  title: 'Página Empresa',
+  title: 'Página Sobre',
   type: 'document',
   fields: [
     defineField({ name: 'comoTrabalhamos', title: 'Como trabalhamos', type: 'text', rows: 5, validation: (r) => r.required() }),
@@ -45,5 +45,5 @@ export const paginaEmpresa = defineType({
     }),
     defineField({ name: 'principios', title: 'Princípios', type: 'array', of: [{ type: 'string' }] }),
   ],
-  preview: { prepare: () => ({ title: 'Página Empresa' }) },
+  preview: { prepare: () => ({ title: 'Página Sobre' }) },
 });

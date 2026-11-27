@@ -3,7 +3,7 @@ import type { StructureResolver } from 'sanity/structure';
 /** Singletons: documento único com `_id` fixo (o site os consulta por esse id). */
 const SINGLETONS = [
   { id: 'configuracoes', type: 'configuracoes', title: 'Configurações do site' },
-  { id: 'paginaEmpresa', type: 'paginaEmpresa', title: 'Página Empresa' },
+  { id: 'paginaEmpresa', type: 'paginaEmpresa', title: 'Página Sobre' },
   { id: 'paginaCompliance', type: 'paginaCompliance', title: 'Página Compliance' },
   { id: 'paginaLegal-privacidade', type: 'paginaLegal', title: 'Política de privacidade' },
   { id: 'paginaLegal-cookies', type: 'paginaLegal', title: 'Política de cookies' },

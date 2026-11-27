@@ -29,10 +29,10 @@ Os números ("Nossa atuação em números") ficam em **Números** no menu do Stu
 
 ## 3. Onde chegam os leads
 
-Cada formulário de contato envia um e-mail para a caixa do segmento escolhido. Os endereços ficam em **Configurações do site** no Studio (campos de e-mail por segmento: Obras civis e Infraestrutura; e e-mails de Carreiras, Fornecedores e Imprensa).
+Cada formulário de contato envia um e-mail para a caixa do segmento correspondente à disciplina escolhida. Os endereços ficam em **Configurações do site** no Studio (campos de e-mail por segmento: Obras civis e Infraestrutura; e e-mails de Carreiras, Fornecedores e Imprensa).
 
 - Para mudar quem recebe, altere o e-mail em **Configurações do site** e publique. Vale em até 1 minuto, sem deploy.
-- O assunto do e-mail segue o padrão `[Site] Lead <segmento> — <empresa>`.
+- O assunto do e-mail segue o padrão `[Site] Lead <disciplina> — <empresa>`.
 - Se o assunto começa com **`[não verificado]`**, o formulário foi enviado sem a verificação anti-robô (por exemplo, por quem usa o navegador com JavaScript desligado). Pode ser um cliente de verdade, mas trate com um pouco mais de cuidado: confirme os dados antes de responder.
 - Se o e-mail de um lead não chegar, confira a pasta de spam e peça a quem administra o site para verificar o painel do Resend (serviço que envia os e-mails).
 
@@ -56,11 +56,12 @@ Faça tudo antes de apontar o domínio definitivo.
 | Variável | Para que serve |
 | --- | --- |
 | `CONTENT_SOURCE` | Deve ser `sanity` (ou ficar em branco). Nunca `fixtures` em produção. |
-| `NEXT_PUBLIC_SITE_URL` | Endereço público do site, com `https://`. |
+| `NEXT_PUBLIC_SITE_URL` | Endereço público do site, com `https://`. Sem ela o build usa `VERCEL_PROJECT_PRODUCTION_URL`; se nenhuma existir em produção, o build falha. |
 | `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET` | Projeto e dataset do Sanity. |
 | `SANITY_API_READ_TOKEN` | Só se o dataset for privado. |
 | `SANITY_REVALIDATE_SECRET` | Segredo do webhook do Sanity (item abaixo). |
-| `RESEND_API_KEY` | Envio dos e-mails de lead. |
+| `RESEND_API_KEY` | Envio dos e-mails de lead. Sem ela, em produção, o formulário mostra falha (com o WhatsApp como alternativa) em vez de perder o lead em silêncio. |
+| `LEAD_TRANSPORT` | Deixe em branco em produção. `log` só para testar localmente sem Resend. |
 | `LEAD_FROM_EMAIL` | Remetente dos e-mails de lead (domínio verificado no Resend). |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | Verificação anti-robô dos formulários. Sem elas, todo lead chega como "[não verificado]". |
 | `NEXT_PUBLIC_GTM_ID` | ID do Google Tag Manager (formato `GTM-XXXXXXX`). |
@@ -77,6 +78,7 @@ Depois de alterar variáveis, faça um novo deploy (Deployments > **Redeploy**).
 **Google Tag Manager**
 
 - [ ] Tags do GA4 configuradas com **Consent Mode**: só disparam com `analytics_storage` concedido; tags de marketing só com `ad_storage` concedido.
+- [ ] Se forem adicionadas tags de marketing no GTM, incluir os domínios que elas usam na CSP em `next.config.ts` (`script-src`, `img-src`, `connect-src`, `frame-src`); sem isso o navegador bloqueia as requisições. Tags de marketing só rodam quando o visitante aceita também **Desempenho**.
 - [ ] Eventos conferidos no modo Preview do GTM: `lead_submit`, `cta_click`, `whatsapp_click`, `project_view`, `filter_use`.
 - [ ] Confirmado que, antes de aceitar o banner de cookies, nenhuma requisição ao Google é feita (aba Network do navegador).
 
@@ -86,13 +88,20 @@ Depois de alterar variáveis, faça um novo deploy (Deployments > **Redeploy**).
 - [ ] E-mails por segmento (Obras civis e Infraestrutura), Carreiras, Fornecedores e Imprensa.
 - [ ] Endereço, CNPJ e razão social conferidos.
 - [ ] Redes sociais (LinkedIn, Instagram, YouTube, Facebook): remova as que a DT não usa.
+- [ ] Criar o documento **Página Compliance** no Studio (programa de integridade, SSMA e vagas); sem ele a página de Compliance não carrega.
+- [ ] Definir a **categoria** de cada serviço (Infraestrutura, Edificações ou Consultoria); serviço sem categoria não aparece na página Serviços.
 
 **Conteúdo**
 
-- [ ] Trocar os textos provisórios da **Home** e da **Empresa** pelos textos aprovados pela DT. Fixtures e textos marcados com "[exemplo]" não podem ir ao ar.
+- [ ] Trocar os textos provisórios da **Home** e da página **Sobre** pelos textos aprovados pela DT. Fixtures e textos marcados com "[exemplo]" não podem ir ao ar.
 - [ ] Pelo menos 6 obras completas publicadas (fotos e fichas fornecidas pela DT).
 - [ ] Política de privacidade e Política de cookies revisadas pelo jurídico.
 - [ ] Logo e cores da DT aprovados pelo Murilo antes de apontar o domínio.
+
+**Desempenho e proteção contra abuso**
+
+- [ ] Medir o LCP no preview da Vercel com fotos reais e reduzir o limite do `lighthouserc.json` para 2500 ms em `/` e `/servicos/<slug>` (hoje 3500 ms, folga para as imagens provisórias).
+- [ ] Criar no Vercel Firewall (WAF) uma regra de rate limit para requisições POST em `/contato` e `/compliance` (por exemplo, 5 requisições por minuto por IP). Os formulários são Server Actions públicas: sem limite, um robô pode esgotar a cota do Resend e lotar as caixas de lead e de carreiras, mesmo com Turnstile.
 
 **Domínio e redirecionamentos**
 
