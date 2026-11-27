@@ -1,10 +1,7 @@
-"use client";
-
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { Tabs, type TabItem } from "@/components/ui/Tabs";
+import { Container } from "@/components/ui/Container";
 import { HOME_COPY } from "@/lib/copy/home";
 import { SERVICOS_COPY } from "@/lib/copy/servicos";
 import type { CategoriaServico, Servico } from "@/lib/content/types";
@@ -72,79 +69,56 @@ function ServicoCard({ servico, comImagem }: { servico: Servico; comImagem: bool
   );
 }
 
-function categoriaDoHash(hash: string): CategoriaServico | undefined {
-  const id = hash.replace(/^#/, "");
-  return CATEGORIAS.find((c) => c === id);
-}
+const FUNDO: Record<CategoriaServico, string> = {
+  infraestrutura: "",
+  edificacoes: "border-y border-outline-variant bg-surface-container-low",
+  consultoria: "",
+};
 
+/** Três seções empilhadas (âncoras #infraestrutura, #edificacoes, #consultoria), como no layout. */
 export function ServicosCatalogo({ servicos }: { servicos: Servico[] }) {
-  const tabs: TabItem[] = CATEGORIAS.flatMap((categoria) => {
-    const itens = servicos.filter((s) => s.categoria === categoria);
-    if (itens.length === 0) return [];
-    const copy = SERVICOS_COPY.categorias[categoria];
-    const destaque = "destaque" in copy ? copy.destaque : undefined;
-    return [
-      {
-        id: categoria,
-        label: HOME_COPY.servicos.abas[categoria],
-        content: (
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-col justify-between gap-4 border-b border-outline-variant pb-4 md:flex-row md:items-end">
-              <div>
-                <h2 className="font-headline text-headline-lg-mobile text-balance text-on-surface lg:text-headline-lg">
-                  {copy.titulo}
-                </h2>
-                <p className="font-body text-body-md text-on-surface-variant">{copy.lead}</p>
-              </div>
-              {destaque && <span className="shrink-0 font-mono text-mono-md text-secondary">{destaque}</span>}
-            </div>
-            <div
-              className={cn(
-                "grid grid-cols-1 items-stretch gap-6",
-                categoria === "infraestrutura" ? "md:grid-cols-2" : "md:grid-cols-3",
-              )}
-            >
-              {itens.map((s) => (
-                <ServicoCard key={s.slug} servico={s} comImagem={categoria === "infraestrutura"} />
-              ))}
-            </div>
-          </div>
-        ),
-      },
-    ];
-  });
-
-  const [selecionada, setSelecionada] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    const aplicar = (rolar: boolean) => {
-      const cat = categoriaDoHash(window.location.hash);
-      if (!cat) return;
-      setSelecionada(cat);
-      if (rolar) {
-        // Espera o painel sair de `hidden` antes de rolar até ele.
-        requestAnimationFrame(() => document.getElementById(cat)?.scrollIntoView({ block: "start" }));
-      }
-    };
-    aplicar(true);
-    const onHash = () => aplicar(true);
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
-  }, []);
-
-  if (tabs.length === 0) return null;
-
   return (
-    <Tabs
-      label={SERVICOS_COPY.tablist}
-      tabs={tabs}
-      anchorPanels
-      selectedId={selecionada}
-      onSelect={(id) => {
-        setSelecionada(id);
-        window.history.replaceState(null, "", `#${id}`);
-      }}
-      panelClassName="scroll-mt-40"
-    />
+    <>
+      {CATEGORIAS.map((categoria) => {
+        const itens = servicos.filter((s) => s.categoria === categoria);
+        if (itens.length === 0) return null;
+        const copy = SERVICOS_COPY.categorias[categoria];
+        const destaque = "destaque" in copy ? copy.destaque : undefined;
+        const titleId = `${categoria}-titulo`;
+        return (
+          <section
+            key={categoria}
+            id={categoria}
+            aria-labelledby={titleId}
+            className={cn("scroll-mt-20 py-12 md:scroll-mt-24 md:py-section", FUNDO[categoria])}
+          >
+            <Container className="flex flex-col gap-8">
+              <div className="flex flex-col justify-between gap-4 border-b border-outline-variant pb-4 md:flex-row md:items-end">
+                <div>
+                  <h2
+                    id={titleId}
+                    className="font-headline text-headline-lg-mobile text-balance text-on-surface lg:text-headline-lg"
+                  >
+                    {copy.titulo}
+                  </h2>
+                  <p className="font-body text-body-md text-on-surface-variant">{copy.lead}</p>
+                </div>
+                {destaque && <span className="shrink-0 font-mono text-mono-md text-secondary">{destaque}</span>}
+              </div>
+              <div
+                className={cn(
+                  "grid grid-cols-1 items-stretch gap-6",
+                  categoria === "infraestrutura" ? "md:grid-cols-2" : "md:grid-cols-3",
+                )}
+              >
+                {itens.map((s) => (
+                  <ServicoCard key={s.slug} servico={s} comImagem={categoria === "infraestrutura"} />
+                ))}
+              </div>
+            </Container>
+          </section>
+        );
+      })}
+    </>
   );
 }

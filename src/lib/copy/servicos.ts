@@ -5,7 +5,6 @@ export const SERVICOS_COPY = {
     titulo: "Soluções completas em infraestrutura viária, edificações e consultoria",
     lead: "Capacidade técnica multidisciplinar para atender concessionárias de rodovias, órgãos públicos e empresas privadas com rigor normativo e previsibilidade de prazo.",
   },
-  tablist: "Categorias de serviço",
   categorias: {
     infraestrutura: {
       titulo: "Infraestrutura rodoviária e viária",

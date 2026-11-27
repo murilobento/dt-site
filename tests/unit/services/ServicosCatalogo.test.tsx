@@ -1,5 +1,5 @@
-import { act, render, screen, within } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { render, screen, within } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import { ServicosCatalogo } from "@/components/services/ServicosCatalogo";
 import servicos from "@/lib/content/fixtures/servicos.json";
 import type { Servico } from "@/lib/content/types";
@@ -7,60 +7,43 @@ import type { Servico } from "@/lib/content/types";
 const all = servicos as Servico[];
 
 describe("ServicosCatalogo", () => {
-  beforeEach(() => {
-    window.history.replaceState(null, "", "/servicos");
-    Element.prototype.scrollIntoView = vi.fn();
-    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
-      cb(0);
-      return 0;
-    });
-  });
-  afterEach(() => vi.unstubAllGlobals());
-
-  it("sem hash, a primeira aba está ativa e os painéis têm id de âncora", () => {
+  it("renderiza as 3 seções âncora, cada uma rotulada pelo seu H2", () => {
     const { container } = render(<ServicosCatalogo servicos={all} />);
-    expect(screen.getByRole("tab", { name: "Infraestrutura Rodoviária" })).toHaveAttribute("aria-selected", "true");
-    for (const id of ["infraestrutura", "edificacoes", "consultoria"]) {
-      expect(container.querySelector(`[role=tabpanel]#${id}`)).not.toBeNull();
+    for (const [id, titulo] of [
+      ["infraestrutura", "Infraestrutura rodoviária e viária"],
+      ["edificacoes", "Edificações, reformas e obras civis"],
+      ["consultoria", "Consultoria técnica de engenharia"],
+    ]) {
+      const sec = container.querySelector<HTMLElement>(`section#${id}`)!;
+      expect(sec).not.toBeNull();
+      expect(within(sec).getByRole("heading", { level: 2, name: titulo })).toBeInTheDocument();
+      expect(screen.getByRole("region", { name: titulo })).toBe(sec);
     }
   });
 
-  it("#consultoria ativa a aba Consultoria e rola até o painel", () => {
-    window.history.replaceState(null, "", "/servicos#consultoria");
+  it("headings: h2 por seção e h3 por card, sem salto", () => {
     render(<ServicosCatalogo servicos={all} />);
-    expect(screen.getByRole("tab", { name: "Consultoria Técnica" })).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByRole("tabpanel", { name: "Consultoria Técnica" })).toBeVisible();
-    expect(Element.prototype.scrollIntoView).toHaveBeenCalled();
+    expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(3);
+    expect(screen.getAllByRole("heading", { level: 3 })).toHaveLength(all.length);
   });
 
-  it("reage a hashchange", () => {
-    render(<ServicosCatalogo servicos={all} />);
-    act(() => {
-      window.history.replaceState(null, "", "/servicos#edificacoes");
-      window.dispatchEvent(new HashChangeEvent("hashchange"));
-    });
-    expect(screen.getByRole("tab", { name: "Edificações e Reformas" })).toHaveAttribute("aria-selected", "true");
-  });
-
-  it("hash desconhecido é ignorado", () => {
-    window.history.replaceState(null, "", "/servicos#xyz");
-    render(<ServicosCatalogo servicos={all} />);
-    expect(screen.getByRole("tab", { name: "Infraestrutura Rodoviária" })).toHaveAttribute("aria-selected", "true");
-  });
-
-  it("CTA leva a /contato/comercial com disciplina e origem; há link Ver serviço", () => {
-    render(<ServicosCatalogo servicos={all} />);
-    const painel = screen.getByRole("tabpanel", { name: "Infraestrutura Rodoviária" });
-    const cta = within(painel).getAllByRole("link", { name: /Solicitar escopo/ });
+  it("CTA por categoria leva a /contato/comercial com disciplina e origem; há link Ver serviço", () => {
+    const { container } = render(<ServicosCatalogo servicos={all} />);
+    const infra = within(container.querySelector<HTMLElement>("#infraestrutura")!);
+    const cta = infra.getAllByRole("link", { name: /Solicitar escopo/ });
     expect(cta[0].getAttribute("href")).toMatch(/disciplina=rodoviaria-pavimentacao&origem=conservacao$/);
     const saus = cta.find((a) => a.getAttribute("href")!.includes("origem=saus-pres"))!;
     expect(saus).toHaveAttribute("href", expect.stringContaining("disciplina=sau-pre"));
-    expect(within(painel).getAllByRole("link", { name: /Ver serviço:/ })[0]).toHaveAttribute("href", "/servicos/conservacao");
+    expect(infra.getAllByRole("link", { name: /Ver serviço:/ })[0]).toHaveAttribute("href", "/servicos/conservacao");
+    const cons = within(container.querySelector<HTMLElement>("#consultoria")!);
+    expect(cons.getAllByRole("link", { name: /Agendar consultoria/ })[0].getAttribute("href")).toContain(
+      "disciplina=consultoria",
+    );
   });
 
-  it("clicar numa aba atualiza o hash", () => {
-    render(<ServicosCatalogo servicos={all} />);
-    act(() => screen.getByRole("tab", { name: "Consultoria Técnica" }).click());
-    expect(window.location.hash).toBe("#consultoria");
+  it("omite seções de categorias sem serviço", () => {
+    const { container } = render(<ServicosCatalogo servicos={all.filter((s) => s.categoria === "consultoria")} />);
+    expect(container.querySelectorAll("section")).toHaveLength(1);
+    expect(container.querySelector("#infraestrutura")).toBeNull();
   });
 });

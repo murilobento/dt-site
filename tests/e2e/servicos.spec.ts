@@ -34,14 +34,13 @@ test("CTA da página de serviço leva disciplina e segmento", async ({ page }) =
   );
 });
 
-test("índice: abas por categoria e ordem de headings", async ({ page }) => {
+test("índice: seções âncora empilhadas e ordem de headings", async ({ page }) => {
   await page.goto("/servicos");
   await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
-  await expect(page.getByRole("tab")).toHaveText([
-    "Infraestrutura Rodoviária",
-    "Edificações e Reformas",
-    "Consultoria Técnica",
-  ]);
+  await expect(page.getByRole("tab")).toHaveCount(0);
+  for (const id of ["infraestrutura", "edificacoes", "consultoria"]) {
+    await expect(page.locator(`main section#${id}`)).toBeVisible();
+  }
   const levels = await page.locator("main h1, main h2, main h3").evaluateAll((els) =>
     els.map((e) => Number(e.tagName[1])),
   );
@@ -50,10 +49,12 @@ test("índice: abas por categoria e ordem de headings", async ({ page }) => {
   await expect(page).toHaveURL(/\/servicos\/.+/);
 });
 
-test("/servicos#consultoria abre a aba Consultoria", async ({ page }) => {
+test("/servicos#consultoria rola até a seção Consultoria (abaixo do header fixo)", async ({ page }) => {
   await page.goto("/servicos#consultoria");
-  await expect(page.getByRole("tab", { name: "Consultoria Técnica" })).toHaveAttribute("aria-selected", "true");
-  await expect(page.locator("#consultoria")).toBeVisible();
+  const heading = page.getByRole("heading", { level: 2, name: "Consultoria técnica de engenharia" });
+  await expect(heading).toBeInViewport();
+  const top = await page.locator("#consultoria").evaluate((el) => el.getBoundingClientRect().top);
+  expect(top).toBeGreaterThanOrEqual(60);
   await expect(page.getByRole("link", { name: /Agendar consultoria/ }).first()).toHaveAttribute(
     "href",
     /disciplina=consultoria/,

@@ -31,13 +31,9 @@ export default async function ServicosPage() {
         </Container>
       </section>
 
-      <section className="py-12 md:py-section">
-        <Container>
-          <ServicosCatalogo servicos={servicos} />
-        </Container>
-      </section>
+      <ServicosCatalogo servicos={servicos} />
 
-      <section className="pb-section">
+      <section className="pb-section pt-12 md:pt-section">
         <Container>
           <div className="grid items-center gap-6 rounded-lg bg-primary-container p-6 md:p-8 lg:grid-cols-12 lg:gap-8 lg:p-12">
             <div className="flex flex-col gap-3 lg:col-span-8">
