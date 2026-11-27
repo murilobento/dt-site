@@ -1,40 +1,37 @@
 import Image from "next/image";
+import { HardHat } from "lucide-react";
 import { Container } from "@/components/ui/Container";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Button } from "@/components/ui/Button";
 import { HOME_COPY } from "@/lib/copy/home";
 import type { Imagem } from "@/lib/content/types";
 import { TrackedCta } from "./TrackedCta";
 
 export function Hero({ imagem }: { imagem?: Imagem }) {
-  const { eyebrow, titulo, subtitulo } = HOME_COPY.hero;
+  const { titulo, subtitulo, ctaServicos, ctaObras } = HOME_COPY.hero;
   return (
-    <section className="relative isolate overflow-hidden bg-surface-inverse text-text-on-inverse">
+    <section className="relative isolate overflow-hidden bg-brand-navy">
       {imagem && (
-        <>
-          <Image
-            src={imagem.url}
-            alt={imagem.alt}
-            fill
-            sizes="100vw"
-            preload
-            fetchPriority="high"
-            className="-z-20 object-cover"
-          />
-          <div aria-hidden="true" className="absolute inset-0 -z-10 bg-surface-inverse/75" />
-        </>
+        <Image
+          src={imagem.url}
+          alt=""
+          fill
+          sizes="100vw"
+          preload
+          fetchPriority="high"
+          className="-z-10 object-cover opacity-35"
+        />
       )}
-      <Container className="py-24 md:py-32">
-        <div className="max-w-3xl">
-          <Eyebrow className="text-text-on-inverse-secondary">{eyebrow}</Eyebrow>
-          <h1 className="mt-4 text-3xl text-text-on-inverse md:text-5xl">{titulo}</h1>
-          <p className="mt-6 max-w-2xl text-lg text-text-on-inverse-secondary">{subtitulo}</p>
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-            <TrackedCta href="/contato/comercial" inverse local="hero">
-              Fale com a equipe
+      <Container className="py-12 md:py-16 lg:py-24">
+        <div className="flex max-w-3xl flex-col gap-5 md:gap-6">
+          <h1 className="font-display text-display-lg-mobile text-balance text-white lg:text-display-lg">{titulo}</h1>
+          <p className="max-w-prose font-body text-body-lg text-pretty text-on-primary-container">{subtitulo}</p>
+          <div className="flex flex-wrap items-center gap-3 pt-2 md:gap-4">
+            <TrackedCta href="/servicos" variant="accent" inverse local="hero" className="w-full sm:w-auto">
+              <HardHat aria-hidden="true" className="size-5" />
+              {ctaServicos}
             </TrackedCta>
-            <Button href="/obras" variant="secondary" inverse>
-              Ver obras
+            <Button href="/obras" variant="secondary" inverse className="w-full sm:w-auto">
+              {ctaObras}
             </Button>
           </div>
         </div>

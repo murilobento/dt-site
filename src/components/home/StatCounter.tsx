@@ -43,18 +43,18 @@ function useCountUp(target: number) {
   return { itemRef, valueRef };
 }
 
-function Stat({ numero }: { numero: Numero }) {
+function Stat({ numero, divider }: { numero: Numero; divider: boolean }) {
   const { itemRef, valueRef } = useCountUp(numero.valor);
   const final = formatNumber(numero.valor);
   const textoFinal = `${final}${numero.unidade ? ` ${numero.unidade}` : ""} ${numero.rotulo}`;
   return (
-    <li ref={itemRef}>
-      <div aria-hidden="true">
-        <p className="font-display text-4xl font-extrabold text-text-primary">
+    <li ref={itemRef} className={divider ? "lg:border-l lg:border-outline-variant lg:pl-6" : undefined}>
+      <div aria-hidden="true" className="flex flex-col gap-1">
+        <p className="font-display text-headline-lg-mobile tabular-nums text-primary lg:text-headline-lg">
           <span ref={valueRef}>{final}</span>
-          {numero.unidade && <span className="ml-1 text-xl">{numero.unidade}</span>}
+          {numero.unidade && <span className="ml-1">{numero.unidade}</span>}
         </p>
-        <p className="mt-2 text-base text-text-secondary">{numero.rotulo}</p>
+        <p className="font-body text-body-md text-on-surface-variant">{numero.rotulo}</p>
       </div>
       <span className="sr-only">{textoFinal}</span>
     </li>
@@ -63,9 +63,9 @@ function Stat({ numero }: { numero: Numero }) {
 
 export function StatCounter({ numeros }: { numeros: Numero[] }) {
   return (
-    <ul className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-3 lg:grid-cols-5">
-      {numeros.map((n) => (
-        <Stat key={n.rotulo} numero={n} />
+    <ul className="grid grid-cols-2 gap-6 md:gap-8 lg:grid-cols-4">
+      {numeros.map((n, i) => (
+        <Stat key={n.rotulo} numero={n} divider={i > 0} />
       ))}
     </ul>
   );

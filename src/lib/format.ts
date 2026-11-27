@@ -14,3 +14,10 @@ function formatMes(ym: string): string {
 export function formatPeriodo(inicio: string, termino?: string): string {
   return termino ? `${formatMes(inicio)} a ${formatMes(termino)}` : `desde ${formatMes(inicio)}`;
 }
+
+/** `18.5` → `"18,5"`; `12000` → `"12.000"` (vírgula decimal, ponto de milhar). */
+export function formatDecimal(n: number): string {
+  const [int, dec] = n.toString().split(".");
+  const milhar = int.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return dec ? `${milhar},${dec}` : milhar;
+}

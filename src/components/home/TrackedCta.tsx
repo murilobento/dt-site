@@ -9,7 +9,8 @@ type TrackedCtaProps = {
   /** Posição do CTA na página, enviada como `local` em `cta_click`. */
   local: string;
   inverse?: boolean;
-  variant?: "primary" | "secondary" | "ghost";
+  variant?: "primary" | "accent" | "secondary" | "ghost";
+  className?: string;
   children: ReactNode;
 };
 
