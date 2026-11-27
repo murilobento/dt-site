@@ -16,7 +16,7 @@ export function BeforeAfter({ antesDepois }: Props) {
           <div className="relative aspect-[8/5] overflow-hidden rounded-md bg-surface-container">
             <Image src={img.url} alt={img.alt} fill sizes="(min-width: 48rem) 50vw, 100vw" className="object-cover" />
           </div>
-          <figcaption className="mt-2 text-sm font-semibold text-on-surface-variant">{rotulo}</figcaption>
+          <figcaption className="mt-2 text-label-lg text-on-surface-variant">{rotulo}</figcaption>
         </figure>
       ))}
     </div>

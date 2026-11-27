@@ -25,21 +25,6 @@
   --color-inverse-surface: #2f3032;
   --color-inverse-on-surface: #f2f0f3;
 
-  /* Legacy aliases: remover após Layout v2 Task 7. Os componentes ainda não migrados usam os nomes
-     antigos; cada um aponta para o valor novo mais próximo para as páginas continuarem renderizando. */
-  --color-brand-primary: #001428; /* = primary */
-  --color-brand-primary-hover: #0f2942; /* = brand-navy */
-  --color-surface-inverse: #0f2942; /* = brand-navy */
-  --color-surface-default: #ffffff; /* = surface-container-lowest */
-  --color-surface-muted: #f5f3f5; /* = surface-container-low */
-  --color-text-primary: #1b1c1e; /* = on-surface */
-  --color-text-secondary: #43474d; /* = on-surface-variant */
-  --color-text-on-inverse: #ffffff; /* = white */
-  --color-text-on-inverse-secondary: #d1e4ff; /* = on-primary-container */
-  --color-border: #c3c6ce; /* = outline-variant */
-  --color-success: #1e7f4f;
-  --color-warning: #b26b00;
-
   --font-display: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
   --font-headline: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
   --font-title: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
@@ -111,26 +96,6 @@
   --text-mono-md--font-weight: 500;
 
 
-  /* Legacy aliases (text-xs…text-5xl): remover após Layout v2 Task 7 */
-  --text-xs: 0.75rem;
-  --text-xs--line-height: 1.5;
-  --text-sm: 0.875rem;
-  --text-sm--line-height: 1.5;
-  --text-base: 1rem;
-  --text-base--line-height: 1.5;
-  --text-lg: 1.25rem;
-  --text-lg--line-height: 1.5;
-  --text-xl: 1.5625rem;
-  --text-xl--line-height: 1.1;
-  --text-2xl: 1.9375rem;
-  --text-2xl--line-height: 1.1;
-  --text-3xl: 2.4375rem;
-  --text-3xl--line-height: 1.1;
-  --text-4xl: 3.0625rem;
-  --text-4xl--line-height: 1.1;
-  --text-5xl: 3.8125rem;
-  --text-5xl--line-height: 1.1;
-
   --spacing-gutter-xs: 4px;
   --spacing-gutter-sm: 8px;
   --spacing-gutter-md: 16px;
@@ -145,9 +110,6 @@
   --radius-lg: 12px;
   --radius-xl: 16px;
   --radius-full: 9999px;
-  /* Legacy aliases: remover após Layout v2 Task 7 */
-  --radius-control: 4px;
-  --radius-card: 8px;
 
   --shadow-*: initial;
   --shadow-overlay: 0 8px 24px rgb(0 0 0 / 0.16);

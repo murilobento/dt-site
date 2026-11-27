@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-const URLS = ["/", "/sobre", "/compliance", "/servicos", "/servicos/restauracao", "/obras", "/obras/pinhalzinho-sc", "/contato", "/contato/comercial"];
+const URLS = ["/", "/sobre", "/compliance", "/servicos", "/servicos/restauracao", "/obras", "/obras/pinhalzinho-sc", "/contato"];
 
 test("títulos e descriptions únicos nas páginas da Fase 1", async ({ page }) => {
   const titles = new Set<string>();

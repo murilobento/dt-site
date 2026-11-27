@@ -126,9 +126,9 @@ export function ObrasExplorer({ obras, initialFilters, servicoNomes }: Props) {
         </div>
       ) : (
         <ul className="grid items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {resultado.map((o) => (
+          {resultado.map((o, i) => (
             <li key={o.slug} className="flex">
-              <ProjectCard obra={o} />
+              <ProjectCard obra={o} eager={i < 3} />
             </li>
           ))}
         </ul>

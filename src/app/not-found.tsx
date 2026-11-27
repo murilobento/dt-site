@@ -12,9 +12,9 @@ export default function NotFound() {
   return (
     <section className="py-16 md:py-24">
       <Container>
-        <Eyebrow className="text-text-secondary">Erro 404</Eyebrow>
-        <h1 className="mt-4 text-3xl text-text-primary md:text-5xl">Página não encontrada</h1>
-        <p className="mt-6 max-w-2xl text-lg text-text-secondary">
+        <Eyebrow className="text-on-surface-variant">Erro 404</Eyebrow>
+        <h1 className="mt-4 font-display text-display-lg-mobile text-primary lg:text-display-lg">Página não encontrada</h1>
+        <p className="mt-6 max-w-2xl text-body-lg text-on-surface-variant">
           O endereço pode ter mudado ou a página foi removida.
         </p>
         <div className="mt-8 flex flex-wrap gap-4">

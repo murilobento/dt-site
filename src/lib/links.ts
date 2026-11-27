@@ -10,5 +10,5 @@ export function leadHref({ segmento, disciplina, origem }: LeadOpts = {}): strin
   if (disciplina) params.set("disciplina", disciplina);
   if (origem) params.set("origem", origem);
   const qs = params.toString();
-  return qs ? `/contato/comercial?${qs}` : "/contato/comercial";
+  return qs ? `/contato?${qs}` : "/contato";
 }

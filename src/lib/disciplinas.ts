@@ -15,6 +15,16 @@ export const DISCIPLINAS: Disciplina[] = [
   "consultoria",
 ];
 
+export function isDisciplina(v: unknown): v is Disciplina {
+  return typeof v === "string" && (DISCIPLINAS as string[]).includes(v);
+}
+
+/** Disciplina inicial do formulário: `disciplina` da URL vence; `segmento` legado mapeia para a primeira disciplina dele. */
+export function disciplinaInicial(disciplina?: string, segmento?: string): Disciplina | undefined {
+  if (isDisciplina(disciplina)) return disciplina;
+  return DISCIPLINAS.find((d) => segmento !== undefined && Object.hasOwn(DISCIPLINA_SEGMENTO, d) && DISCIPLINA_SEGMENTO[d] === segmento);
+}
+
 export const DISCIPLINA_LABEL: Record<Disciplina, string> = {
   "rodoviaria-pavimentacao": "Rodoviária e Pavimentação",
   "terraplanagem-drenagens": "Terraplanagem e Drenagens",

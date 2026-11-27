@@ -51,9 +51,9 @@ export function ConsentField({ error, children }: { error?: string; children: Re
           type="checkbox"
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? "consentimento-erro" : undefined}
-          className="mt-1 h-5 w-5 shrink-0 accent-brand-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
+          className="mt-1 h-5 w-5 shrink-0 accent-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         />
-        <label htmlFor="consentimento" className="text-base text-text-primary">
+        <label htmlFor="consentimento" className="font-body text-body-md text-on-surface">
           {children}{" "}
           <Link href="/privacidade" className="underline underline-offset-4">
             Política de Privacidade
@@ -62,7 +62,7 @@ export function ConsentField({ error, children }: { error?: string; children: Re
         </label>
       </div>
       {error && (
-        <p id="consentimento-erro" className="mt-2 text-sm text-error">
+        <p id="consentimento-erro" className="mt-2 font-body text-body-md text-error">
           {error}
         </p>
       )}

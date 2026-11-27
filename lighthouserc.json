@@ -6,10 +6,10 @@
       "startServerReadyTimeout": 60000,
       "url": [
         "http://localhost:3000/",
-        "http://localhost:3000/empresa",
+        "http://localhost:3000/sobre",
         "http://localhost:3000/servicos/restauracao",
         "http://localhost:3000/obras",
-        "http://localhost:3000/contato/comercial"
+        "http://localhost:3000/contato"
       ],
       "numberOfRuns": 3,
       "settings": {
@@ -19,7 +19,7 @@
     "assert": {
       "assertMatrix": [
         {
-          "matchingUrlPattern": "^http://localhost:3000/(empresa|obras|contato/comercial)$",
+          "matchingUrlPattern": "^http://localhost:3000/(sobre|obras|contato)$",
           "assertions": {
             "categories:performance": [
               "error",

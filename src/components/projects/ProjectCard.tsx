@@ -8,9 +8,11 @@ import type { Obra } from "@/lib/content/types";
 type ProjectCardProps = {
   obra: Obra;
   variant?: "padrao" | "horizontal";
+  /** Imagem acima da dobra: carrega já (candidata a LCP) em vez de sob demanda. */
+  eager?: boolean;
 };
 
-export function ProjectCard({ obra, variant = "padrao" }: ProjectCardProps) {
+export function ProjectCard({ obra, variant = "padrao", eager = false }: ProjectCardProps) {
   const horizontal = variant === "horizontal";
   const { extensao } = obra;
   return (
@@ -28,6 +30,7 @@ export function ProjectCard({ obra, variant = "padrao" }: ProjectCardProps) {
           src={obra.capa.url}
           alt={obra.capa.alt}
           fill
+          {...(eager ? { preload: true, fetchPriority: "high" as const } : {})}
           sizes={
             horizontal
               ? "(min-width: 40rem) 40vw, 100vw"

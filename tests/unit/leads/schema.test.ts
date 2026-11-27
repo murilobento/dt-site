@@ -12,25 +12,25 @@ describe("leadSchema", () => {
   });
   it("consentimento é obrigatório", () =>
     expect(leadSchema.safeParse({ ...valido, consentimento: false }).success).toBe(false));
-  it("cargo é opcional", () => {
-    const { cargo: _cargo, ...sem } = valido;
-    void _cargo;
+  it("cidade/UF é opcional", () => {
+    const { cidadeUf: _c, ...sem } = valido;
+    void _c;
     expect(leadSchema.safeParse(sem).success).toBe(true);
   });
   it("telefone exige DDD (10+ dígitos)", () => {
     const r = leadSchema.safeParse({ ...valido, telefone: "9999-0000" });
     expect(r.error!.flatten().fieldErrors.telefone![0]).toBe("Informe um telefone com DDD.");
   });
-  it("segmento desconhecido é rejeitado", () => {
-    const r = leadSchema.safeParse({ ...valido, segmento: "outro" });
-    expect(r.error!.flatten().fieldErrors.segmento![0]).toBe("Escolha o segmento.");
+  it("disciplina desconhecida ou vazia é rejeitada", () => {
+    for (const disciplina of ["outro", "", "constructor"]) {
+      const r = leadSchema.safeParse({ ...valido, disciplina });
+      expect(r.error!.flatten().fieldErrors.disciplina![0]).toBe("Escolha a disciplina principal.");
+    }
   });
   it("campos obrigatórios vazios têm mensagem própria", () => {
-    const r = leadSchema.safeParse({ ...valido, nome: " ", tipoObra: "", local: "", mensagem: "" });
+    const r = leadSchema.safeParse({ ...valido, nome: " ", escopo: "" });
     const e = r.error!.flatten().fieldErrors;
     expect(e.nome![0]).toBe("Informe seu nome.");
-    expect(e.tipoObra![0]).toBe("Informe o tipo de obra.");
-    expect(e.local![0]).toBe("Informe o local da obra.");
-    expect(e.mensagem![0]).toBe("Escreva uma mensagem.");
+    expect(e.escopo![0]).toBe("Descreva o escopo, o prazo ou o número do edital.");
   });
 });

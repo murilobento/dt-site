@@ -81,7 +81,7 @@ function PreferencesDialog() {
           <PreferencesForm />
           <Dialog.Close
             aria-label="Fechar"
-            className="absolute right-4 top-4 min-h-12 min-w-12 text-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="absolute right-4 top-4 min-h-12 min-w-12 text-headline-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             <span aria-hidden="true">×</span>
           </Dialog.Close>

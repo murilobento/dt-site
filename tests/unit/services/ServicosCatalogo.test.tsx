@@ -27,7 +27,7 @@ describe("ServicosCatalogo", () => {
     expect(screen.getAllByRole("heading", { level: 3 })).toHaveLength(all.length);
   });
 
-  it("CTA por categoria leva a /contato/comercial com disciplina e origem; há link Ver serviço", () => {
+  it("CTA por categoria leva a /contato com disciplina e origem; há link Ver serviço", () => {
     const { container } = render(<ServicosCatalogo servicos={all} />);
     const infra = within(container.querySelector<HTMLElement>("#infraestrutura")!);
     const cta = infra.getAllByRole("link", { name: /Solicitar escopo/ });

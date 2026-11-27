@@ -52,8 +52,8 @@ export function ProjectSpecs({
     <dl className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
       {rows.map((r) => (
         <div key={r.label} className="border-t border-outline-variant pt-4">
-          <dt className="text-sm font-semibold text-on-surface-variant">{r.label}</dt>
-          <dd className="mt-1 text-base text-on-surface">{r.value}</dd>
+          <dt className="text-label-lg text-on-surface-variant">{r.label}</dt>
+          <dd className="mt-1 text-body-lg text-on-surface">{r.value}</dd>
         </div>
       ))}
     </dl>

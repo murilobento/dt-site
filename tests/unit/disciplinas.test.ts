@@ -6,6 +6,7 @@ import {
   DISCIPLINA_SEGMENTO,
   DISCIPLINAS,
   disciplinaDaObra,
+  disciplinaInicial,
   disciplinaDoServico,
 } from "@/lib/disciplinas";
 
@@ -34,5 +35,19 @@ describe("disciplinas", () => {
     expect(disciplinaDaObra("saupre")).toBe("sau-pre");
     expect(disciplinaDaObra("edificacoes")).toBe("edificacao-reforma");
     expect(disciplinaDaObra("rodoviaria")).toBe("rodoviaria-pavimentacao");
+  });
+});
+
+describe("disciplinaInicial", () => {
+  it("disciplina da URL vence o segmento legado", () => {
+    expect(disciplinaInicial("sau-pre", "obras-civis")).toBe("sau-pre");
+  });
+  it("segmento legado mapeia para a primeira disciplina dele", () => {
+    expect(disciplinaInicial(undefined, "infraestrutura")).toBe("rodoviaria-pavimentacao");
+    expect(disciplinaInicial("xyz", "obras-civis")).toBe("edificacao-reforma");
+  });
+  it("valores inválidos são ignorados", () => {
+    expect(disciplinaInicial("xyz", "constructor")).toBeUndefined();
+    expect(disciplinaInicial()).toBeUndefined();
   });
 });

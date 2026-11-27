@@ -10,7 +10,6 @@ const PATHS = [
   "/obras",
   "/obras/pinhalzinho-sc",
   "/contato",
-  "/contato/comercial",
   "/privacidade",
 ];
 

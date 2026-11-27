@@ -27,7 +27,15 @@ describe("ServicesTabs", () => {
     expect(within(painel).getAllByRole("article")).toHaveLength(infra.length);
     const ctas = within(painel).getAllByRole("link", { name: /Solicitar escopo/ });
     expect(ctas).toHaveLength(infra.length);
-    expect(ctas[0]).toHaveAttribute("href", `/contato/comercial?segmento=${infra[0].segmento}&disciplina=${disciplinaDoServico(infra[0])}&origem=${infra[0].slug}`);
+    expect(ctas[0]).toHaveAttribute("href", `/contato?segmento=${infra[0].segmento}&disciplina=${disciplinaDoServico(infra[0])}&origem=${infra[0].slug}`);
+  });
+
+  it("edificações usa 'Solicitar orçamento'", async () => {
+    const user = userEvent.setup();
+    render(<ServicesTabs servicos={all} />);
+    await user.click(screen.getByRole("tab", { name: "Edificações e Reformas" }));
+    const painel = screen.getByRole("tabpanel", { name: "Edificações e Reformas" });
+    expect(within(painel).getAllByRole("link", { name: /Solicitar orçamento/ }).length).toBeGreaterThan(0);
   });
 
   it("consultoria usa 'Agendar consultoria' e a navegação por teclado troca de aba", async () => {

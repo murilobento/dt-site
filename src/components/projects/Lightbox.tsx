@@ -54,10 +54,10 @@ export function Lightbox({ fotos, index, onIndexChange, onCloseFocus }: Lightbox
                 sizes="(min-width: 64rem) 1024px, 100vw"
                 className="max-h-[65vh] w-auto rounded-md object-contain"
               />
-              <figcaption className="text-center text-base text-white">{foto.alt}</figcaption>
+              <figcaption className="text-center text-body-lg text-white">{foto.alt}</figcaption>
             </figure>
           )}
-          <p className="text-sm text-on-primary-container" aria-live="polite">
+          <p className="text-label-lg text-on-primary-container" aria-live="polite">
             {index !== null && `${index + 1} de ${total}`}
           </p>
           <div className="flex flex-wrap justify-center gap-3">

@@ -17,7 +17,7 @@ export const HOME_COPY = {
       edificacoes: "Edificações e Reformas",
       consultoria: "Consultoria Técnica",
     },
-    cta: { infraestrutura: "Solicitar escopo", edificacoes: "Solicitar escopo", consultoria: "Agendar consultoria" },
+    cta: { infraestrutura: "Solicitar escopo", edificacoes: "Solicitar orçamento", consultoria: "Agendar consultoria" },
   },
   obras: {
     titulo: "Obras em destaque",

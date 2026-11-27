@@ -1,32 +1,32 @@
 import { Resend } from "resend";
+import { DISCIPLINA_LABEL, DISCIPLINA_SEGMENTO } from "@/lib/disciplinas";
 import { SEGMENTO_LABEL } from "@/lib/segmentos";
 import type { Candidatura } from "./candidatura";
 import type { Lead } from "./schema";
 
 const DEFAULT_FROM = "Site DT <site@dtconstrutora.com.br>";
 
-const oneLine = (s: string) => s.replace(/[\r\n]+/g, " ").trim();
+const oneLine = (s: string) => s.replace(/[\r\n\u0085\u2028\u2029]+/g, " ").trim();
 
 export function buildSubject(lead: Lead, unverified = false): string {
-  return `${unverified ? "[não verificado] " : ""}[Site] Lead ${lead.segmento} — ${oneLine(lead.empresa)}`;
+  return `${unverified ? "[não verificado] " : ""}[Site] Lead ${DISCIPLINA_LABEL[lead.disciplina]} — ${oneLine(lead.empresa)}`;
 }
 
 function buildText(lead: Lead): string {
   return [
-    `Segmento: ${SEGMENTO_LABEL[lead.segmento]}`,
+    `Disciplina: ${DISCIPLINA_LABEL[lead.disciplina]}`,
+    `Segmento: ${SEGMENTO_LABEL[DISCIPLINA_SEGMENTO[lead.disciplina]]}`,
     `Origem: ${lead.origem || "direto"}`,
     "",
     `Nome: ${lead.nome}`,
     `Empresa: ${lead.empresa}`,
-    `Cargo: ${lead.cargo || "-"}`,
     `E-mail: ${lead.email}`,
     `Telefone: ${lead.telefone}`,
     "",
-    `Tipo de obra: ${lead.tipoObra}`,
-    `Local da obra: ${lead.local}`,
+    `Cidade / UF da obra: ${lead.cidadeUf || "-"}`,
     "",
-    "Mensagem:",
-    lead.mensagem,
+    "Escopo, prazo ou número do edital:",
+    lead.escopo,
   ].join("\n");
 }
 
@@ -57,7 +57,7 @@ export async function sendLeadEmail(lead: Lead, to: string, opts: { unverified?:
     replyTo: lead.email,
     subject: buildSubject(lead, opts.unverified),
     text: buildText(lead),
-    logLine: `[leads] RESEND_API_KEY ausente, transporte log: lead segmento=${lead.segmento}`,
+    logLine: `[leads] RESEND_API_KEY ausente, transporte log: lead disciplina=${lead.disciplina}`,
   });
 }
 

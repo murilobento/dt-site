@@ -28,3 +28,14 @@ describe("redirects", () => {
     expect(p).toContain('source sem "/" inicial: sem-barra');
   });
 });
+
+describe("redirects do Layout v2", () => {
+  it("/contato/comercial e /empresa são 301 para as páginas atuais", () => {
+    expect(LEGACY_REDIRECTS).toEqual(
+      expect.arrayContaining([
+        { source: "/empresa", destination: "/sobre", permanent: true },
+        { source: "/contato/comercial", destination: "/contato", permanent: true },
+      ]),
+    );
+  });
+});

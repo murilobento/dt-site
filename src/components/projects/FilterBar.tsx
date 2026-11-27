@@ -73,7 +73,6 @@ export function FilterBar({
     const qs = serializeObraFilters(next);
     return qs ? `/obras?${qs}` : "/obras";
   };
-  const panelVisible = moreOpen || !jsActive;
 
   return (
     <div className="flex flex-col gap-6">
@@ -101,19 +100,18 @@ export function FilterBar({
         </p>
       </div>
 
-      {jsActive ? (
+      {/* Sempre no HTML do servidor (sem salto de layout na hidratação); some quando não há JavaScript. */}
         <button
           type="button"
           aria-expanded={moreOpen}
           aria-controls="filtros-secundarios"
           onClick={onToggleMore}
-          className="inline-flex min-h-11 items-center gap-2 self-start font-label text-label-lg text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary md:hidden"
+          className="inline-flex min-h-11 items-center gap-2 self-start font-label text-label-lg text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary md:hidden [@media(scripting:none)]:hidden"
         >
           <ListFilter aria-hidden="true" className="size-4" />
           Mais filtros
           <ChevronDown aria-hidden="true" className={cn("size-4 transition-transform duration-state-change", moreOpen && "rotate-180")} />
         </button>
-      ) : null}
 
       <form
         id="filtros-secundarios"
@@ -126,7 +124,7 @@ export function FilterBar({
           e.preventDefault();
           onSearchNow();
         }}
-        className={cn("gap-4 sm:grid-cols-2 lg:grid-cols-4", panelVisible ? "grid" : "hidden md:grid")}
+        className={cn("gap-4 sm:grid-cols-2 lg:grid-cols-4", moreOpen ? "grid" : "hidden md:grid [@media(scripting:none)]:grid")}
       >
         {filters.categoria ? <input type="hidden" name="categoria" value={filters.categoria} /> : null}
         {filters.segmento ? <input type="hidden" name="segmento" value={filters.segmento} /> : null}

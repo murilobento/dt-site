@@ -16,9 +16,9 @@ export default function ErrorPage({ error, retry }: { error: unknown; retry: () 
   return (
     <section className="py-16 md:py-24">
       <Container>
-        <Eyebrow className="text-text-secondary">Erro</Eyebrow>
-        <h1 className="mt-4 text-3xl text-text-primary md:text-5xl">Algo deu errado</h1>
-        <p className="mt-6 max-w-2xl text-lg text-text-secondary">Tente de novo em alguns instantes.</p>
+        <Eyebrow className="text-on-surface-variant">Erro</Eyebrow>
+        <h1 className="mt-4 font-display text-display-lg-mobile text-primary lg:text-display-lg">Algo deu errado</h1>
+        <p className="mt-6 max-w-2xl text-body-lg text-on-surface-variant">Tente de novo em alguns instantes.</p>
         <div className="mt-8 flex flex-wrap gap-4">
           <Button onClick={() => retry()}>Tentar de novo</Button>
           <Button href="/" variant="secondary">

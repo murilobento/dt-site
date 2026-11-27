@@ -6,7 +6,7 @@ vi.mock("@/lib/leads/turnstile", () => ({ verifyTurnstile: vi.fn() }));
 vi.mock("next/headers", () => ({ headers: async () => new Headers({ "x-forwarded-for": "9.9.9.9, 1.1.1.1" }) }));
 vi.mock("@/lib/content/source", () => ({ getContentSource: () => ({ getConfiguracoes: async () => cfg }) }));
 
-import { submitLead, type LeadFormState } from "@/app/contato/comercial/actions";
+import { submitLead, type LeadFormState } from "@/app/contato/actions";
 import { sendLeadEmail } from "@/lib/leads/send";
 import { verifyTurnstile } from "@/lib/leads/turnstile";
 
@@ -58,7 +58,7 @@ describe("submitLead", () => {
     vi.unstubAllEnvs();
   });
   it("sucesso devolve o segmento", async () => {
-    expect(await submitLead(idle, fd(valido))).toEqual({ status: "success", segmento: "infraestrutura" });
+    expect(await submitLead(idle, fd(valido))).toEqual({ status: "success", segmento: "infraestrutura", disciplina: "rodoviaria-pavimentacao" });
   });
   it("campos inválidos → erros por campo e valores preservados, sem e-mail", async () => {
     const s = await submitLead(idle, fd({ ...valido, email: "joao", consentimento: false }));
@@ -78,11 +78,21 @@ describe("submitLead", () => {
       message: "Não conseguimos enviar agora. Tente de novo em alguns minutos ou fale pelo WhatsApp.",
     });
   });
-  it("lead válido envia para o destinatário do segmento", async () => {
+  it("edificação roteia para o segmento obras-civis", async () => {
+    const s = await submitLead(idle, fd({ ...valido, disciplina: "edificacao-reforma" }));
+    expect(s).toEqual({ status: "success", segmento: "obras-civis", disciplina: "edificacao-reforma" });
+    expect(sendLeadEmail).toHaveBeenCalledWith(expect.anything(), cfg.emailsLead["obras-civis"], { unverified: false });
+  });
+  it("disciplina inválida não envia e preserva o resto", async () => {
+    const s = await submitLead(idle, fd({ ...valido, disciplina: "x" }));
+    expect(s).toMatchObject({ status: "error", values: { nome: valido.nome } });
+    expect(sendLeadEmail).not.toHaveBeenCalled();
+  });
+  it("lead válido envia para o destinatário da disciplina", async () => {
     const s = await submitLead(idle, fd(valido));
     expect(s.status).toBe("success");
     expect(sendLeadEmail).toHaveBeenCalledWith(
-      expect.objectContaining({ segmento: "infraestrutura", origem: "restauracao" }),
+      expect.objectContaining({ disciplina: "rodoviaria-pavimentacao", origem: "restauracao" }),
       cfg.emailsLead.infraestrutura,
       { unverified: false },
     );

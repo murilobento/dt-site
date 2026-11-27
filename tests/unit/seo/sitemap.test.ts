@@ -18,7 +18,7 @@ describe("sitemap", () => {
     expect(urls).toEqual(
       expect.arrayContaining([
         `${SITE}/`, `${SITE}/sobre`, `${SITE}/compliance`, `${SITE}/servicos`, `${SITE}/obras`, `${SITE}/contato`,
-        `${SITE}/contato/comercial`, `${SITE}/privacidade`, `${SITE}/cookies`,
+        `${SITE}/privacidade`, `${SITE}/cookies`,
         `${SITE}/obras/pinhalzinho-sc`, `${SITE}/servicos/restauracao`,
       ]),
     );
