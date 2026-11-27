@@ -11,6 +11,11 @@ type TabsProps = {
   tabs: TabItem[];
   className?: string;
   panelClassName?: string;
+  /** Seleção controlada pelo pai (ex.: âncora da URL). Sem isso, o estado é interno. */
+  selectedId?: string;
+  onSelect?: (id: string) => void;
+  /** Usa o `id` da aba como id do painel (âncoras `#id`). */
+  anchorPanels?: boolean;
 };
 
 /**
@@ -18,9 +23,16 @@ type TabsProps = {
  * Todos os painéis ficam no HTML (os inativos com `hidden`), então o conteúdo existe sem JS
  * e fora da árvore de acessibilidade quando oculto.
  */
-export function Tabs({ label, tabs, className, panelClassName }: TabsProps) {
+export function Tabs({ label, tabs, className, panelClassName, selectedId, onSelect, anchorPanels }: TabsProps) {
   const base = useId();
-  const [ativo, setAtivo] = useState(0);
+  const [ativoInterno, setAtivoInterno] = useState(0);
+  const controlado = selectedId !== undefined ? tabs.findIndex((t) => t.id === selectedId) : -1;
+  const ativo = controlado >= 0 ? controlado : ativoInterno;
+  const setAtivo = (i: number) => {
+    setAtivoInterno(i);
+    if (tabs[i]) onSelect?.(tabs[i].id);
+  };
+  const painelId = (id: string) => (anchorPanels ? id : `${base}-panel-${id}`);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   if (tabs.length === 0) return null;
 
@@ -63,7 +75,7 @@ export function Tabs({ label, tabs, className, panelClassName }: TabsProps) {
               role="tab"
               id={`${base}-tab-${t.id}`}
               aria-selected={selecionado}
-              aria-controls={`${base}-panel-${t.id}`}
+              aria-controls={painelId(t.id)}
               tabIndex={selecionado ? 0 : -1}
               onClick={() => setAtivo(i)}
               className={cn(
@@ -82,7 +94,7 @@ export function Tabs({ label, tabs, className, panelClassName }: TabsProps) {
         <div
           key={t.id}
           role="tabpanel"
-          id={`${base}-panel-${t.id}`}
+          id={painelId(t.id)}
           aria-labelledby={`${base}-tab-${t.id}`}
           hidden={i !== ativo}
           tabIndex={0}

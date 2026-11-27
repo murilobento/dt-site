@@ -2,7 +2,7 @@ import type { ComponentPropsWithoutRef, ElementType } from "react";
 
 type ContainerProps<T extends ElementType> = { as?: T } & ComponentPropsWithoutRef<T>;
 
-/** Largura máxima de 1200 px (max-w-page); margem lateral de 16 px no mobile e 24 px (page-margin) a partir de sm. */
+/** Largura máxima de 1280 px (max-w-page); margem lateral de 16 px no mobile e 24 px (page-margin) a partir de sm. */
 export function Container<T extends ElementType = "div">({
   as,
   className = "",

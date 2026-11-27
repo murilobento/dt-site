@@ -1,8 +1,14 @@
 import type { Segmento } from "@/lib/content/types";
+import type { Disciplina } from "@/lib/disciplinas";
 
-/** Link para o formulário comercial, já com segmento e (opcional) origem do clique. */
-export function leadHref(segmento: Segmento, origem?: string): string {
-  const params = new URLSearchParams({ segmento });
+type LeadOpts = { segmento?: Segmento; disciplina?: Disciplina; origem?: string };
+
+/** Link para o formulário comercial, com segmento, disciplina e/ou origem do clique. */
+export function leadHref({ segmento, disciplina, origem }: LeadOpts = {}): string {
+  const params = new URLSearchParams();
+  if (segmento) params.set("segmento", segmento);
+  if (disciplina) params.set("disciplina", disciplina);
   if (origem) params.set("origem", origem);
-  return `/contato/comercial?${params.toString()}`;
+  const qs = params.toString();
+  return qs ? `/contato/comercial?${qs}` : "/contato/comercial";
 }

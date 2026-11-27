@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Mail } from "lucide-react";
+import { ServicosCatalogo } from "@/components/services/ServicosCatalogo";
+import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { getContentSource } from "@/lib/content/source";
-import type { Segmento } from "@/lib/content/types";
-import { SEGMENTO_LABEL } from "@/lib/segmentos";
+import { SERVICOS_COPY } from "@/lib/copy/servicos";
 import { buildMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildMetadata({
@@ -13,51 +13,46 @@ export const metadata: Metadata = buildMetadata({
   path: "/servicos",
 });
 
-const SEGMENTOS: Segmento[] = ["obras-civis", "infraestrutura"];
-
 export default async function ServicosPage() {
   const servicos = await getContentSource().getServicos();
+  const { hero, cta } = SERVICOS_COPY;
 
   return (
     <>
-      <section className="bg-surface-inverse py-16 text-text-on-inverse md:py-24">
-        <Container>
-          <Eyebrow className="text-text-on-inverse-secondary">O que fazemos</Eyebrow>
-          <h1 className="mt-4 text-3xl text-text-on-inverse md:text-5xl">Serviços</h1>
-          <p className="mt-6 max-w-2xl text-lg text-text-on-inverse-secondary">
-            Do projeto à entrega, com equipe e equipamentos próprios.
-          </p>
+      <section className="border-b border-primary-container bg-brand-navy py-12 text-on-primary md:py-16">
+        <Container className="flex flex-col gap-4">
+          <span className="inline-flex items-center self-start rounded-sm bg-secondary-container px-3 py-1 font-label text-label-sm text-on-secondary-container">
+            {hero.selo}
+          </span>
+          <h1 className="max-w-4xl font-display text-display-lg-mobile text-balance text-on-primary lg:text-display-lg">
+            {hero.titulo}
+          </h1>
+          <p className="max-w-2xl font-body text-body-lg text-pretty text-on-primary-container">{hero.lead}</p>
         </Container>
       </section>
-      {SEGMENTOS.map((segmento) => {
-        const grupo = servicos.filter((s) => s.segmento === segmento);
-        if (grupo.length === 0) return null;
-        return (
-          <section key={segmento} className="py-16 md:py-24">
-            <Container>
-              <h2 className="text-2xl text-text-primary md:text-3xl">{SEGMENTO_LABEL[segmento]}</h2>
-              <ul className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {grupo.map((s) => (
-                  <li
-                    key={s.slug}
-                    className="flex flex-col rounded-card border border-border bg-surface-default p-6"
-                  >
-                    <h3 className="text-xl font-bold text-text-primary">{s.titulo}</h3>
-                    <p className="mt-2 flex-1 text-base text-text-secondary">{s.resumo}</p>
-                    <Link
-                      href={`/servicos/${s.slug}`}
-                      aria-label={`Ver serviço: ${s.titulo}`}
-                      className="mt-6 inline-flex min-h-12 items-center font-semibold text-brand-primary underline underline-offset-4"
-                    >
-                      Ver serviço
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </Container>
-          </section>
-        );
-      })}
+
+      <section className="py-12 md:py-section">
+        <Container>
+          <ServicosCatalogo servicos={servicos} />
+        </Container>
+      </section>
+
+      <section className="pb-section">
+        <Container>
+          <div className="grid items-center gap-6 rounded-lg bg-primary-container p-6 md:p-8 lg:grid-cols-12 lg:gap-8 lg:p-12">
+            <div className="flex flex-col gap-3 lg:col-span-8">
+              <h2 className="font-headline text-headline-lg-mobile text-balance text-white lg:text-headline-lg">{cta.titulo}</h2>
+              <p className="max-w-prose font-body text-body-lg text-pretty text-on-primary-container">{cta.lead}</p>
+            </div>
+            <div className="flex lg:col-span-4 lg:justify-end">
+              <Button href="/contato" variant="accent" inverse className="w-full sm:w-auto">
+                <Mail aria-hidden="true" className="size-5" />
+                {cta.botao}
+              </Button>
+            </div>
+          </div>
+        </Container>
+      </section>
     </>
   );
 }

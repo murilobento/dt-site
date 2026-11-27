@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { Tabs, type TabItem } from "@/components/ui/Tabs";
 import { HOME_COPY } from "@/lib/copy/home";
 import { SERVICO_ICONES } from "@/lib/icons";
+import { disciplinaDoServico } from "@/lib/disciplinas";
 import { leadHref } from "@/lib/links";
 import { cn } from "@/lib/ui/cn";
 import type { CategoriaServico, Servico } from "@/lib/content/types";
@@ -35,7 +36,7 @@ function ServicoCard({ servico }: { servico: Servico }) {
       </div>
       <footer className="border-t border-outline-variant pt-3">
         <Link
-          href={leadHref(servico.segmento, servico.slug)}
+          href={leadHref({ segmento: servico.segmento, disciplina: disciplinaDoServico(servico), origem: servico.slug })}
           className="inline-flex items-center gap-1 font-label text-label-lg text-primary underline-offset-4 hover:underline"
         >
           {HOME_COPY.servicos.cta[servico.categoria]}

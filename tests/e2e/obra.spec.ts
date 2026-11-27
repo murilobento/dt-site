@@ -59,7 +59,7 @@ test("CTA final usa a microcopy e o segmento da obra", async ({ page }) => {
   await expect(page.getByText("Tem uma obra parecida? Fale com nosso time de Infraestrutura.")).toBeVisible();
   await expect(page.getByRole("link", { name: "Solicitar proposta" }).last()).toHaveAttribute(
     "href",
-    /segmento=infraestrutura&origem=pinhalzinho-sc/,
+    /segmento=infraestrutura&disciplina=rodoviaria-pavimentacao&origem=pinhalzinho-sc/,
   );
 });
 

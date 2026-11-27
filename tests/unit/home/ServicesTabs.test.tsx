@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { ServicesTabs } from "@/components/home/ServicesTabs";
 import servicos from "@/lib/content/fixtures/servicos.json";
+import { disciplinaDoServico } from "@/lib/disciplinas";
 import type { Servico } from "@/lib/content/types";
 
 const all = servicos as Servico[];
@@ -26,7 +27,7 @@ describe("ServicesTabs", () => {
     expect(within(painel).getAllByRole("article")).toHaveLength(infra.length);
     const ctas = within(painel).getAllByRole("link", { name: /Solicitar escopo/ });
     expect(ctas).toHaveLength(infra.length);
-    expect(ctas[0]).toHaveAttribute("href", `/contato/comercial?segmento=${infra[0].segmento}&origem=${infra[0].slug}`);
+    expect(ctas[0]).toHaveAttribute("href", `/contato/comercial?segmento=${infra[0].segmento}&disciplina=${disciplinaDoServico(infra[0])}&origem=${infra[0].slug}`);
   });
 
   it("consultoria usa 'Agendar consultoria' e a navegação por teclado troca de aba", async () => {

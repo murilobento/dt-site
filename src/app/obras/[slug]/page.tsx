@@ -11,6 +11,7 @@ import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { getContentSource } from "@/lib/content/source";
 import type { Segmento } from "@/lib/content/types";
+import { disciplinaDaObra } from "@/lib/disciplinas";
 import { leadHref } from "@/lib/links";
 import { SEGMENTO_LABEL } from "@/lib/segmentos";
 import { breadcrumbJsonLd, obraJsonLd } from "@/lib/seo/jsonld";
@@ -126,7 +127,7 @@ export default async function ObraPage({ params }: Props) {
           <h2 className="max-w-xl text-2xl text-text-on-inverse md:text-3xl">
             Tem uma obra parecida? Fale com nosso time de {TIME_LABEL[obra.segmento]}.
           </h2>
-          <Button href={leadHref(obra.segmento, obra.slug)} inverse>
+          <Button href={leadHref({ segmento: obra.segmento, disciplina: disciplinaDaObra(obra.categoria), origem: obra.slug })} inverse>
             Solicitar proposta
           </Button>
         </Container>

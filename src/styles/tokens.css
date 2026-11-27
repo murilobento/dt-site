@@ -159,7 +159,7 @@
   --ease-surface-enter: cubic-bezier(0.2, 0, 0, 1);
   --ease-surface-exit: cubic-bezier(0.3, 0, 1, 1);
 
-  --container-page: 75rem;
+  --container-page: 80rem;
   --breakpoint-*: initial;
   --breakpoint-sm: 40rem;
   --breakpoint-md: 48rem;
