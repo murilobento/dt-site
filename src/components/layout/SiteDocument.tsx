@@ -19,8 +19,10 @@ const CONSENT_FLAG = `if(document.cookie.indexOf("${CONSENT_COOKIE}=")>-1)docume
 /** Documento completo do site (html, cabeçalho, rodapé, consentimento). Usado pelo layout raiz do grupo (site) e pelo 404 global. */
 export async function SiteDocument({ children }: { children: React.ReactNode }) {
   const config = await getContentSource().getConfiguracoes();
+  // O script CONSENT_FLAG marca data-consent no <html> antes da hidratação (esconde o banner
+  // para quem já decidiu); suppressHydrationWarning cobre só os atributos deste elemento.
   return (
-    <html lang="pt-BR" className={FONT_VARIABLES}>
+    <html lang="pt-BR" className={FONT_VARIABLES} suppressHydrationWarning>
       <body>
         <script dangerouslySetInnerHTML={{ __html: CONSENT_FLAG }} />
         {/* Sem JS o banner não funciona (e nada é rastreado): não deixa um bloco morto cobrindo a página. */}
