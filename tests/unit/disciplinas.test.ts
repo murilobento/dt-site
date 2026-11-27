@@ -1,0 +1,61 @@
+import { describe, expect, it } from "vitest";
+import servicos from "@/lib/content/fixtures/servicos.json";
+import type { Servico } from "@/lib/content/types";
+import {
+  DISCIPLINA_LABEL,
+  DISCIPLINA_OPCAO,
+  DISCIPLINA_SEGMENTO,
+  DISCIPLINAS,
+  disciplinaDaObra,
+  disciplinaInicial,
+  disciplinaDoServico,
+} from "@/lib/disciplinas";
+
+const por = (slug: string) => (servicos as Servico[]).find((s) => s.slug === slug)!;
+
+describe("disciplinas", () => {
+  it("rótulos exatos e segmento de roteamento", () => {
+    expect(DISCIPLINAS.map((d) => DISCIPLINA_LABEL[d])).toEqual([
+      "Rodoviária e Pavimentação",
+      "Terraplanagem e Drenagens",
+      "SAU e PRE",
+      "Edificação e Reforma",
+      "Consultoria",
+    ]);
+    expect(DISCIPLINAS.map((d) => DISCIPLINA_OPCAO[d])).toEqual([
+      "Obra rodoviária / pavimentação",
+      "Terraplanagem e drenagens",
+      "SAU / PRE rodoviário",
+      "Edificação / reforma predial",
+      "Consultoria / projeto / laudo",
+    ]);
+    expect(DISCIPLINA_SEGMENTO["edificacao-reforma"]).toBe("obras-civis");
+    expect(DISCIPLINA_SEGMENTO.consultoria).toBe("infraestrutura");
+  });
+  it("disciplinaDoServico por categoria e ícone", () => {
+    expect(disciplinaDoServico(por("restauracao"))).toBe("rodoviaria-pavimentacao");
+    expect(disciplinaDoServico(por("terraplanagem-drenagem"))).toBe("terraplanagem-drenagens");
+    expect(disciplinaDoServico(por("saus-pres"))).toBe("sau-pre");
+    expect(disciplinaDoServico(por("reformas"))).toBe("edificacao-reforma");
+    expect(disciplinaDoServico(por("laudos-pareceres"))).toBe("consultoria");
+  });
+  it("disciplinaDaObra", () => {
+    expect(disciplinaDaObra("saupre")).toBe("sau-pre");
+    expect(disciplinaDaObra("edificacoes")).toBe("edificacao-reforma");
+    expect(disciplinaDaObra("rodoviaria")).toBe("rodoviaria-pavimentacao");
+  });
+});
+
+describe("disciplinaInicial", () => {
+  it("disciplina da URL vence o segmento legado", () => {
+    expect(disciplinaInicial("sau-pre", "obras-civis")).toBe("sau-pre");
+  });
+  it("segmento legado mapeia para a primeira disciplina dele", () => {
+    expect(disciplinaInicial(undefined, "infraestrutura")).toBe("rodoviaria-pavimentacao");
+    expect(disciplinaInicial("xyz", "obras-civis")).toBe("edificacao-reforma");
+  });
+  it("valores inválidos são ignorados", () => {
+    expect(disciplinaInicial("xyz", "constructor")).toBeUndefined();
+    expect(disciplinaInicial()).toBeUndefined();
+  });
+});

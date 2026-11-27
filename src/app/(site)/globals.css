@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@import "../../styles/tokens.css";
+
+/* Entrada de seção (componente Reveal): fade + 16px, 240ms, curva de entrada do layout, uma vez. O Reveal só
+   marca `data-reveal="pending"` depois da hidratação e sem reduced motion; sem JS o conteúdo fica visível. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    transition:
+      opacity var(--transition-duration-surface-enter) var(--ease-surface-enter),
+      transform var(--transition-duration-surface-enter) var(--ease-surface-enter);
+  }
+  [data-reveal="pending"] {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+/* Banner de cookies renderizado no servidor: escondido antes da hidratação para quem já decidiu. */
+html[data-consent="decided"] [data-cookie-banner][data-ssr] {
+  display: none;
+}

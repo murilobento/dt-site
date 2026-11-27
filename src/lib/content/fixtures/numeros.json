@@ -1,0 +1,35 @@
+[
+  {
+    "rotulo": "Obras entregues [exemplo]",
+    "valor": 40,
+    "fonte": "Dado de exemplo, não verificado [exemplo]",
+    "dataReferencia": "2025-01"
+  },
+  {
+    "rotulo": "Quilômetros de rodovia [exemplo]",
+    "valor": 250,
+    "unidade": "km",
+    "fonte": "Dado de exemplo, não verificado [exemplo]",
+    "dataReferencia": "2025-01"
+  },
+  {
+    "rotulo": "Metros quadrados construídos [exemplo]",
+    "valor": 80000,
+    "unidade": "m²",
+    "fonte": "Dado de exemplo, não verificado [exemplo]",
+    "dataReferencia": "2025-01"
+  },
+  {
+    "rotulo": "Colaboradores [exemplo]",
+    "valor": 120,
+    "fonte": "Dado de exemplo, não verificado [exemplo]",
+    "dataReferencia": "2025-01"
+  },
+  {
+    "rotulo": "Anos de atuação [exemplo]",
+    "valor": 10,
+    "unidade": "anos",
+    "fonte": "Dado de exemplo, não verificado [exemplo]",
+    "dataReferencia": "2025-01"
+  }
+]

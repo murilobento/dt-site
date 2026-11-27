@@ -1,0 +1,36 @@
+{
+  "comoTrabalhamos": "Como trabalhamos. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+  "marcos": [
+    {
+      "ano": 2015,
+      "titulo": "Fundação [exemplo]",
+      "descricao": "Início das atividades. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+    },
+    {
+      "ano": 2020,
+      "titulo": "Primeira obra rodoviária [exemplo]",
+      "descricao": "Entrada na infraestrutura. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+    }
+  ],
+  "missao": "Missão. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+  "visao": "Visão. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+  "valores": [
+    {
+      "titulo": "Segurança [exemplo]",
+      "descricao": "Segurança em cada etapa. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+    },
+    {
+      "titulo": "Qualidade [exemplo]",
+      "descricao": "Qualidade em cada etapa. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+    },
+    {
+      "titulo": "Compromisso [exemplo]",
+      "descricao": "Compromisso em cada etapa. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+    }
+  ],
+  "principios": [
+    "Cumprir prazos combinados [exemplo]",
+    "Zelar pela segurança de todos [exemplo]",
+    "Comunicar com transparência [exemplo]"
+  ]
+}

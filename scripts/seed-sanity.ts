@@ -1,0 +1,176 @@
+/**
+ * Importa as fixtures (src/lib/content/fixtures/*.json + public/fixtures/*.webp) para o Sanity.
+ * Idempotente: `_id` = `<tipo>-<slug>` (singletons têm id fixo) e usa createOrReplace;
+ * o upload de imagem deduplica por hash. Rodar de novo apenas sobrescreve com as fixtures.
+ *
+ * Uso (ver docs/sanity-setup.md):
+ *   npx tsx --env-file=.env.local scripts/seed-sanity.ts [--dry-run]
+ * Variáveis: NEXT_PUBLIC_SANITY_PROJECT_ID, NEXT_PUBLIC_SANITY_DATASET, SANITY_API_WRITE_TOKEN.
+ * ATENÇÃO: sobrescreve documentos com os mesmos _id. Não rode em dataset com conteúdo real editado.
+ */
+import { readFileSync } from 'node:fs';
+import { basename, join } from 'node:path';
+import { createClient } from 'next-sanity';
+import type {
+  Configuracoes, Diferencial, Imagem, Numero, Obra, PaginaCompliance, PaginaEmpresa, PaginaLegal, Servico,
+} from '../src/lib/content/types';
+
+const ROOT = join(__dirname, '..');
+const FIXTURES = join(ROOT, 'src/lib/content/fixtures');
+const PUBLIC = join(ROOT, 'public');
+const dryRun = process.argv.includes('--dry-run');
+
+const json = <T>(f: string): T => JSON.parse(readFileSync(join(FIXTURES, f), 'utf8')) as T;
+
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+const token = process.env.SANITY_API_WRITE_TOKEN;
+if (!dryRun && (!projectId || !token)) {
+  console.error('Defina NEXT_PUBLIC_SANITY_PROJECT_ID e SANITY_API_WRITE_TOKEN (token com permissão de escrita).');
+  process.exit(1);
+}
+
+const client = createClient({
+  projectId: projectId ?? 'dry-run',
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  apiVersion: '2025-01-01',
+  useCdn: false,
+  token,
+});
+
+const slugify = (s: string) =>
+  s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+const ref = (id: string) => ({ _type: 'reference' as const, _ref: id });
+const key = (prefix: string, i: number) => `${prefix}${i}`;
+
+const uploaded = new Map<string, string>();
+async function imagem(img: Imagem) {
+  let assetId = uploaded.get(img.url);
+  if (!assetId) {
+    if (dryRun) {
+      assetId = `image-dry-run-${basename(img.url)}`;
+    } else {
+      const asset = await client.assets.upload('image', readFileSync(join(PUBLIC, img.url)), {
+        filename: basename(img.url),
+      });
+      assetId = asset._id;
+    }
+    uploaded.set(img.url, assetId);
+  }
+  return { _type: 'image' as const, alt: img.alt, asset: ref(assetId) };
+}
+
+const slug = (s: string) => ({ _type: 'slug' as const, current: s });
+
+async function build() {
+  const docs: Record<string, unknown>[] = [];
+  const servicos = json<Servico[]>('servicos.json');
+  const obras = json<Obra[]>('obras.json');
+  const numeros = json<Numero[]>('numeros.json');
+  const cfg = json<Configuracoes>('configuracoes.json');
+  const empresa = json<PaginaEmpresa>('paginaEmpresa.json');
+  const compliance = json<PaginaCompliance>('paginaCompliance.json');
+  const diferenciais = json<Diferencial[]>('diferenciais.json');
+  const legais = json<PaginaLegal[]>('paginasLegais.json');
+
+  // Clientes saem das próprias obras (nome e tipo), sem repetição; a ordem segue a primeira aparição.
+  const clientes = [...new Map(obras.flatMap((o) => (o.cliente ? [[o.cliente.nome, o.cliente] as const] : []))).values()];
+  const clientePorNome = new Map(clientes.map((c) => [c.nome, `cliente-${slugify(c.nome)}`]));
+  const servicoId = (s: string) => `servico-${s}`;
+
+  for (const [i, s] of servicos.entries()) {
+    docs.push({
+      _id: servicoId(s.slug), _type: 'servico', titulo: s.titulo, slug: slug(s.slug), segmento: s.segmento,
+      categoria: s.categoria, ...(s.subtitulo ? { subtitulo: s.subtitulo } : {}), ...(s.icone ? { icone: s.icone } : {}),
+      ordem: i, resumo: s.resumo, escopo: s.escopo, equipamentos: s.equipamentos,
+      etapas: s.etapas.map((e, j) => ({ _key: key('etapa', j), _type: 'etapa', ...e })),
+      imagem: await imagem(s.imagem), ...(s.seo ? { seo: { _type: 'seo', ...s.seo } } : {}),
+    });
+  }
+
+  for (const [i, c] of clientes.entries()) {
+    docs.push({ _id: clientePorNome.get(c.nome), _type: 'cliente', nome: c.nome, tipo: c.tipo, ordem: i + 1 });
+  }
+
+  for (const o of obras) {
+    const clienteId = o.cliente ? clientePorNome.get(o.cliente.nome) : undefined;
+    docs.push({
+      _id: `obra-${o.slug}`, _type: 'obra', titulo: o.titulo, slug: slug(o.slug), segmento: o.segmento, categoria: o.categoria,
+      servicos: o.servicos.map((s, j) => ({ _key: key('srv', j), ...ref(servicoId(s)) })),
+      ...(clienteId ? { cliente: ref(clienteId) } : {}),
+      cidade: o.cidade, uf: o.uf,
+      ...(o.coordenadas ? { coordenadas: { _type: 'geopoint', lat: o.coordenadas.lat, lng: o.coordenadas.lng } } : {}),
+      inicio: o.inicio, ...(o.termino ? { termino: o.termino } : {}), status: o.status,
+      ...(o.extensao ? { extensao: o.extensao } : {}),
+      ...(o.diferencialTecnico ? { diferencialTecnico: o.diferencialTecnico } : {}),
+      ...(o.codigoContrato ? { codigoContrato: o.codigoContrato } : {}),
+      ...(o.norma ? { norma: o.norma } : {}),
+      ...(o.desafio ? { desafio: o.desafio } : {}),
+      ...(o.solucao ? { solucao: o.solucao } : {}),
+      ...(o.quantitativos
+        ? { quantitativos: o.quantitativos.map((q, j) => ({ _key: key('qtd', j), _type: 'quantitativo', ...q })) }
+        : {}),
+      ...(o.etapas ? { etapas: o.etapas.map((e, j) => ({ _key: key('etapa', j), _type: 'etapa', ...e })) } : {}),
+      descricao: o.descricao, capa: await imagem(o.capa),
+      galeria: await Promise.all(o.galeria.map(async (g, j) => ({ _key: key('gal', j), ...(await imagem(g)) }))),
+      ...(o.antesDepois
+        ? { antesDepois: { antes: await imagem(o.antesDepois.antes), depois: await imagem(o.antesDepois.depois) } }
+        : {}),
+      destaque: o.destaque, ...(o.seo ? { seo: { _type: 'seo', ...o.seo } } : {}),
+    });
+  }
+
+  for (const [i, n] of numeros.entries()) {
+    docs.push({ _id: `numero-${slugify(n.rotulo)}`, _type: 'numero', ...n, ordem: i });
+  }
+
+  docs.push({
+    _id: 'configuracoes', _type: 'configuracoes', ...cfg,
+    emailsLead: { obrasCivis: cfg.emailsLead['obras-civis'], infraestrutura: cfg.emailsLead.infraestrutura },
+    redes: cfg.redes.map((r, i) => ({ _key: key('rede', i), _type: 'redeSocial', ...r })),
+    diferenciais: diferenciais.map((d, i) => ({ _key: key('dif', i), _type: 'diferencial', ...d })),
+  });
+
+  docs.push({
+    _id: 'paginaEmpresa', _type: 'paginaEmpresa', comoTrabalhamos: empresa.comoTrabalhamos,
+    missao: empresa.missao, visao: empresa.visao, principios: empresa.principios,
+    valores: empresa.valores.map((v, i) => ({ _key: key('val', i), _type: 'valor', ...v })),
+    marcos: await Promise.all(
+      empresa.marcos.map(async (m, i) => ({
+        _key: key('marco', i), _type: 'marco', ano: m.ano, titulo: m.titulo, descricao: m.descricao,
+        ...(m.imagem ? { imagem: await imagem(m.imagem) } : {}),
+      })),
+    ),
+  });
+
+  docs.push({
+    _id: 'paginaCompliance', _type: 'paginaCompliance',
+    pilares: compliance.pilares.map((p, i) => ({
+      _key: key('pilar', i), _type: 'pilar', titulo: p.titulo, descricao: p.descricao, icone: p.icone, itens: p.itens,
+    })),
+    vagas: compliance.vagas.map((v, i) => ({ _key: key('vaga', i), _type: 'vaga', ...v })),
+  });
+
+  for (const { slug: paginaSlug, ...p } of legais) {
+    docs.push({ _id: `paginaLegal-${paginaSlug}`, _type: 'paginaLegal', ...p });
+  }
+
+  return docs;
+}
+
+async function main() {
+  const docs = await build();
+  if (dryRun) {
+    console.log(`[dry-run] ${docs.length} documentos:`);
+    for (const d of docs) console.log(`  ${d._type}\t${d._id}`);
+    return;
+  }
+  const tx = docs.reduce((t, d) => t.createOrReplace(d as never), client.transaction());
+  await tx.commit();
+  console.log(`${docs.length} documentos publicados (createOrReplace).`);
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

@@ -1,0 +1,372 @@
+[
+  {
+    "slug": "obras-civis",
+    "titulo": "Obras civis [exemplo]",
+    "segmento": "obras-civis",
+    "resumo": "Edificações e reformas. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "escopo": [
+      "Edificações comerciais [exemplo]",
+      "Reformas [exemplo]"
+    ],
+    "equipamentos": [
+      "Betoneira [exemplo]",
+      "Guincho [exemplo]"
+    ],
+    "etapas": [
+      {
+        "titulo": "Etapa 1 [exemplo]",
+        "descricao": "Descrição da etapa 1. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 2 [exemplo]",
+        "descricao": "Descrição da etapa 2. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 3 [exemplo]",
+        "descricao": "Descrição da etapa 3. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      }
+    ],
+    "imagem": {
+      "url": "/fixtures/servico-obras-civis.webp",
+      "alt": "Equipe executando obras civis [exemplo]",
+      "width": 1200,
+      "height": 800
+    },
+    "categoria": "edificacoes",
+    "subtitulo": "Corporativo • Institucional",
+    "icone": "edificio"
+  },
+  {
+    "slug": "conservacao",
+    "titulo": "Conservação rodoviária [exemplo]",
+    "segmento": "infraestrutura",
+    "resumo": "Manutenção de rodovias. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "escopo": [
+      "Tapa-buracos [exemplo]",
+      "Sinalização [exemplo]"
+    ],
+    "equipamentos": [
+      "Caminhão basculante [exemplo]",
+      "Rolo compactador [exemplo]"
+    ],
+    "etapas": [
+      {
+        "titulo": "Etapa 1 [exemplo]",
+        "descricao": "Descrição da etapa 1. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 2 [exemplo]",
+        "descricao": "Descrição da etapa 2. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 3 [exemplo]",
+        "descricao": "Descrição da etapa 3. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      }
+    ],
+    "imagem": {
+      "url": "/fixtures/servico-conservacao.webp",
+      "alt": "Equipe executando conservação rodoviária [exemplo]",
+      "width": 1200,
+      "height": 800
+    },
+    "categoria": "infraestrutura",
+    "subtitulo": "Tapa-buraco • Sinalização • Drenagem",
+    "icone": "estrada"
+  },
+  {
+    "slug": "restauracao",
+    "titulo": "Restauração rodoviária [exemplo]",
+    "segmento": "infraestrutura",
+    "resumo": "Recuperação de pavimentos. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "escopo": [
+      "Fresagem [exemplo]",
+      "Recapeamento [exemplo]"
+    ],
+    "equipamentos": [
+      "Fresadora [exemplo]",
+      "Vibroacabadora [exemplo]"
+    ],
+    "etapas": [
+      {
+        "titulo": "Etapa 1 [exemplo]",
+        "descricao": "Descrição da etapa 1. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 2 [exemplo]",
+        "descricao": "Descrição da etapa 2. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 3 [exemplo]",
+        "descricao": "Descrição da etapa 3. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      }
+    ],
+    "imagem": {
+      "url": "/fixtures/servico-restauracao.webp",
+      "alt": "Equipe executando restauração rodoviária [exemplo]",
+      "width": 1200,
+      "height": 800
+    },
+    "categoria": "infraestrutura",
+    "subtitulo": "CBUQ • Fresagem • Restauração",
+    "icone": "estrada"
+  },
+  {
+    "slug": "construcao-rodoviaria",
+    "titulo": "Construção rodoviária [exemplo]",
+    "segmento": "infraestrutura",
+    "resumo": "Implantação de novas vias. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "escopo": [
+      "Terraplenagem [exemplo]",
+      "Pavimentação [exemplo]"
+    ],
+    "equipamentos": [
+      "Motoniveladora [exemplo]",
+      "Escavadeira [exemplo]"
+    ],
+    "etapas": [
+      {
+        "titulo": "Etapa 1 [exemplo]",
+        "descricao": "Descrição da etapa 1. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 2 [exemplo]",
+        "descricao": "Descrição da etapa 2. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 3 [exemplo]",
+        "descricao": "Descrição da etapa 3. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      }
+    ],
+    "imagem": {
+      "url": "/fixtures/servico-construcao-rodoviaria.webp",
+      "alt": "Equipe executando construção rodoviária [exemplo]",
+      "width": 1200,
+      "height": 800
+    },
+    "categoria": "infraestrutura",
+    "subtitulo": "Implantação • Duplicação • Pavimentação",
+    "icone": "estrada"
+  },
+  {
+    "slug": "terraplanagem-drenagem",
+    "titulo": "Terraplanagem e drenagem [exemplo]",
+    "segmento": "infraestrutura",
+    "categoria": "infraestrutura",
+    "subtitulo": "Solo • Compactação • Galerias • Bueiros",
+    "icone": "drenagem",
+    "resumo": "Cortes, aterros compactados e redes de drenagem superficial e profunda. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "escopo": [
+      "Cortes e aterros [exemplo]",
+      "Bueiros e galerias [exemplo]"
+    ],
+    "equipamentos": [
+      "Escavadeira [exemplo]",
+      "Rolo compactador [exemplo]"
+    ],
+    "etapas": [
+      {
+        "titulo": "Etapa 1 [exemplo]",
+        "descricao": "Descrição da etapa 1. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 2 [exemplo]",
+        "descricao": "Descrição da etapa 2. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 3 [exemplo]",
+        "descricao": "Descrição da etapa 3. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      }
+    ],
+    "imagem": {
+      "url": "/fixtures/servico-construcao-rodoviaria.webp",
+      "alt": "Frente de terraplanagem em obra rodoviária [exemplo]",
+      "width": 1200,
+      "height": 800
+    }
+  },
+  {
+    "slug": "saus-pres",
+    "titulo": "SAUs e PREs rodoviários [exemplo]",
+    "segmento": "infraestrutura",
+    "categoria": "infraestrutura",
+    "subtitulo": "Bases operacionais • Postos",
+    "icone": "base-operacional",
+    "resumo": "Construção de bases operacionais e postos rodoviários, com acessos e utilidades. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "escopo": [
+      "Edificação [exemplo]",
+      "Pátio e acessos [exemplo]"
+    ],
+    "equipamentos": [
+      "Guindaste [exemplo]",
+      "Vibroacabadora [exemplo]"
+    ],
+    "etapas": [
+      {
+        "titulo": "Etapa 1 [exemplo]",
+        "descricao": "Descrição da etapa 1. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 2 [exemplo]",
+        "descricao": "Descrição da etapa 2. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 3 [exemplo]",
+        "descricao": "Descrição da etapa 3. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      }
+    ],
+    "imagem": {
+      "url": "/fixtures/servico-conservacao.webp",
+      "alt": "Base operacional rodoviária em construção [exemplo]",
+      "width": 1200,
+      "height": 800
+    }
+  },
+  {
+    "slug": "reformas",
+    "titulo": "Reformas e revitalizações [exemplo]",
+    "segmento": "obras-civis",
+    "categoria": "edificacoes",
+    "subtitulo": "Retrofit • Adequação • Acessibilidade",
+    "icone": "reforma",
+    "resumo": "Retrofit de fachadas e instalações, adequação de acessibilidade e reforço estrutural. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "escopo": [
+      "Retrofit [exemplo]",
+      "Acessibilidade [exemplo]"
+    ],
+    "equipamentos": [
+      "Andaime fachadeiro [exemplo]",
+      "Guincho [exemplo]"
+    ],
+    "etapas": [
+      {
+        "titulo": "Etapa 1 [exemplo]",
+        "descricao": "Descrição da etapa 1. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 2 [exemplo]",
+        "descricao": "Descrição da etapa 2. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 3 [exemplo]",
+        "descricao": "Descrição da etapa 3. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      }
+    ],
+    "imagem": {
+      "url": "/fixtures/servico-obras-civis.webp",
+      "alt": "Equipe em reforma predial [exemplo]",
+      "width": 1200,
+      "height": 800
+    }
+  },
+  {
+    "slug": "gerenciamento-fiscalizacao",
+    "titulo": "Gerenciamento e fiscalização [exemplo]",
+    "segmento": "infraestrutura",
+    "categoria": "consultoria",
+    "subtitulo": "Medições • Controle • Prazos",
+    "icone": "fiscalizacao",
+    "resumo": "Acompanhamento físico-financeiro de contratos e controle tecnológico de campo. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "escopo": [
+      "Medições [exemplo]",
+      "Controle tecnológico [exemplo]"
+    ],
+    "equipamentos": [
+      "Estação total [exemplo]",
+      "Tablet de campo [exemplo]"
+    ],
+    "etapas": [
+      {
+        "titulo": "Etapa 1 [exemplo]",
+        "descricao": "Descrição da etapa 1. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 2 [exemplo]",
+        "descricao": "Descrição da etapa 2. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 3 [exemplo]",
+        "descricao": "Descrição da etapa 3. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      }
+    ],
+    "imagem": {
+      "url": "/fixtures/servico-restauracao.webp",
+      "alt": "Técnico fiscalizando obra em campo [exemplo]",
+      "width": 1200,
+      "height": 800
+    }
+  },
+  {
+    "slug": "projetos-orcamentacao",
+    "titulo": "Projetos e orçamentação [exemplo]",
+    "segmento": "infraestrutura",
+    "categoria": "consultoria",
+    "subtitulo": "Executivo • SICRO • SINAPI",
+    "icone": "projeto",
+    "resumo": "Projetos executivos viários e prediais e orçamentos referenciais. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "escopo": [
+      "Projeto executivo [exemplo]",
+      "Orçamento referencial [exemplo]"
+    ],
+    "equipamentos": [
+      "Estação de trabalho [exemplo]",
+      "Software de orçamento [exemplo]"
+    ],
+    "etapas": [
+      {
+        "titulo": "Etapa 1 [exemplo]",
+        "descricao": "Descrição da etapa 1. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 2 [exemplo]",
+        "descricao": "Descrição da etapa 2. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 3 [exemplo]",
+        "descricao": "Descrição da etapa 3. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      }
+    ],
+    "imagem": {
+      "url": "/fixtures/servico-obras-civis.webp",
+      "alt": "Engenheiro revisando projeto executivo [exemplo]",
+      "width": 1200,
+      "height": 800
+    }
+  },
+  {
+    "slug": "laudos-pareceres",
+    "titulo": "Laudos e pareceres técnicos [exemplo]",
+    "segmento": "infraestrutura",
+    "categoria": "consultoria",
+    "subtitulo": "Vistorias • Patologias • As-built",
+    "icone": "laudo",
+    "resumo": "Diagnóstico de patologias, vistorias cautelares e pareceres para editais. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]",
+    "escopo": [
+      "Vistorias [exemplo]",
+      "Pareceres [exemplo]"
+    ],
+    "equipamentos": [
+      "Drone [exemplo]",
+      "Esclerômetro [exemplo]"
+    ],
+    "etapas": [
+      {
+        "titulo": "Etapa 1 [exemplo]",
+        "descricao": "Descrição da etapa 1. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 2 [exemplo]",
+        "descricao": "Descrição da etapa 2. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      },
+      {
+        "titulo": "Etapa 3 [exemplo]",
+        "descricao": "Descrição da etapa 3. Texto de exemplo para validar o layout; substituir pelo conteúdo real. [exemplo]"
+      }
+    ],
+    "imagem": {
+      "url": "/fixtures/servico-conservacao.webp",
+      "alt": "Vistoria técnica em pavimento [exemplo]",
+      "width": 1200,
+      "height": 800
+    }
+  }
+]
