@@ -7,6 +7,8 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      CONTENT_SOURCE: fixtures
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -20,8 +22,6 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
-        env:
-          CONTENT_SOURCE: fixtures
 
   lighthouse:
     runs-on: ubuntu-latest
