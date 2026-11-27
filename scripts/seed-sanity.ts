@@ -12,7 +12,7 @@ import { readFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { createClient } from 'next-sanity';
 import type {
-  Cliente, Configuracoes, Diferencial, Imagem, Numero, Obra, PaginaCompliance, PaginaEmpresa, PaginaLegal, Servico,
+  Configuracoes, Diferencial, Imagem, Numero, Obra, PaginaCompliance, PaginaEmpresa, PaginaLegal, Servico,
 } from '../src/lib/content/types';
 
 const ROOT = join(__dirname, '..');
@@ -65,7 +65,6 @@ const slug = (s: string) => ({ _type: 'slug' as const, current: s });
 async function build() {
   const docs: Record<string, unknown>[] = [];
   const servicos = json<Servico[]>('servicos.json');
-  const clientes = json<Cliente[]>('clientes.json');
   const obras = json<Obra[]>('obras.json');
   const numeros = json<Numero[]>('numeros.json');
   const cfg = json<Configuracoes>('configuracoes.json');
@@ -74,6 +73,8 @@ async function build() {
   const diferenciais = json<Diferencial[]>('diferenciais.json');
   const legais = json<PaginaLegal[]>('paginasLegais.json');
 
+  // Clientes saem das próprias obras (nome e tipo), sem repetição; a ordem segue a primeira aparição.
+  const clientes = [...new Map(obras.flatMap((o) => (o.cliente ? [[o.cliente.nome, o.cliente] as const] : []))).values()];
   const clientePorNome = new Map(clientes.map((c) => [c.nome, `cliente-${slugify(c.nome)}`]));
   const servicoId = (s: string) => `servico-${s}`;
 
@@ -87,16 +88,12 @@ async function build() {
     });
   }
 
-  for (const c of clientes) {
-    docs.push({
-      _id: clientePorNome.get(c.nome), _type: 'cliente', nome: c.nome, tipo: c.tipo, ordem: c.ordem,
-      ...(c.site ? { site: c.site } : {}), logo: await imagem(c.logo),
-    });
+  for (const [i, c] of clientes.entries()) {
+    docs.push({ _id: clientePorNome.get(c.nome), _type: 'cliente', nome: c.nome, tipo: c.tipo, ordem: i + 1 });
   }
 
   for (const o of obras) {
     const clienteId = o.cliente ? clientePorNome.get(o.cliente.nome) : undefined;
-    if (o.cliente && !clienteId) throw new Error(`Obra ${o.slug}: cliente "${o.cliente.nome}" não está em clientes.json`);
     docs.push({
       _id: `obra-${o.slug}`, _type: 'obra', titulo: o.titulo, slug: slug(o.slug), segmento: o.segmento, categoria: o.categoria,
       servicos: o.servicos.map((s, j) => ({ _key: key('srv', j), ...ref(servicoId(s)) })),

@@ -2,7 +2,7 @@ import 'server-only';
 import { fixturesSource } from './fixtures-source';
 import { sanitySource } from './sanity-source';
 import type {
-  Cliente, Configuracoes, Diferencial, Numero, Obra, PaginaCompliance, PaginaEmpresa, PaginaLegal, Servico,
+  Configuracoes, Diferencial, Numero, Obra, PaginaCompliance, PaginaEmpresa, PaginaLegal, Servico,
 } from './types';
 
 export interface ContentSource {
@@ -15,7 +15,6 @@ export interface ContentSource {
   getServicos(): Promise<Servico[]>;
   getServico(slug: string): Promise<Servico | null>;
   /** por ordem asc */
-  getClientes(): Promise<Cliente[]>;
   getNumeros(): Promise<Numero[]>;
   getConfiguracoes(): Promise<Configuracoes>;
   getPaginaEmpresa(): Promise<PaginaEmpresa>;

@@ -163,7 +163,6 @@ describe('sanitySource', () => {
     fetchMock.mockResolvedValue([]);
     await sanitySource.getObras();
     await sanitySource.getServicos();
-    await sanitySource.getClientes();
     await sanitySource.getNumeros();
     for (const call of fetchMock.mock.calls) {
       expect(call[0]).toContain('!(_id in path("drafts.**"))');
@@ -171,8 +170,7 @@ describe('sanitySource', () => {
     const tags = fetchMock.mock.calls.map((c) => c[2].next.tags);
     expect(tags[0]).toEqual(expect.arrayContaining(['obra', 'servico', 'cliente']));
     expect(tags[1]).toEqual(['servico']);
-    expect(tags[2]).toEqual(['cliente']);
-    expect(tags[3]).toEqual(['numero']);
+    expect(tags[2]).toEqual(['numero']);
   });
 
   it('getObrasDestaque limita a 6 e getObrasPorServico passa o slug', async () => {

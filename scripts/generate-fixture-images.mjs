@@ -13,7 +13,6 @@ const jobs = [
   ['pinhalzinho-antes.webp', 1600, 1000, 110, 'Pinhalzinho antes'],
   ['pinhalzinho-depois.webp', 1600, 1000, 190, 'Pinhalzinho depois'],
   ...['obras-civis', 'conservacao', 'restauracao', 'construcao-rodoviaria'].map((n, i) => [`servico-${n}.webp`, 1200, 800, 140 + i * 15, `Serviço: ${n}`]),
-  ...'ABCDEFGHI'.split('').map((l, i) => [`cliente-${l.toLowerCase()}.webp`, 400, 200, 225 + i * 3, `Nome do Cliente ${l}`]),
 ];
 
 for (const [file, w, h, g, label] of jobs) {

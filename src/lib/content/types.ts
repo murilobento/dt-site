@@ -80,14 +80,6 @@ export interface Servico {
   seo?: Seo;
 }
 
-export interface Cliente {
-  nome: string;
-  logo: Imagem;
-  tipo: TipoCliente;
-  site?: string;
-  ordem: number;
-}
-
 export interface Numero {
   rotulo: string;
   valor: number;

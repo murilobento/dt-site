@@ -7,7 +7,7 @@ export const cliente = defineType({
   type: 'document',
   fields: [
     defineField({ name: 'nome', title: 'Nome', type: 'string', validation: (r) => r.required() }),
-    imagem('logo', 'Logo'),
+    imagem('logo', 'Logo (opcional)', { required: false }),
     defineField({
       name: 'tipo',
       title: 'Tipo',

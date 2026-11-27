@@ -3,7 +3,7 @@ import { createClient } from 'next-sanity';
 import { createImageUrlBuilder } from '@sanity/image-url';
 import type { ContentSource } from './source';
 import type {
-  Cliente, Configuracoes, Diferencial, Imagem, Numero, Obra, PaginaCompliance, PaginaEmpresa, PaginaLegal,
+  Configuracoes, Diferencial, Imagem, Numero, Obra, PaginaCompliance, PaginaEmpresa, PaginaLegal,
   Servico, TipoCliente,
 } from './types';
 
@@ -14,7 +14,6 @@ const PUBLICADO = '!(_id in path("drafts.**"))';
 const TAGS = {
   obra: ['obra', 'servico', 'cliente'], // a obra resolve slugs de serviço e dados do cliente
   servico: ['servico'],
-  cliente: ['cliente'],
   numero: ['numero'],
   configuracoes: ['configuracoes'],
   paginaEmpresa: ['paginaEmpresa'],
@@ -214,7 +213,7 @@ function mapObra(raw: RawObra | null | undefined): Obra | null {
 const mapObras = (raws: RawObra[] | null | undefined): Obra[] =>
   (raws ?? []).map(mapObra).filter((o): o is Obra => o !== null);
 
-// ---------- servico / cliente / numero ----------
+// ---------- servico / numero ----------
 
 interface RawServico {
   slug: string;
@@ -258,26 +257,6 @@ function mapServico(raw: RawServico | null | undefined): Servico | null {
     equipamentos: raw.equipamentos ?? [],
     imagem,
     ...(seo && Object.keys(seo).length ? { seo } : {}),
-  };
-}
-
-interface RawCliente {
-  nome: string;
-  tipo: TipoCliente;
-  site?: string | null;
-  ordem?: number | null;
-  logo?: RawImagem | null;
-}
-
-function mapCliente(raw: RawCliente): Cliente | null {
-  const logo = imagemOuNull(raw.logo);
-  if (!logo) return null;
-  return {
-    nome: raw.nome,
-    tipo: raw.tipo,
-    logo,
-    ordem: raw.ordem ?? 0,
-    ...(raw.site ? { site: raw.site } : {}),
   };
 }
 
@@ -354,17 +333,6 @@ export const sanitySource: ContentSource = {
       TAGS.servico,
     );
     return mapServico(raw);
-  },
-
-  async getClientes() {
-    const raws = await fetchSanity<RawCliente[]>(
-      `*[_type == "cliente" && ${PUBLICADO} && defined(logo.asset)] | order(ordem asc) {
-        nome, tipo, site, ordem, ${IMG('logo')}
-      }`,
-      {},
-      TAGS.cliente,
-    );
-    return (raws ?? []).map(mapCliente).filter((c): c is Cliente => c !== null);
   },
 
   async getNumeros() {

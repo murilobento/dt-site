@@ -64,20 +64,6 @@ describe('fixturesSource', () => {
     ]);
     expect(todo).not.toMatch(/Curitiba|\(41\)|CREA-PR/);
   });
-  it('clientes: 3 por tipo, ordenados por ordem asc', async () => {
-    const c = await src.getClientes();
-    expect(c).toHaveLength(9);
-    for (const t of ['concessionaria', 'publico', 'privado'] as const)
-      expect(c.filter((x) => x.tipo === t)).toHaveLength(3);
-    expect(c.map((x) => x.ordem)).toEqual([...c.map((x) => x.ordem)].sort((a, b) => a - b));
-    expect(c.some((x) => x.nome === 'Nome do Cliente A')).toBe(true);
-  });
-  it('todo cliente de obra existe em clientes com mesmo nome e tipo', async () => {
-    const clientes = await src.getClientes();
-    for (const o of await src.getObras())
-      if (o.cliente)
-        expect(clientes.some((c) => c.nome === o.cliente!.nome && c.tipo === o.cliente!.tipo)).toBe(true);
-  });
   it('serviços e configurações', async () => {
     const servicos = await src.getServicos();
     expect(servicos.map((s) => s.slug)).toContain('restauracao');
