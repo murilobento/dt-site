@@ -16,4 +16,14 @@ export const valido = {
 
 export const cfg = {
   emailsLead: { "obras-civis": "obras-civis@example.com", infraestrutura: "infra@example.com" },
+  emailCarreiras: "carreiras@example.com",
 } as unknown as Configuracoes;
+
+export const candidaturaValida = {
+  nome: "Maria Souza",
+  email: "maria@exemplo.com.br",
+  telefone: "(18) 98888-0000",
+  area: "Segurança do Trabalho",
+  resumo: "Técnica em segurança, 6 anos de obras viárias. Currículo: https://exemplo.com/cv",
+  consentimento: true,
+} as const;

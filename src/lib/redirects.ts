@@ -5,13 +5,13 @@ export interface LegacyRedirect {
 }
 
 /**
- * URLs do site antigo da DT. Vazio por enquanto: o cliente ainda não confirmou
- * se existe um site anterior. Preencha com `{ source, destination, permanent: true }`.
+ * URLs antigas que redirecionam (301) para a rota atual, usadas por `redirects()` do next.config.
+ * O cliente ainda não confirmou se existe um site anterior; ao confirmar, acrescente `{ source, destination, permanent: true }`.
  */
-export const LEGACY_REDIRECTS: LegacyRedirect[] = [];
+export const LEGACY_REDIRECTS: LegacyRedirect[] = [{ source: "/empresa", destination: "/sobre", permanent: true }];
 
 /** Caminhos estáticos do site; destinos dinâmicos (/obras/x, /servicos/x) vêm do conteúdo. */
-export const STATIC_PATHS = ["/", "/empresa", "/servicos", "/obras", "/contato", "/contato/comercial", "/privacidade", "/cookies"];
+export const STATIC_PATHS = ["/", "/sobre", "/compliance", "/servicos", "/obras", "/contato", "/contato/comercial", "/privacidade", "/cookies"];
 
 /** Devolve a lista de problemas (vazia = válida). Não lança. */
 export function validateRedirects(list: readonly LegacyRedirect[], knownPaths: readonly string[]): string[] {

@@ -10,11 +10,11 @@ describe("redirects", () => {
   });
 
   it("aceita lista válida", () => {
-    expect(validateRedirects([r("/quem-somos", "/empresa"), r("/portfolio", "/obras")], known)).toEqual([]);
+    expect(validateRedirects([r("/quem-somos", "/sobre"), r("/portfolio", "/obras")], known)).toEqual([]);
   });
 
   it("aponta source repetido", () => {
-    const p = validateRedirects([r("/a", "/empresa"), r("/a", "/obras")], known);
+    const p = validateRedirects([r("/a", "/sobre"), r("/a", "/obras")], known);
     expect(p).toEqual(["source repetido: /a"]);
   });
 
@@ -23,7 +23,7 @@ describe("redirects", () => {
   });
 
   it("aponta loop e source sem barra", () => {
-    const p = validateRedirects([r("/obras", "/obras"), r("sem-barra", "/empresa")], known);
+    const p = validateRedirects([r("/obras", "/obras"), r("sem-barra", "/sobre")], known);
     expect(p).toContain("redirect para si mesmo: /obras");
     expect(p).toContain('source sem "/" inicial: sem-barra');
   });

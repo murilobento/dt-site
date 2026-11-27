@@ -16,7 +16,7 @@ function MarcoImagem({ marco }: { marco: Marco }) {
       height={marco.imagem.height}
       sizes="(min-width: 768px) 640px, 100vw"
       loading="lazy"
-      className="mt-4 h-auto w-full max-w-2xl rounded-lg"
+      className="mt-4 h-auto w-full max-w-2xl rounded-md"
     />
   );
 }
@@ -58,7 +58,7 @@ export function Timeline({ marcos }: { marcos: Marco[] }) {
           role="tablist"
           aria-label="Linha do tempo"
           onKeyDown={onKeyDown}
-          className="flex gap-2 border-b border-border"
+          className="flex gap-2 border-b border-outline-variant"
         >
           {marcos.map((m, i) => {
             const selecionado = i === ativo;
@@ -75,10 +75,10 @@ export function Timeline({ marcos }: { marcos: Marco[] }) {
                 aria-controls="marco-painel"
                 tabIndex={selecionado ? 0 : -1}
                 onClick={() => setAtivo(i)}
-                className={`-mb-px border-b-2 px-4 py-3 font-display text-lg font-bold ${
+                className={`-mb-px border-b-2 px-4 py-3 font-mono text-headline-md font-semibold tabular-nums ${
                   selecionado
-                    ? "border-brand-primary text-text-primary"
-                    : "border-transparent text-text-secondary hover:text-text-primary"
+                    ? "border-secondary text-secondary"
+                    : "border-transparent text-on-surface-variant hover:text-on-surface"
                 }`}
               >
                 {m.ano}
@@ -92,18 +92,18 @@ export function Timeline({ marcos }: { marcos: Marco[] }) {
           aria-labelledby={`marco-tab-${ativo}`}
           className="pt-8"
         >
-          <h3 className="text-xl text-text-primary">{marco.titulo}</h3>
-          <p className="mt-2 max-w-2xl text-base text-text-secondary">{marco.descricao}</p>
+          <h3 className="font-title text-title-lg text-on-surface">{marco.titulo}</h3>
+          <p className="mt-2 max-w-2xl font-body text-body-md text-on-surface-variant">{marco.descricao}</p>
           <MarcoImagem marco={marco} />
         </div>
       </div>
 
-      <ol aria-label="Linha do tempo" className="mt-8 space-y-8 border-l border-border pl-6 md:hidden">
+      <ol aria-label="Linha do tempo" className="mt-8 space-y-8 border-l border-outline-variant pl-6 md:hidden">
         {marcos.map((m) => (
           <li key={`${m.ano}-${m.titulo}`}>
-            <p className="font-display text-lg font-bold text-text-primary">{m.ano}</p>
-            <h3 className="mt-1 text-xl text-text-primary">{m.titulo}</h3>
-            <p className="mt-2 text-base text-text-secondary">{m.descricao}</p>
+            <p className="font-mono text-headline-md font-semibold tabular-nums text-secondary">{m.ano}</p>
+            <h3 className="mt-1 font-title text-title-lg text-on-surface">{m.titulo}</h3>
+            <p className="mt-2 font-body text-body-md text-on-surface-variant">{m.descricao}</p>
             <MarcoImagem marco={m} />
           </li>
         ))}

@@ -7,15 +7,18 @@ import {
   FileText,
   Hammer,
   Handshake,
+  HardHat,
   Layers,
+  Leaf,
   Route,
+  Scale,
   SearchCheck,
   ShieldCheck,
   Shovel,
   Warehouse,
   type LucideIcon,
 } from "lucide-react";
-import type { Diferencial, IconeServico } from "@/lib/content/types";
+import type { Diferencial, IconeServico, PaginaCompliance } from "@/lib/content/types";
 
 /** Ícone de cada `Servico.icone` (lucide, SVG inline). */
 export const SERVICO_ICONES: Record<IconeServico, LucideIcon> = {
@@ -37,4 +40,11 @@ export const DIFERENCIAL_ICONES: Record<Diferencial["icone"], LucideIcon> = {
   seguranca: ShieldCheck,
   planejamento: CalendarRange,
   atendimento: Handshake,
+};
+
+/** Ícone de cada `PaginaCompliance.pilares[].icone`. */
+export const PILAR_ICONES: Record<PaginaCompliance["pilares"][number]["icone"], LucideIcon> = {
+  etica: Scale,
+  seguranca: HardHat,
+  ambiental: Leaf,
 };

@@ -1,16 +1,28 @@
 import { expect, test } from "@playwright/test";
 
-test("seções da página Empresa", async ({ page }) => {
-  await page.goto("/empresa");
-  await expect(page.getByRole("heading", { level: 1, name: "Sobre a DT" })).toBeVisible();
-  for (const h of ["Nossa história", "Como trabalhamos", "Missão", "Visão", "Valores", "Princípios"]) {
+test("seções da página Sobre Nós", async ({ page }) => {
+  await page.goto("/sobre");
+  await expect(page.getByRole("heading", { level: 1, name: "Engenharia sólida construída em campo" })).toBeVisible();
+  for (const h of ["Como trabalhamos", "Nossa trajetória", "Valores", "Princípios"]) {
     await expect(page.getByRole("heading", { level: 2, name: h, exact: true })).toBeVisible();
   }
 });
 
+test("Missão e Visão aparecem como cartões", async ({ page }) => {
+  await page.goto("/sobre");
+  for (const h of ["Missão", "Visão"]) await expect(page.getByRole("heading", { level: 3, name: h, exact: true })).toBeVisible();
+  await expect(page).toHaveTitle("Sobre Nós | DT Construtora");
+});
+
+test("/empresa redireciona em definitivo para /sobre", async ({ request }) => {
+  const res = await request.get("/empresa", { maxRedirects: 0 });
+  expect([301, 308]).toContain(res.status()); // `permanent: true` do Next responde 308
+  expect(new URL(res.headers().location, "http://localhost:3000").pathname).toBe("/sobre");
+});
+
 test("timeline navegável por teclado", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
-  await page.goto("/empresa");
+  await page.goto("/sobre");
   const tabs = page.getByRole("tablist", { name: "Linha do tempo" }).getByRole("tab");
   await tabs.first().focus();
   await page.keyboard.press("ArrowRight");
@@ -31,7 +43,7 @@ test("timeline navegável por teclado", async ({ page }) => {
 
 test("mobile: timeline vira lista vertical com todos os marcos visíveis", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
-  await page.goto("/empresa");
+  await page.goto("/sobre");
   await expect(page.getByRole("tablist")).toHaveCount(0);
   const items = page.locator("ol[aria-label='Linha do tempo'] > li");
   const n = await items.count();
@@ -40,7 +52,7 @@ test("mobile: timeline vira lista vertical com todos os marcos visíveis", async
 });
 
 test("princípios com ícone de check decorativo", async ({ page }) => {
-  await page.goto("/empresa");
+  await page.goto("/sobre");
   const li = page.locator("section", { has: page.getByRole("heading", { name: "Princípios", exact: true }) }).locator("li").first();
   await expect(li.locator("svg[aria-hidden='true']")).toHaveCount(1);
 });

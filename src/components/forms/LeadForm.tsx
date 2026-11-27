@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import Script from "next/script";
 import { useActionState, useEffect, useRef } from "react";
 import { submitLead, type LeadFormState } from "@/app/contato/comercial/actions";
 import { Button } from "@/components/ui/Button";
@@ -9,6 +7,7 @@ import { track } from "@/lib/analytics/track";
 import type { Segmento } from "@/lib/content/types";
 import { SEGMENTO_LABEL } from "@/lib/segmentos";
 import { CONTROL_CLASS, Field } from "./Field";
+import { ConsentField, Honeypot, recoverAfterError, TurnstileWidget } from "./FormGuards";
 
 const SUCCESS = "Recebemos sua mensagem. Nossa equipe responde em até 2 dias úteis.";
 
@@ -18,16 +17,9 @@ type LeadFormProps = {
   whatsappHref: string;
 };
 
-declare global {
-  interface Window {
-    turnstile?: { reset: () => void };
-  }
-}
-
 export function LeadForm({ segmentoInicial, origem, whatsappHref }: LeadFormProps) {
   const [state, action, pending] = useActionState<LeadFormState, FormData>(submitLead, { status: "idle" });
   const formRef = useRef<HTMLFormElement>(null);
-  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
   const values = state.status === "error" ? state.values : {};
   const errors = state.status === "error" ? state.fieldErrors : {};
@@ -37,9 +29,7 @@ export function LeadForm({ segmentoInicial, origem, whatsappHref }: LeadFormProp
       track("lead_submit", { segmento: state.segmento });
     }
     if (state.status !== "error") return;
-    window.turnstile?.reset(); // o token é de uso único
-    const first = formRef.current?.querySelector<HTMLElement>("[aria-invalid='true']");
-    (first ?? formRef.current?.querySelector<HTMLElement>("[data-form-message]"))?.focus();
+    recoverAfterError(formRef.current);
   }, [state]);
 
   if (state.status === "success") {
@@ -100,47 +90,12 @@ export function LeadForm({ segmentoInicial, origem, whatsappHref }: LeadFormProp
         {(a) => <textarea {...a} name="mensagem" rows={5} defaultValue={values.mensagem} className={CONTROL_CLASS} />}
       </Field>
 
-      <div>
-        <div className="flex items-start gap-3">
-          <input
-            id="consentimento"
-            name="consentimento"
-            type="checkbox"
-            aria-invalid={errors.consentimento ? true : undefined}
-            aria-describedby={errors.consentimento ? "consentimento-erro" : undefined}
-            className="mt-1 h-5 w-5 shrink-0 accent-brand-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary"
-          />
-          <label htmlFor="consentimento" className="text-base text-text-primary">
-            Concordo com o uso dos meus dados para retorno do contato, conforme a{" "}
-            <Link href="/privacidade" className="underline underline-offset-4">
-              Política de Privacidade
-            </Link>
-            .
-          </label>
-        </div>
-        {errors.consentimento && (
-          <p id="consentimento-erro" className="mt-2 text-sm text-error">
-            {errors.consentimento}
-          </p>
-        )}
-      </div>
+      <ConsentField error={errors.consentimento}>Concordo com o uso dos meus dados para retorno do contato, conforme a</ConsentField>
 
       <input type="hidden" name="origem" value={values.origem ?? origem ?? ""} />
 
-      {/* Honeypot: invisível para pessoas e leitores de tela. */}
-      <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-        <label>
-          Não preencha este campo
-          <input type="text" name="website" tabIndex={-1} autoComplete="off" />
-        </label>
-      </div>
-
-      {siteKey && (
-        <>
-          <div className="cf-turnstile" data-sitekey={siteKey} data-appearance="interaction-only" data-response-field-name="cf-turnstile-response" />
-          <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="lazyOnload" />
-        </>
-      )}
+      <Honeypot />
+      <TurnstileWidget />
 
       <div>
         <Button type="submit" disabled={pending} aria-disabled={pending}>

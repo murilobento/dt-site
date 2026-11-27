@@ -1,13 +1,12 @@
 "use server";
 
-import { headers } from "next/headers";
 import type { Segmento } from "@/lib/content/types";
 import { getContentSource } from "@/lib/content/source";
 import { SEGMENTO_LABEL } from "@/lib/segmentos";
 import { leadSchema, type Lead } from "@/lib/leads/schema";
 import { resolveLeadRecipient } from "@/lib/leads/routing";
 import { sendLeadEmail } from "@/lib/leads/send";
-import { verifyTurnstile } from "@/lib/leads/turnstile";
+import { checkTurnstile, firstFieldErrors, formText as text, isHoneypotFilled, MSG_TURNSTILE } from "@/lib/leads/guard";
 
 export type LeadFormState =
   | { status: "idle" }
@@ -21,17 +20,11 @@ export type LeadFormState =
 
 const TEXT_FIELDS = ["nome", "empresa", "cargo", "email", "telefone", "segmento", "tipoObra", "local", "mensagem", "origem"] as const;
 
-const MSG_TURNSTILE = "Não foi possível validar o envio. Recarregue a página e tente de novo.";
 const MSG_SEND = "Não conseguimos enviar agora. Tente de novo em alguns minutos ou fale pelo WhatsApp.";
-
-function text(formData: FormData, key: string): string {
-  const v = formData.get(key);
-  return typeof v === "string" ? v : "";
-}
 
 export async function submitLead(_prev: LeadFormState, formData: FormData): Promise<LeadFormState> {
   // Honeypot: robôs preenchem; fingimos sucesso para não dar pista.
-  if (text(formData, "website").trim() !== "") {
+  if (isHoneypotFilled(formData)) {
     const seg = text(formData, "segmento");
     return { status: "success", segmento: (seg in SEGMENTO_LABEL ? seg : "obras-civis") as Segmento };
   }
@@ -45,10 +38,7 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
 
   const parsed = leadSchema.safeParse(raw);
   if (!parsed.success) {
-    const fieldErrors: Partial<Record<keyof Lead, string>> = {};
-    for (const [k, msgs] of Object.entries(parsed.error.flatten().fieldErrors)) {
-      if (msgs?.[0]) fieldErrors[k as keyof Lead] = msgs[0];
-    }
+    const fieldErrors = firstFieldErrors<keyof Lead>(parsed.error);
     // O consentimento nunca volta marcado: é preciso reafirmá-lo a cada envio.
     const values: Record<string, string> = {};
     for (const k of TEXT_FIELDS) if (typeof raw[k] === "string") values[k] = raw[k] as string;
@@ -58,18 +48,14 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
   const { consentimento: _consentimento, ...values } = lead;
   void _consentimento;
 
-  const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() || undefined;
-  // Token presente deve passar. Token ausente com secret configurado é o caminho sem JavaScript:
-  // aceitamos, mas o e-mail segue marcado como não verificado.
-  const token = text(formData, "cf-turnstile-response");
-  const unverified = !token && Boolean(process.env.TURNSTILE_SECRET_KEY);
-  if (token && !(await verifyTurnstile(token, ip))) {
+  const turnstile = await checkTurnstile(formData);
+  if (!turnstile.ok) {
     return { status: "error", fieldErrors: {}, values, message: MSG_TURNSTILE };
   }
 
   try {
     const cfg = await getContentSource().getConfiguracoes();
-    await sendLeadEmail(lead, resolveLeadRecipient(lead.segmento, cfg), { unverified });
+    await sendLeadEmail(lead, resolveLeadRecipient(lead.segmento, cfg), { unverified: turnstile.unverified });
   } catch (err) {
     // Sem PII no log: só o tipo do erro.
     console.error("[leads] falha no envio:", err instanceof Error ? err.message : "desconhecido");

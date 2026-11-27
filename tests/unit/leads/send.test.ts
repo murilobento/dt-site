@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { buildSubject, sendLeadEmail } from "@/lib/leads/send";
+import { buildSubject, sendCandidaturaEmail, sendLeadEmail } from "@/lib/leads/send";
 import type { Lead } from "@/lib/leads/schema";
-import { valido } from "./fixtures";
+import { candidaturaValida, valido } from "./fixtures";
 
 const lead = valido as unknown as Lead;
 
@@ -30,6 +30,25 @@ describe("send", () => {
     vi.stubEnv("NODE_ENV", "production");
     const err = vi.spyOn(console, "error").mockImplementation(() => {});
     await sendLeadEmail(lead, "infra@example.com");
+    expect(err).toHaveBeenCalledOnce();
+    err.mockRestore();
+  });
+  it("candidatura: transporte log não registra dados pessoais", async () => {
+    vi.stubEnv("RESEND_API_KEY", "");
+    const info = vi.spyOn(console, "info").mockImplementation(() => {});
+    await sendCandidaturaEmail(candidaturaValida, "carreiras@example.com");
+    const line = info.mock.calls.flat().join(" ");
+    expect(line).toContain("candidatura");
+    for (const pii of [candidaturaValida.nome, candidaturaValida.email, candidaturaValida.telefone, candidaturaValida.resumo]) {
+      expect(line).not.toContain(pii);
+    }
+    info.mockRestore();
+  });
+  it("candidatura: em produção sem chave registra com console.error", async () => {
+    vi.stubEnv("RESEND_API_KEY", "");
+    vi.stubEnv("NODE_ENV", "production");
+    const err = vi.spyOn(console, "error").mockImplementation(() => {});
+    await sendCandidaturaEmail(candidaturaValida, "carreiras@example.com");
     expect(err).toHaveBeenCalledOnce();
     err.mockRestore();
   });

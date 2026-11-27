@@ -8,19 +8,19 @@ type FieldProps = {
 };
 
 export const CONTROL_CLASS =
-  "mt-2 block min-h-12 w-full rounded-control border border-border bg-surface-default px-4 py-2 text-base text-text-primary aria-[invalid=true]:border-error focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary";
+  "mt-1.5 block min-h-12 w-full rounded-sm border border-outline bg-surface-container-lowest px-4 py-2.5 font-body text-body-md text-on-surface aria-[invalid=true]:border-error focus-visible:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 
 /** Rótulo + controle + erro ligados por `for`/`aria-describedby`; `children` recebe os atributos de a11y. */
 export function Field({ id, label, error, children }: FieldProps) {
   const errorId = `${id}-erro`;
   return (
     <div>
-      <label htmlFor={id} className="text-base font-semibold text-text-primary">
+      <label htmlFor={id} className="font-label text-label-lg text-on-surface">
         {label}
       </label>
       {children({ id, ...(error ? { "aria-invalid": true as const, "aria-describedby": errorId } : {}) })}
       {error && (
-        <p id={errorId} className="mt-2 text-sm text-error">
+        <p id={errorId} className="mt-1.5 font-body text-body-md text-error">
           {error}
         </p>
       )}

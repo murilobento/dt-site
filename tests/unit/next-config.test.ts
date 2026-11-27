@@ -11,3 +11,9 @@ describe("next.config images", () => {
     expect(nextConfig.images?.formats).toEqual(["image/avif", "image/webp"]);
   });
 });
+
+describe("next.config redirects", () => {
+  it("/empresa redireciona em definitivo para /sobre", async () => {
+    expect(await nextConfig.redirects?.()).toContainEqual({ source: "/empresa", destination: "/sobre", permanent: true });
+  });
+});

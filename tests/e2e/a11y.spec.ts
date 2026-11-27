@@ -3,7 +3,8 @@ import { expect, test, type Page } from "@playwright/test";
 
 const PATHS = [
   "/",
-  "/empresa",
+  "/sobre",
+  "/compliance",
   "/servicos",
   "/servicos/restauracao",
   "/obras",
