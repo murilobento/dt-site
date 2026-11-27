@@ -4,7 +4,12 @@ import { candidaturaValida, cfg } from "./fixtures";
 vi.mock("@/lib/leads/send", () => ({ sendCandidaturaEmail: vi.fn() }));
 vi.mock("@/lib/leads/turnstile", () => ({ verifyTurnstile: vi.fn() }));
 vi.mock("next/headers", () => ({ headers: async () => new Headers({ "x-forwarded-for": "9.9.9.9, 1.1.1.1" }) }));
-vi.mock("@/lib/content/source", () => ({ getContentSource: () => ({ getConfiguracoes: async () => cfg }) }));
+vi.mock("@/lib/content/source", () => ({
+  getContentSource: () => ({
+    getConfiguracoes: async () => cfg,
+    getPaginaCompliance: async () => ({ vagas: [{ titulo: "Engenheiro(a) de campo" }] }),
+  }),
+}));
 
 import { submitCandidatura, type CandidaturaFormState } from "@/app/(site)/compliance/actions";
 import { sendCandidaturaEmail } from "@/lib/leads/send";
@@ -30,6 +35,14 @@ describe("submitCandidatura", () => {
   it("honeypot preenchido → sucesso aparente, nenhum e-mail", async () => {
     expect((await submitCandidatura(idle, fd({ ...candidaturaValida, website: "spam" }))).status).toBe("success");
     expect(sendCandidaturaEmail).not.toHaveBeenCalled();
+  });
+  it("área fora da lista (adulterada) → erro de campo, sem e-mail", async () => {
+    const s = await submitCandidatura(idle, fd({ ...candidaturaValida, area: "Qualquer coisa" }));
+    expect(s).toMatchObject({ status: "error", fieldErrors: { area: "Escolha a área de interesse." } });
+    expect(sendCandidaturaEmail).not.toHaveBeenCalled();
+  });
+  it("área de uma vaga aberta do CMS é aceita", async () => {
+    expect((await submitCandidatura(idle, fd({ ...candidaturaValida, area: "Engenheiro(a) de campo" }))).status).toBe("success");
   });
   it("Turnstile inválido → erro genérico, sem e-mail", async () => {
     vi.mocked(verifyTurnstile).mockResolvedValue(false);

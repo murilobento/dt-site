@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { getContentSource } from "@/lib/content/source";
 import { PILAR_ICONES } from "@/lib/icons";
-import { AREAS_GENERICAS } from "@/lib/leads/candidatura";
+import { areasPermitidas } from "@/lib/leads/candidatura";
 import { buildMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildMetadata({
@@ -21,7 +21,7 @@ const H2 = "font-headline text-headline-lg-mobile text-balance text-on-surface l
 export default async function CompliancePage() {
   const source = getContentSource();
   const [pagina, config] = await Promise.all([source.getPaginaCompliance(), source.getConfiguracoes()]);
-  const areas = [...new Set([...pagina.vagas.map((v) => v.titulo), ...AREAS_GENERICAS])];
+  const areas = areasPermitidas(pagina.vagas);
 
   return (
     <>

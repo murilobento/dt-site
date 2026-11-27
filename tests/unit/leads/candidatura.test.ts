@@ -31,3 +31,13 @@ describe("assunto da candidatura", () => {
     expect(buildCandidaturaSubject(candidaturaValida, true)).toBe("[não verificado] [Site] Candidatura — Segurança do Trabalho");
   });
 });
+
+describe("areasPermitidas", () => {
+  it("junta vagas do CMS e áreas genéricas sem repetir", async () => {
+    const { areasPermitidas, AREAS_GENERICAS } = await import("@/lib/leads/candidatura");
+    const areas = areasPermitidas([{ titulo: "Vaga X" }, { titulo: "Administrativo" }]);
+    expect(areas).toContain("Vaga X");
+    expect(areas.filter((a) => a === "Administrativo")).toHaveLength(1);
+    expect(areas).toHaveLength(AREAS_GENERICAS.length + 1);
+  });
+});

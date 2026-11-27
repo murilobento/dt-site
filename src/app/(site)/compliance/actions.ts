@@ -1,7 +1,7 @@
 "use server";
 
 import { getContentSource } from "@/lib/content/source";
-import { candidaturaSchema, type Candidatura } from "@/lib/leads/candidatura";
+import { AREA_ERROR, areasPermitidas, candidaturaSchema, type Candidatura } from "@/lib/leads/candidatura";
 import { checkTurnstile, firstFieldErrors, formText, isHoneypotFilled, MSG_TURNSTILE } from "@/lib/leads/guard";
 import { sendCandidaturaEmail } from "@/lib/leads/send";
 
@@ -35,6 +35,22 @@ export async function submitCandidatura(_prev: CandidaturaFormState, formData: F
     return { status: "error", fieldErrors: firstFieldErrors<keyof Candidatura>(parsed.error), values: values as Partial<Candidatura> };
   }
   const candidatura = parsed.data;
+
+  // A área precisa ser uma das oferecidas no formulário (vagas do CMS + genéricas); o select pode ser adulterado.
+  let areas: string[];
+  try {
+    areas = areasPermitidas((await getContentSource().getPaginaCompliance()).vagas);
+  } catch (err) {
+    console.error("[candidaturas] falha ao ler as áreas:", err instanceof Error ? err.message : "desconhecido");
+    const { consentimento: _c, ...rest } = candidatura;
+    void _c;
+    return { status: "error", fieldErrors: {}, values: rest, message: MSG_SEND };
+  }
+  if (!areas.includes(candidatura.area)) {
+    const { consentimento: _c, ...rest } = candidatura;
+    void _c;
+    return { status: "error", fieldErrors: { area: AREA_ERROR }, values: { ...rest, area: "" } };
+  }
   const { consentimento: _consentimento, ...values } = candidatura;
   void _consentimento;
 
