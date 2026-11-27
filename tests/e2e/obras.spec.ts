@@ -123,3 +123,12 @@ test("navegar para /obras pelo menu limpa os filtros", async ({ page }) => {
   await page.getByRole("banner").getByRole("link", { name: "Obras", exact: true }).first().click();
   await expect(page.getByLabel("Estado")).toHaveValue("");
 });
+
+test.describe("sem JavaScript no mobile", () => {
+  test.use({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
+  test("filtros secundários ficam visíveis e 'Mais filtros' some", async ({ page }) => {
+    await page.goto("/obras");
+    await expect(page.getByLabel("Estado")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Mais filtros" })).toBeHidden();
+  });
+});

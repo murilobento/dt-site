@@ -4,7 +4,7 @@ import { useActionState, useEffect, useRef } from "react";
 import { submitCandidatura, type CandidaturaFormState } from "@/app/compliance/actions";
 import { Button } from "@/components/ui/Button";
 import { CONTROL_CLASS, Field } from "./Field";
-import { ConsentField, Honeypot, recoverAfterError, TurnstileWidget } from "./FormGuards";
+import { ConsentField, Honeypot, recoverAfterError, RequiredLegend, TurnstileWidget } from "./FormGuards";
 
 export const SUCCESS = "Recebemos sua candidatura. Se houver uma vaga compatível, entraremos em contato.";
 
@@ -38,18 +38,18 @@ export function CandidaturaForm({ areas }: { areas: string[] }) {
         </div>
       )}
 
-      <Field id="nome" label="Nome completo" error={errors.nome}>
+      <Field id="nome" label="Nome completo" required error={errors.nome}>
         {(a) => <input {...a} name="nome" type="text" autoComplete="name" defaultValue={values.nome} className={CONTROL_CLASS} />}
       </Field>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field id="email" label="E-mail" error={errors.email}>
+        <Field id="email" label="E-mail" required error={errors.email}>
           {(a) => <input {...a} name="email" type="email" autoComplete="email" defaultValue={values.email} className={CONTROL_CLASS} />}
         </Field>
-        <Field id="telefone" label="Telefone / WhatsApp" error={errors.telefone}>
+        <Field id="telefone" label="Telefone / WhatsApp" required error={errors.telefone}>
           {(a) => <input {...a} name="telefone" type="tel" autoComplete="tel" defaultValue={values.telefone} className={CONTROL_CLASS} />}
         </Field>
       </div>
-      <Field id={AREA_FIELD_ID} label="Área de interesse" error={errors.area}>
+      <Field id={AREA_FIELD_ID} label="Área de interesse" required error={errors.area}>
         {(a) => (
           // A chave remonta o select após um erro: `defaultValue` só vale na montagem.
           <select {...a} key={values.area ?? "inicial"} name="area" defaultValue={values.area ?? ""} className={CONTROL_CLASS}>
@@ -62,7 +62,7 @@ export function CandidaturaForm({ areas }: { areas: string[] }) {
           </select>
         )}
       </Field>
-      <Field id="resumo" label="Resumo de experiência / Link para currículo" error={errors.resumo}>
+      <Field id="resumo" label="Resumo de experiência / Link para currículo" required error={errors.resumo}>
         {(a) => (
           <textarea
             {...a}
@@ -82,9 +82,12 @@ export function CandidaturaForm({ areas }: { areas: string[] }) {
       <Honeypot />
       <TurnstileWidget />
 
-      <Button type="submit" disabled={pending} aria-disabled={pending} className="w-full">
-        {pending ? "Enviando…" : "Enviar candidatura"}
-      </Button>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <RequiredLegend />
+        <Button type="submit" disabled={pending} aria-disabled={pending} className="w-full sm:w-auto">
+          {pending ? "Enviando…" : "Enviar candidatura"}
+        </Button>
+      </div>
     </form>
   );
 }

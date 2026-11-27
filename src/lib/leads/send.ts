@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { DISCIPLINA_LABEL, DISCIPLINA_SEGMENTO } from "@/lib/disciplinas";
+import { DISCIPLINA_OPCAO, DISCIPLINA_SEGMENTO } from "@/lib/disciplinas";
 import { SEGMENTO_LABEL } from "@/lib/segmentos";
 import type { Candidatura } from "./candidatura";
 import type { Lead } from "./schema";
@@ -9,12 +9,12 @@ const DEFAULT_FROM = "Site DT <site@dtconstrutora.com.br>";
 const oneLine = (s: string) => s.replace(/[\r\n\u0085\u2028\u2029]+/g, " ").trim();
 
 export function buildSubject(lead: Lead, unverified = false): string {
-  return `${unverified ? "[não verificado] " : ""}[Site] Lead ${DISCIPLINA_LABEL[lead.disciplina]} — ${oneLine(lead.empresa)}`;
+  return `${unverified ? "[não verificado] " : ""}[Site] Lead ${DISCIPLINA_OPCAO[lead.disciplina]} — ${oneLine(lead.empresa)}`;
 }
 
 function buildText(lead: Lead): string {
   return [
-    `Disciplina: ${DISCIPLINA_LABEL[lead.disciplina]}`,
+    `Disciplina: ${DISCIPLINA_OPCAO[lead.disciplina]}`,
     `Segmento: ${SEGMENTO_LABEL[DISCIPLINA_SEGMENTO[lead.disciplina]]}`,
     `Origem: ${lead.origem || "direto"}`,
     "",

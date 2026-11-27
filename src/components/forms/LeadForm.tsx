@@ -4,9 +4,9 @@ import { useActionState, useEffect, useRef } from "react";
 import { submitLead, type LeadFormState } from "@/app/contato/actions";
 import { Button } from "@/components/ui/Button";
 import { track } from "@/lib/analytics/track";
-import { DISCIPLINA_LABEL, DISCIPLINAS, type Disciplina } from "@/lib/disciplinas";
+import { DISCIPLINA_OPCAO, DISCIPLINAS, type Disciplina } from "@/lib/disciplinas";
 import { CONTROL_CLASS, Field } from "./Field";
-import { ConsentField, Honeypot, recoverAfterError, TurnstileWidget } from "./FormGuards";
+import { ConsentField, Honeypot, recoverAfterError, RequiredLegend, TurnstileWidget } from "./FormGuards";
 
 const SUCCESS = "Recebemos sua mensagem. Nossa equipe responde em até 2 dias úteis.";
 
@@ -53,36 +53,36 @@ export function LeadForm({ disciplinaInicial, origem, whatsappHref }: LeadFormPr
       )}
 
       <div className="grid gap-5 md:grid-cols-2">
-        <Field id="nome" label="Nome completo" error={errors.nome}>
-          {(a) => <input {...a} name="nome" type="text" autoComplete="name" defaultValue={values.nome} className={CONTROL_CLASS} />}
+        <Field id="nome" label="Nome completo" required error={errors.nome}>
+          {(a) => <input {...a} name="nome" placeholder="Ex.: Ricardo Almeida" type="text" autoComplete="name" defaultValue={values.nome} className={CONTROL_CLASS} />}
         </Field>
-        <Field id="empresa" label="Empresa / Órgão" error={errors.empresa}>
-          {(a) => <input {...a} name="empresa" type="text" autoComplete="organization" defaultValue={values.empresa} className={CONTROL_CLASS} />}
+        <Field id="empresa" label="Empresa / Órgão" required error={errors.empresa}>
+          {(a) => <input {...a} name="empresa" placeholder="Concessionária, prefeitura ou empresa" type="text" autoComplete="organization" defaultValue={values.empresa} className={CONTROL_CLASS} />}
         </Field>
-        <Field id="email" label="E-mail corporativo" error={errors.email}>
-          {(a) => <input {...a} name="email" type="email" autoComplete="email" defaultValue={values.email} className={CONTROL_CLASS} />}
+        <Field id="email" label="E-mail corporativo" required error={errors.email}>
+          {(a) => <input {...a} name="email" placeholder="contato@empresa.com.br" type="email" autoComplete="email" defaultValue={values.email} className={CONTROL_CLASS} />}
         </Field>
-        <Field id="telefone" label="Telefone / WhatsApp" error={errors.telefone}>
-          {(a) => <input {...a} name="telefone" type="tel" autoComplete="tel" defaultValue={values.telefone} className={CONTROL_CLASS} />}
+        <Field id="telefone" label="Telefone / WhatsApp" required error={errors.telefone}>
+          {(a) => <input {...a} name="telefone" placeholder="(18) 99999-0000" type="tel" autoComplete="tel" defaultValue={values.telefone} className={CONTROL_CLASS} />}
         </Field>
-        <Field id="disciplina" label="Disciplina principal" error={errors.disciplina}>
+        <Field id="disciplina" label="Disciplina principal" required error={errors.disciplina}>
           {(a) => (
             <select {...a} key={values.disciplina ?? "inicial"} name="disciplina" defaultValue={values.disciplina ?? disciplinaInicial ?? ""} className={CONTROL_CLASS}>
               <option value="">Selecione</option>
               {DISCIPLINAS.map((d) => (
                 <option key={d} value={d}>
-                  {DISCIPLINA_LABEL[d]}
+                  {DISCIPLINA_OPCAO[d]}
                 </option>
               ))}
             </select>
           )}
         </Field>
         <Field id="cidadeUf" label="Cidade / UF da obra" error={errors.cidadeUf}>
-          {(a) => <input {...a} name="cidadeUf" type="text" autoComplete="address-level2" defaultValue={values.cidadeUf} className={CONTROL_CLASS} />}
+          {(a) => <input {...a} name="cidadeUf" placeholder="Ex.: Regente Feijó — SP" type="text" autoComplete="address-level2" defaultValue={values.cidadeUf} className={CONTROL_CLASS} />}
         </Field>
       </div>
-      <Field id="escopo" label="Escopo resumido, prazo ou número do edital" error={errors.escopo}>
-        {(a) => <textarea {...a} name="escopo" rows={4} defaultValue={values.escopo} className={CONTROL_CLASS} />}
+      <Field id="escopo" label="Escopo resumido, prazo ou número do edital" required error={errors.escopo}>
+        {(a) => <textarea {...a} name="escopo" placeholder="Descreva extensão aproximada, área em m², tipo de intervenção ou link/código do edital." rows={4} defaultValue={values.escopo} className={CONTROL_CLASS} />}
       </Field>
 
       <ConsentField error={errors.consentimento}>Concordo com o uso dos meus dados para retorno do contato, conforme a</ConsentField>
@@ -92,8 +92,9 @@ export function LeadForm({ disciplinaInicial, origem, whatsappHref }: LeadFormPr
       <Honeypot />
       <TurnstileWidget />
 
-      <div>
-        <Button type="submit" disabled={pending} aria-disabled={pending}>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <RequiredLegend />
+        <Button type="submit" disabled={pending} aria-disabled={pending} className="w-full sm:w-auto">
           {pending ? "Enviando…" : "Enviar solicitação técnica"}
         </Button>
       </div>

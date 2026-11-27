@@ -10,6 +10,11 @@ declare global {
 }
 
 /** Honeypot: invisível para pessoas e leitores de tela. */
+/** Legenda "* Campos obrigatórios", ao lado do botão de envio. */
+export function RequiredLegend() {
+  return <p className="font-label text-label-sm text-on-surface-variant">* Campos obrigatórios</p>;
+}
+
 export function Honeypot() {
   return (
     <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">

@@ -39,8 +39,8 @@ export default async function ContatoPage({ searchParams }: { searchParams: Sear
   const { logradouro, cidade, uf, cep } = c.endereco;
   const mapa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${logradouro}, ${cidade} - ${uf}, ${cep}`)}`;
   const tel = c.telefone.replace(/[^\d+]/g, "");
-  const segmento: Segmento = disciplina ? DISCIPLINA_SEGMENTO[disciplina] : (Object.keys(c.emailsLead)[0] as Segmento);
-  const emailComercial = c.emailsLead[segmento];
+  const segmento: Segmento = disciplina ? DISCIPLINA_SEGMENTO[disciplina] : "infraestrutura";
+  const emailComercial = c.emailsLead[segmento] ?? Object.values(c.emailsLead).find(Boolean);
 
   return (
     <>
@@ -65,7 +65,7 @@ export default async function ContatoPage({ searchParams }: { searchParams: Sear
             <div className="flex flex-col gap-1">
               <h2 className="font-headline text-headline-md text-on-surface">Dados da solicitação</h2>
               <p className="font-body text-body-md text-on-surface-variant">
-                Preencha os campos para direcionarmos ao coordenador da disciplina.
+                Preencha os campos obrigatórios para direcionarmos ao coordenador da disciplina.
               </p>
             </div>
             <LeadForm disciplinaInicial={disciplina} origem={origem} whatsappHref={buildWhatsAppUrl(c.whatsapp, "/contato")} />
@@ -84,15 +84,17 @@ export default async function ContatoPage({ searchParams }: { searchParams: Sear
                     </a>
                   </div>
                 </li>
-                <li className="flex items-start gap-3">
-                  <Mail aria-hidden="true" className="size-6 shrink-0 text-primary" />
-                  <div>
-                    <span className={LABEL}>E-mail Comercial &amp; Editais</span>
-                    <a href={`mailto:${emailComercial}`} className={LINK}>
-                      {emailComercial}
-                    </a>
-                  </div>
-                </li>
+                {emailComercial && (
+                  <li className="flex items-start gap-3">
+                    <Mail aria-hidden="true" className="size-6 shrink-0 text-primary" />
+                    <div>
+                      <span className={LABEL}>E-mail Comercial &amp; Editais</span>
+                      <a href={`mailto:${emailComercial}`} className={LINK}>
+                        {emailComercial}
+                      </a>
+                    </div>
+                  </li>
+                )}
                 <li className="flex items-start gap-3">
                   <Clock aria-hidden="true" className="size-6 shrink-0 text-primary" />
                   <div>

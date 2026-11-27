@@ -87,6 +87,25 @@ test("funciona sem JavaScript", async ({ browser }) => {
   await ctx.close();
 });
 
+test("campos obrigatórios têm asterisco visual, aria-required e legenda; opções com o texto do layout", async ({ page }) => {
+  await page.goto("/contato");
+  for (const l of ["Nome completo", "Empresa / Órgão", "E-mail corporativo", "Telefone / WhatsApp", "Disciplina principal", "Escopo resumido, prazo ou número do edital"]) {
+    await expect(page.getByLabel(l)).toHaveAttribute("aria-required", "true");
+  }
+  await expect(page.getByLabel("Cidade / UF da obra")).not.toHaveAttribute("aria-required", "true");
+  await expect(page.getByText("* Campos obrigatórios")).toBeVisible();
+  await expect(page.getByText("Preencha os campos obrigatórios para direcionarmos ao coordenador da disciplina.")).toBeVisible();
+  const opcoes = await page.getByLabel("Disciplina principal").locator("option").allTextContents();
+  expect(opcoes).toEqual([
+    "Selecione",
+    "Obra rodoviária / pavimentação",
+    "Terraplanagem e drenagens",
+    "SAU / PRE rodoviário",
+    "Edificação / reforma predial",
+    "Consultoria / projeto / laudo",
+  ]);
+});
+
 test("consentimento não vem marcado", async ({ page }) => {
   await page.goto("/contato");
   await expect(page.getByLabel(/Concordo com o uso/)).not.toBeChecked();

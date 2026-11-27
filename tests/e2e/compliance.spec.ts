@@ -79,3 +79,10 @@ test("consentimento não vem marcado e aponta para a Política de Privacidade", 
   await expect(page.getByLabel(/Concordo com o uso/)).not.toBeChecked();
   await expect(page.getByRole("link", { name: "Política de Privacidade" })).toHaveAttribute("href", "/privacidade");
 });
+
+test("candidatura marca os campos obrigatórios e mostra a legenda", async ({ page }) => {
+  await page.goto("/compliance");
+  await expect(page.getByLabel("Nome completo")).toHaveAttribute("aria-required", "true");
+  await expect(page.getByLabel("Área de interesse")).toHaveAttribute("aria-required", "true");
+  await expect(page.getByText("* Campos obrigatórios")).toBeVisible();
+});

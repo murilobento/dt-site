@@ -33,6 +33,15 @@ export const DISCIPLINA_LABEL: Record<Disciplina, string> = {
   consultoria: "Consultoria",
 };
 
+/** Texto das opções do formulário de contato e do assunto do e-mail (redação do layout). */
+export const DISCIPLINA_OPCAO: Record<Disciplina, string> = {
+  "rodoviaria-pavimentacao": "Obra rodoviária / pavimentação",
+  "terraplanagem-drenagens": "Terraplanagem e drenagens",
+  "sau-pre": "SAU / PRE rodoviário",
+  "edificacao-reforma": "Edificação / reforma predial",
+  consultoria: "Consultoria / projeto / laudo",
+};
+
 export const DISCIPLINA_SEGMENTO: Record<Disciplina, Segmento> = {
   "rodoviaria-pavimentacao": "infraestrutura",
   "terraplanagem-drenagens": "infraestrutura",

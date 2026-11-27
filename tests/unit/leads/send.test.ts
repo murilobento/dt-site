@@ -9,9 +9,9 @@ describe("send", () => {
   afterEach(() => vi.unstubAllEnvs());
 
   it("assunto segue o padrão e não aceita quebra de linha", () => {
-    expect(buildSubject(lead)).toBe("[Site] Lead Rodoviária e Pavimentação — Prefeitura de Exemplo");
+    expect(buildSubject(lead)).toBe("[Site] Lead Obra rodoviária / pavimentação — Prefeitura de Exemplo");
     expect(buildSubject({ ...lead, empresa: "A\r\nBcc: x@y.com\u0085\u2028\u2029B" })).not.toMatch(/[\r\n\u0085\u2028\u2029]/);
-    expect(buildSubject(lead, true)).toBe("[não verificado] [Site] Lead Rodoviária e Pavimentação — Prefeitura de Exemplo");
+    expect(buildSubject(lead, true)).toBe("[não verificado] [Site] Lead Obra rodoviária / pavimentação — Prefeitura de Exemplo");
   });
   it("sem RESEND_API_KEY usa transporte log, sem dados pessoais", async () => {
     vi.stubEnv("RESEND_API_KEY", "");

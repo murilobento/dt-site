@@ -3,6 +3,7 @@ import servicos from "@/lib/content/fixtures/servicos.json";
 import type { Servico } from "@/lib/content/types";
 import {
   DISCIPLINA_LABEL,
+  DISCIPLINA_OPCAO,
   DISCIPLINA_SEGMENTO,
   DISCIPLINAS,
   disciplinaDaObra,
@@ -20,6 +21,13 @@ describe("disciplinas", () => {
       "SAU e PRE",
       "Edificação e Reforma",
       "Consultoria",
+    ]);
+    expect(DISCIPLINAS.map((d) => DISCIPLINA_OPCAO[d])).toEqual([
+      "Obra rodoviária / pavimentação",
+      "Terraplanagem e drenagens",
+      "SAU / PRE rodoviário",
+      "Edificação / reforma predial",
+      "Consultoria / projeto / laudo",
     ]);
     expect(DISCIPLINA_SEGMENTO["edificacao-reforma"]).toBe("obras-civis");
     expect(DISCIPLINA_SEGMENTO.consultoria).toBe("infraestrutura");
