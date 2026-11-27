@@ -15,6 +15,6 @@ export default defineConfig({
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 240_000,
-    env: { CONTENT_SOURCE: "fixtures", NEXT_PUBLIC_GTM_ID: "GTM-TEST000" },
+    env: { CONTENT_SOURCE: "fixtures", NEXT_PUBLIC_GTM_ID: "GTM-TEST000", LEAD_TRANSPORT: "log" },
   },
 });

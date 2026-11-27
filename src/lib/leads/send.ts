@@ -32,13 +32,18 @@ function buildText(lead: Lead): string {
 
 type Message = { to: string; replyTo: string; subject: string; text: string; logLine: string };
 
-/** Envia por Resend; lança em falha. Sem RESEND_API_KEY apenas registra `logLine`, que nunca deve conter dados pessoais. */
+/**
+ * Envia por Resend; lança em falha. Sem RESEND_API_KEY: em produção lança (a action mostra a falha com o
+ * fallback de WhatsApp em vez de descartar o lead em silêncio), a menos que LEAD_TRANSPORT=log (next start local/e2e);
+ * fora de produção apenas registra `logLine`, que nunca deve conter dados pessoais.
+ */
 async function deliver({ to, replyTo, subject, text, logLine }: Message): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    // Em produção a ausência da chave descarta a mensagem: precisa aparecer como erro no monitoramento.
-    const log = process.env.NODE_ENV === "production" ? console.error : console.info;
-    log(logLine);
+    if (process.env.NODE_ENV === "production" && process.env.LEAD_TRANSPORT !== "log") {
+      throw new Error("RESEND_API_KEY ausente em produção (defina a chave ou LEAD_TRANSPORT=log)");
+    }
+    console.info(logLine);
     return;
   }
   const { error } = await new Resend(apiKey).emails.send({

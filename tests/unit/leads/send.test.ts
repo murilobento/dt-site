@@ -25,13 +25,20 @@ describe("send", () => {
     expect(line).not.toContain(lead.telefone);
     info.mockRestore();
   });
-  it("em produção sem chave registra com console.error", async () => {
+  it("em produção sem chave e sem LEAD_TRANSPORT=log lança, para a action mostrar a falha", async () => {
     vi.stubEnv("RESEND_API_KEY", "");
+    vi.stubEnv("LEAD_TRANSPORT", "");
     vi.stubEnv("NODE_ENV", "production");
-    const err = vi.spyOn(console, "error").mockImplementation(() => {});
-    await sendLeadEmail(lead, "infra@example.com");
-    expect(err).toHaveBeenCalledOnce();
-    err.mockRestore();
+    await expect(sendLeadEmail(lead, "infra@example.com")).rejects.toThrow(/RESEND_API_KEY/);
+  });
+  it("em produção sem chave mas com LEAD_TRANSPORT=log apenas registra", async () => {
+    vi.stubEnv("RESEND_API_KEY", "");
+    vi.stubEnv("LEAD_TRANSPORT", "log");
+    vi.stubEnv("NODE_ENV", "production");
+    const info = vi.spyOn(console, "info").mockImplementation(() => {});
+    await expect(sendLeadEmail(lead, "infra@example.com")).resolves.toBeUndefined();
+    expect(info).toHaveBeenCalledOnce();
+    info.mockRestore();
   });
   it("candidatura: transporte log não registra dados pessoais", async () => {
     vi.stubEnv("RESEND_API_KEY", "");
@@ -44,12 +51,14 @@ describe("send", () => {
     }
     info.mockRestore();
   });
-  it("candidatura: em produção sem chave registra com console.error", async () => {
+  it("candidatura: em produção sem chave e sem LEAD_TRANSPORT=log lança; com log apenas registra", async () => {
     vi.stubEnv("RESEND_API_KEY", "");
+    vi.stubEnv("LEAD_TRANSPORT", "");
     vi.stubEnv("NODE_ENV", "production");
-    const err = vi.spyOn(console, "error").mockImplementation(() => {});
-    await sendCandidaturaEmail(candidaturaValida, "carreiras@example.com");
-    expect(err).toHaveBeenCalledOnce();
-    err.mockRestore();
+    await expect(sendCandidaturaEmail(candidaturaValida, "carreiras@example.com")).rejects.toThrow(/RESEND_API_KEY/);
+    vi.stubEnv("LEAD_TRANSPORT", "log");
+    const info = vi.spyOn(console, "info").mockImplementation(() => {});
+    await expect(sendCandidaturaEmail(candidaturaValida, "carreiras@example.com")).resolves.toBeUndefined();
+    info.mockRestore();
   });
 });
